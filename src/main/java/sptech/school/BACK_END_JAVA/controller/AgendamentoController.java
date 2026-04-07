@@ -23,7 +23,7 @@ public class AgendamentoController {
     }
 
     @PostMapping("/criar")
-    public ResponseEntity<Agendamento> criarAgendamento(@Valid @RequestBody Agendamento agendamento) {
+    public ResponseEntity<Agendamento> criarAgendamento(@RequestBody Agendamento agendamento) {
         service.criarAgendamento(agendamento);
         return  ResponseEntity.status(200).body(agendamento);
     }
@@ -41,11 +41,11 @@ public class AgendamentoController {
 
         return ResponseEntity.ok(atualizado);
     }
-//
-//    @GetMapping("/listar")
-//    public ResponseEntity<List<Agendamento>> listarTodos() {
-//        return ResponseEntity.status(200).body(repository.findAll());
-//    }
+
+    @GetMapping("/listar")
+    public ResponseEntity<List<Agendamento>> listarTodos() {
+        return ResponseEntity.status(200).body(service.listarTodos());
+    }
 //
 //
 //

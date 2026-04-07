@@ -7,6 +7,8 @@ import sptech.school.BACK_END_JAVA.exception.AgendamentoOrdemJaExisteException;
 import sptech.school.BACK_END_JAVA.exception.AgendamentoNotFoundException;
 import sptech.school.BACK_END_JAVA.repository.AgendamentoRepository;
 
+import java.util.List;
+
 @Service
 public class AgendamentoService {
 
@@ -14,6 +16,10 @@ public class AgendamentoService {
 
     public AgendamentoService(AgendamentoRepository repository) {
         this.repository = repository;
+    }
+
+    public List<Agendamento> listarTodos(){
+        return repository.findAll();
     }
 
     public ResponseEntity criarAgendamento(Agendamento agendamento){
