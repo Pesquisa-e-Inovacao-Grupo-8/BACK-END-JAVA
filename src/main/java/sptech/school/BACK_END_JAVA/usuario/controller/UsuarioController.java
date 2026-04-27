@@ -1,6 +1,8 @@
 package sptech.school.BACK_END_JAVA.usuario.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 import sptech.school.BACK_END_JAVA.usuario.service.UsuarioService;
@@ -12,7 +14,8 @@ import java.util.UUID;
 @RequestMapping
 public class UsuarioController {
     private final UsuarioService service;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     public UsuarioController(UsuarioService service) {
         this.service = service;
     }
@@ -29,9 +32,11 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    @PostMapping
+    @PostMapping("/usuarios")
     public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario) {
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         Usuario criado = service.criar(usuario);
+
         return ResponseEntity.status(201).body(criado);
     }
 
