@@ -33,7 +33,7 @@ public class AgendamentoService {
 
     public Agendamento criar(Agendamento agendamento, UUID clienteId, UUID profissionalId) {
 
-        Cliente cliente = clienteRepository.findById(clienteId)
+        Cliente cliente = clienteRepository.findByUsuarioId(clienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
         Profissional profissional = profissionalRepository.findById(profissionalId)
