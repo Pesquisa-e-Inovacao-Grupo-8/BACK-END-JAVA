@@ -3,13 +3,8 @@ package sptech.school.BACK_END_JAVA.usuario.entity.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 public class UsuarioRequestDto {
     @NotBlank
     @Schema(description = "Representa o nome do usuário", example = "Renata Tokutomi")
@@ -43,4 +38,67 @@ public class UsuarioRequestDto {
     @Schema(description = "Representa o momento em que a conta é criada", example = "2026-12-31T23:59:59")
     private LocalDateTime criacao;
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public LocalDateTime getCriacao() {
+        return criacao;
+    }
+
+    public void setCriacao(LocalDateTime criacao) {
+        this.criacao = criacao;
+    }
 }

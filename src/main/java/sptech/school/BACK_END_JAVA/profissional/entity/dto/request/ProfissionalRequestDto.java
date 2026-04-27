@@ -3,11 +3,7 @@ package sptech.school.BACK_END_JAVA.profissional.entity.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class ProfissionalRequestDto {
 
     @NotBlank
@@ -23,4 +19,36 @@ public class ProfissionalRequestDto {
     @NotNull
     @Schema(description = "Representa a chave estrangeira do usuário", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
     private Integer usuarioId;
+
+    public String getEspecialidade() {
+        return especialidade;
+    }
+
+    public void setEspecialidade(String especialidade) {
+        this.especialidade = especialidade;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public Integer getUsuarioId() {
+        return usuarioId;
+    }
+
+    public void setUsuarioId(Integer usuarioId) {
+        this.usuarioId = usuarioId;
+    }
 }

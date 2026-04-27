@@ -8,8 +8,6 @@ import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
 public class Cliente {
 
     @Id
@@ -22,4 +20,28 @@ public class Cliente {
     @OneToOne
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }

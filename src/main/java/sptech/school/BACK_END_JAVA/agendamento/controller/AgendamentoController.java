@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/agendamentos")
+@CrossOrigin(origins = "*")
 public class AgendamentoController {
     private final AgendamentoService service;
 

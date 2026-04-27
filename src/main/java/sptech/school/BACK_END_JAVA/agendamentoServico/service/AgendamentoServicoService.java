@@ -72,6 +72,4 @@ public class AgendamentoServicoService {
         }
         agendamentoServicoRepository.deleteById(id);
     }
-
-    //restante das funções
 }
