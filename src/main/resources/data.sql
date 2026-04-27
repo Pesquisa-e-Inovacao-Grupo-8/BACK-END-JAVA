@@ -17,8 +17,8 @@ INSERT INTO usuario (id, nome, telefone, cpf, senha, email, tipo, ativo, criacao
 INSERT INTO cliente (id, observacoes, fk_usuario) VALUES
 ('523e4567-e89b-12d3-a456-426614174001', 'Cliente VIP', '423e4567-e89b-12d3-a456-426614174001');
 
-INSERT INTO agendamento (id, data, hora_inicio, hora_fim, status, ordem_pedido, fk_cliente, fk_profissional) VALUES
-('623e4567-e89b-12d3-a456-426614174001', CURRENT_DATE, '14:00:00', '15:00:00', 'CONFIRMADO', 'ORD-001', '523e4567-e89b-12d3-a456-426614174001', '323e4567-e89b-12d3-a456-426614174001');
+INSERT INTO agendamento (id, data, hora_inicio, hora_fim, status, ordem_pedido, fk_cliente, fk_profissional, valor_total) VALUES
+ ('623e4567-e89b-12d3-a456-426614174001', CURRENT_DATE, '14:00:00', '15:00:00', 'CONFIRMADO', 'ORD-001', '523e4567-e89b-12d3-a456-426614174001', '323e4567-e89b-12d3-a456-426614174001', 150.00);
 
 INSERT INTO agendamento_servico (id, fk_agendamento, fk_servico) VALUES
 ('723e4567-e89b-12d3-a456-426614174001', '623e4567-e89b-12d3-a456-426614174001', '123e4567-e89b-12d3-a456-426614174001');

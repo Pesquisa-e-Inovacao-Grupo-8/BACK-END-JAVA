@@ -45,7 +45,8 @@ public class AgendamentoController {
         Agendamento agendamentoCriado = service.criar(
                 agendamentoParaCriar,
                 dto.getClienteId(),
-                dto.getProfissionalId()
+                dto.getProfissionalId(),
+                dto.getServicoId()
         );
 
         return ResponseEntity.status(201).body(agendamentoCriado);

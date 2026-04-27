@@ -32,6 +32,9 @@ public class Agendamento {
     @Column(nullable = false)
     private String ordemPedido;
 
+    @Column(nullable = false)
+    private Double valorTotal;
+
     @ManyToOne
     @JoinColumn(name = "fk_cliente")
     private Cliente cliente;
@@ -86,6 +89,14 @@ public class Agendamento {
 
     public void setOrdemPedido(String ordemPedido) {
         this.ordemPedido = ordemPedido;
+    }
+
+    public Double getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(Double valorTotal) {
+        this.valorTotal = valorTotal;
     }
 
     public Cliente getCliente() {
