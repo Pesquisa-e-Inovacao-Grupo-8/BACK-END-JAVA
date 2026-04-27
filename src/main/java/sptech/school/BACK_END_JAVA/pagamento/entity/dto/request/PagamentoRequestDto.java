@@ -8,8 +8,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
 public class PagamentoRequestDto {
 
     @NotNull
@@ -32,4 +30,43 @@ public class PagamentoRequestDto {
     @Schema(description = "Representa a chave estrangeira do agendamento", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
     private Integer agendamentoId;
 
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
+
+    public String getMetodo() {
+        return metodo;
+    }
+
+    public void setMetodo(String metodo) {
+        this.metodo = metodo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getData() {
+        return data;
+    }
+
+    public void setData(LocalDateTime data) {
+        this.data = data;
+    }
+
+    public Integer getAgendamentoId() {
+        return agendamentoId;
+    }
+
+    public void setAgendamentoId(Integer agendamentoId) {
+        this.agendamentoId = agendamentoId;
+    }
 }

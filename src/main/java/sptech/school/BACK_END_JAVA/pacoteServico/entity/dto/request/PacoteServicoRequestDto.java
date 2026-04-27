@@ -7,8 +7,6 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-@Getter
-@Setter
 public class PacoteServicoRequestDto {
     @NotNull
     @Schema(description = "Representa a chave estrangeira do pacote", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
@@ -19,4 +17,28 @@ public class PacoteServicoRequestDto {
     @NotNull
     @Schema(description = "Representa o valor do preço do serviço ao ser inserido no pacote", example = "15.99")
     private Double preco;
+
+    public UUID getPacoteId() {
+        return pacoteId;
+    }
+
+    public void setPacoteId(UUID pacoteId) {
+        this.pacoteId = pacoteId;
+    }
+
+    public UUID getServicoId() {
+        return servicoId;
+    }
+
+    public void setServicoId(UUID servicoId) {
+        this.servicoId = servicoId;
+    }
+
+    public Double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(Double preco) {
+        this.preco = preco;
+    }
 }
