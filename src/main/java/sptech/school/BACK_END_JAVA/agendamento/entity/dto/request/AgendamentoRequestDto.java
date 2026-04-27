@@ -38,6 +38,10 @@ public class AgendamentoRequestDto {
     @Schema(description = "Representa a chave estrangeira do profissional", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
     private UUID profissionalId;
 
+    @NotNull
+    @Schema(description = "Representa a chave estrangeira do serviço", example = "b8e86162-d472-11e8-b36c-ccaf789d94a1")
+    private UUID servicoId;
+
     public LocalDate getData() {
         return data;
     }
@@ -92,5 +96,13 @@ public class AgendamentoRequestDto {
 
     public void setProfissionalId(UUID profissionalId) {
         this.profissionalId = profissionalId;
+    }
+
+    public UUID getServicoId() {
+        return servicoId;
+    }
+
+    public void setServicoId(UUID servicoId) {
+        this.servicoId = servicoId;
     }
 }
