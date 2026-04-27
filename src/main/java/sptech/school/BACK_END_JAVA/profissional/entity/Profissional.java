@@ -26,7 +26,7 @@ public class Profissional {
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "profissional_servico",
             joinColumns = @JoinColumn(name = "profissional_id"),
