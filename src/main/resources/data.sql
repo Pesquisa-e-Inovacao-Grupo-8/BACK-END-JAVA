@@ -4,8 +4,8 @@ INSERT INTO servico (id, nome, duracao_minutos, descricao, preco, ativo) VALUES
 ('123e4567-e89b-12d3-a456-426614174003', 'Limpeza de Pele', 90, 'Tratamento completo com extração', 180.0, true);
 
 INSERT INTO usuario (id, nome, telefone, cpf, senha, email, tipo, ativo, criacao) VALUES
-('223e4567-e89b-12d3-a456-426614174001', 'Ana Paula', '(11) 99999-1111', '111.111.111-11', 'senha123', 'ana@tukotomi.com', 'PROFISSIONAL', true, CURRENT_TIMESTAMP),
-('223e4567-e89b-12d3-a456-426614174002', 'Juliana Costa', '(11) 99999-2222', '222.222.222-22', 'senha123', 'juliana@tukotomi.com', 'PROFISSIONAL', true, CURRENT_TIMESTAMP);
+('223e4567-e89b-12d3-a456-426614174001', 'Ana Paula', '5511982722589', '111.111.111-11', 'senha123', 'ana@tukotomi.com', 'PROFISSIONAL', true, CURRENT_TIMESTAMP),
+('223e4567-e89b-12d3-a456-426614174002', 'Juliana Costa', '5511982722589', '222.222.222-22', 'senha123', 'juliana@tukotomi.com', 'PROFISSIONAL', true, CURRENT_TIMESTAMP);
 
 INSERT INTO profissional (id, especialidade, descricao, foto, fk_usuario) VALUES
 ('323e4567-e89b-12d3-a456-426614174001', 'Cabelo e Coloração', 'Especialista em mechas', null, '223e4567-e89b-12d3-a456-426614174001'),
