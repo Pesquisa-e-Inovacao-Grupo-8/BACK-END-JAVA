@@ -10,6 +10,7 @@ import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepositor
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,6 +74,10 @@ public class AgendamentoService {
         }
 
         agendamentoRepository.deleteById(id);
+    }
+
+    public List<Agendamento> consultarPorData(LocalDate data) {
+        return agendamentoRepository.findByData(data);
     }
 
 
