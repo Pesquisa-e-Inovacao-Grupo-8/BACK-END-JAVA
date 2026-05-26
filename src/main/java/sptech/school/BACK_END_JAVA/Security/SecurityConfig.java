@@ -55,7 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
 
                         // Libera a criação de usuários (Cadastro)
-                        .requestMatchers(HttpMethod.POST, "/usuarios/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
 
                         // LIBERA A LEITURA PÚBLICA DE SERVIÇOS E PROFISSIONAIS
                         .requestMatchers(HttpMethod.GET, "/servicos/**", "/profissionais/**").permitAll()

@@ -46,7 +46,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    @PostMapping("/usuarios")
+    @PostMapping
     public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario) {
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         Usuario criado = service.criar(usuario);

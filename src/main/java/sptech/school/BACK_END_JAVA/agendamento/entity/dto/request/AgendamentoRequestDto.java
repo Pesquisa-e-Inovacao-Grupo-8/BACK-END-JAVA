@@ -30,10 +30,14 @@ public class AgendamentoRequestDto {
     @Schema(description = "Representa o identificador da ordem do pedido", example = "J6GFbv0bh...")
     private String ordemPedido;
 
-    @NotNull
-    @Schema(description = "Representa a chave estrangeira do cliente", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
+    @Schema(description = "Representa a chave estrangeira do cliente (opcional para avulsos)", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
     private UUID clienteId;
 
+    @Schema(description = "Nome do cliente para agendamentos avulsos", example = "Maria Silva")
+    private String nomeClienteAvulso;
+
+    @Schema(description = "Telefone para agendamentos avulsos", example = "(11) 99999-9999")
+    private String telefoneClienteAvulso;
     @NotNull
     @Schema(description = "Representa a chave estrangeira do profissional", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
     private UUID profissionalId;
@@ -90,6 +94,12 @@ public class AgendamentoRequestDto {
         this.clienteId = clienteId;
     }
 
+    public String getNomeClienteAvulso() { return nomeClienteAvulso; }
+    public void setNomeClienteAvulso(String nome) { this.nomeClienteAvulso = nome; }
+
+    public String getTelefoneClienteAvulso() { return telefoneClienteAvulso; }
+    public void setTelefoneClienteAvulso(String tel) { this.telefoneClienteAvulso = tel; }
+
     public UUID getProfissionalId() {
         return profissionalId;
     }
@@ -104,5 +114,21 @@ public class AgendamentoRequestDto {
 
     public void setServicoId(UUID servicoId) {
         this.servicoId = servicoId;
+    }
+
+    @Override
+    public String toString() {
+        return "AgendamentoRequestDto{" +
+                "data=" + data +
+                ", horaInicio=" + horaInicio +
+                ", horaFim=" + horaFim +
+                ", status='" + status + '\'' +
+                ", ordemPedido='" + ordemPedido + '\'' +
+                ", clienteId=" + clienteId +
+                ", nomeClienteAvulso='" + nomeClienteAvulso + '\'' +
+                ", telefoneClienteAvulso='" + telefoneClienteAvulso + '\'' +
+                ", profissionalId=" + profissionalId +
+                ", servicoId=" + servicoId +
+                '}';
     }
 }

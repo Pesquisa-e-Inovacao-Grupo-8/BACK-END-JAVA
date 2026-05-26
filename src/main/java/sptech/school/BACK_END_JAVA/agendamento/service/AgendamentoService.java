@@ -1,5 +1,7 @@
 package sptech.school.BACK_END_JAVA.agendamento.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 import sptech.school.BACK_END_JAVA.agendamento.repository.AgendamentoRepository;
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 @Service
 public class AgendamentoService {
+    private static final Logger logger = LoggerFactory.getLogger(AgendamentoService.class);
 
     private final AgendamentoRepository agendamentoRepository;
     private final ClienteRepository clienteRepository;
@@ -39,10 +42,25 @@ public class AgendamentoService {
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
     }
 
-    public Agendamento criar(Agendamento agendamento, UUID clienteId, UUID profissionalId, UUID servicoId) {
+    public Agendamento criar(Agendamento agendamento, UUID clienteId, String nomeAvulso, String telAvulso, UUID profissionalId, UUID servicoId) {
 
-        Cliente cliente = clienteRepository.findByUsuarioId(clienteId)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+        logger.info("Tentando criar agendamento. ClienteId recebido: {}", clienteId);
+
+        if (clienteId != null) {
+            // Tenta buscar. Se não achar, não dá erro, apenas trata como avulso
+            var clienteOpt = clienteRepository.findByUsuarioId(clienteId);
+
+            if (clienteOpt.isPresent()) {
+                agendamento.setCliente(clienteOpt.get());
+            } else {
+                logger.warn("Cliente ID {} enviado, mas não encontrado. Tratando como avulso.", clienteId);
+                agendamento.setNomeClienteAvulso(nomeAvulso != null ? nomeAvulso : "Cliente não identificado");
+                agendamento.setTelefoneClienteAvulso(telAvulso);
+            }
+        } else {
+            agendamento.setNomeClienteAvulso(nomeAvulso);
+            agendamento.setTelefoneClienteAvulso(telAvulso);
+        }
 
         Profissional profissional = profissionalRepository.findById(profissionalId)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
@@ -50,7 +68,6 @@ public class AgendamentoService {
         Servico servico = servicoRepository.findById(servicoId)
                 .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
-        agendamento.setCliente(cliente);
         agendamento.setProfissional(profissional);
         agendamento.setValorTotal(servico.getPreco());
 
