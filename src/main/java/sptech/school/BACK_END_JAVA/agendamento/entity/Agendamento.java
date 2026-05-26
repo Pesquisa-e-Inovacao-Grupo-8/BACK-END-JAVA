@@ -39,6 +39,12 @@ public class Agendamento {
     @JoinColumn(name = "fk_cliente")
     private Cliente cliente;
 
+    @Column
+    private String nomeClienteAvulso;
+
+    @Column
+    private String telefoneClienteAvulso;
+
     @ManyToOne
     @JoinColumn(name = "fk_profissional")
     private Profissional profissional;
@@ -105,6 +111,22 @@ public class Agendamento {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public String getNomeClienteAvulso() {
+        return nomeClienteAvulso;
+    }
+
+    public void setNomeClienteAvulso(String nomeClienteAvulso) {
+        this.nomeClienteAvulso = nomeClienteAvulso;
+    }
+
+    public String getTelefoneClienteAvulso() {
+        return telefoneClienteAvulso;
+    }
+
+    public void setTelefoneClienteAvulso(String telefoneClienteAvulso) {
+        this.telefoneClienteAvulso = telefoneClienteAvulso;
     }
 
     public Profissional getProfissional() {
