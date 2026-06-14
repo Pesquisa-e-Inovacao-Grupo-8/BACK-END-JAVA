@@ -16,6 +16,7 @@ public class ClientePacote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_cliente_pacote")
     private UUID id;
 
     @ManyToOne
@@ -31,8 +32,5 @@ public class ClientePacote {
 
     @Column(nullable = false)
     private LocalDateTime dtExpiracao;
-
-    @Column(nullable = false)
-    private Integer qtdUsos;
 
 }

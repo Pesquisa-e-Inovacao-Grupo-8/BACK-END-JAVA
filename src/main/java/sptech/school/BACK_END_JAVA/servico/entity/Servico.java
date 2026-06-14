@@ -12,6 +12,7 @@ import java.util.UUID;
 public class Servico {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_servico")
     private UUID id;
 
     @Column(nullable = false)

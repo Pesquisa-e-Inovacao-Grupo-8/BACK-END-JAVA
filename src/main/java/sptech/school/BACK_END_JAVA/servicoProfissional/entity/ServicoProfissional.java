@@ -14,6 +14,7 @@ import java.util.UUID;
 public class ServicoProfissional {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_servico_profissional")
     private UUID id;
 
     @ManyToOne

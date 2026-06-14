@@ -14,6 +14,7 @@ public class Comprovante {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_comprovante")
     private UUID id;
 
     @Column(nullable = false)

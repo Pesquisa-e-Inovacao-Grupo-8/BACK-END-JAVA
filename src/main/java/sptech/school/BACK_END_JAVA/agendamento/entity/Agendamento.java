@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
+import sptech.school.BACK_END_JAVA.clientePacote.entity.ClientePacote;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,6 +18,7 @@ public class Agendamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_agendamento")
     private UUID id;
 
     @Column(nullable = false)
@@ -41,5 +43,9 @@ public class Agendamento {
     @ManyToOne
     @JoinColumn(name = "fk_profissional")
     private Profissional profissional;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_cliente_pacote")
+    private ClientePacote clientePacote;
 
 }
