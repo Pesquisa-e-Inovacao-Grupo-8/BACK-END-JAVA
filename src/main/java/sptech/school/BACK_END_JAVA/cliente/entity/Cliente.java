@@ -12,6 +12,7 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_cliente")
     private UUID id;
 
     @Column(nullable = true)

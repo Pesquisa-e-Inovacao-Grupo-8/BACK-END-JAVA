@@ -11,6 +11,7 @@ public class Pacote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_pacote")
     private UUID id;
 
     @Column(nullable = false)

@@ -42,14 +42,12 @@ public class AgendamentoController {
         ag.setOrdemPedido(dto.getOrdemPedido());
 
 
-        Agendamento criado = service.criar(
-                ag,
-                dto.getClienteId(),
-                dto.getNomeClienteAvulso(),
-                dto.getTelefoneClienteAvulso(),
-                dto.getProfissionalId(),
-                dto.getServicoId()
-        );
+        agendamentoParaCriar.setData(dto.getData());
+        agendamentoParaCriar.setHoraInicio(dto.getHoraInicio());
+        agendamentoParaCriar.setHoraFim(dto.getHoraFim());
+        agendamentoParaCriar.setStatus(dto.getStatus());
+
+        Agendamento agendamentoCriado = service.criar(dto);
 
         return ResponseEntity.status(201).body(criado);
     }

@@ -8,6 +8,7 @@ import java.util.UUID;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_usuario")
     private UUID id;
 
     @Column(nullable = false)

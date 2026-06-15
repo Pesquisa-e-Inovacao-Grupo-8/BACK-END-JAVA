@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
+import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,6 +16,7 @@ public class Agendamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_agendamento")
     private UUID id;
 
     @Column(nullable = false)
@@ -49,91 +51,13 @@ public class Agendamento {
     @JoinColumn(name = "fk_profissional")
     private Profissional profissional;
 
-    public UUID getId() {
-        return id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "fk_servico")
+    private Servico servico;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    @Column
+    private String nomeClienteAvulso;
 
-    public LocalDate getData() {
-        return data;
-    }
-
-    public void setData(LocalDate data) {
-        this.data = data;
-    }
-
-    public LocalTime getHoraInicio() {
-        return horaInicio;
-    }
-
-    public void setHoraInicio(LocalTime horaInicio) {
-        this.horaInicio = horaInicio;
-    }
-
-    public LocalTime getHoraFim() {
-        return horaFim;
-    }
-
-    public void setHoraFim(LocalTime horaFim) {
-        this.horaFim = horaFim;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getOrdemPedido() {
-        return ordemPedido;
-    }
-
-    public void setOrdemPedido(String ordemPedido) {
-        this.ordemPedido = ordemPedido;
-    }
-
-    public Double getValorTotal() {
-        return valorTotal;
-    }
-
-    public void setValorTotal(Double valorTotal) {
-        this.valorTotal = valorTotal;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public String getNomeClienteAvulso() {
-        return nomeClienteAvulso;
-    }
-
-    public void setNomeClienteAvulso(String nomeClienteAvulso) {
-        this.nomeClienteAvulso = nomeClienteAvulso;
-    }
-
-    public String getTelefoneClienteAvulso() {
-        return telefoneClienteAvulso;
-    }
-
-    public void setTelefoneClienteAvulso(String telefoneClienteAvulso) {
-        this.telefoneClienteAvulso = telefoneClienteAvulso;
-    }
-
-    public Profissional getProfissional() {
-        return profissional;
-    }
-
-    public void setProfissional(Profissional profissional) {
-        this.profissional = profissional;
-    }
+    @Column
+    private String telefoneClienteAvulso;
 }

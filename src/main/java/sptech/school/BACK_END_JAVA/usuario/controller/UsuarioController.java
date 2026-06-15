@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuarios")
-@CrossOrigin(origins = "*")
 public class UsuarioController {
     private final UsuarioService service;
 
@@ -47,6 +46,7 @@ public class UsuarioController {
     }
 
     @PostMapping
+
     public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario) {
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         Usuario criado = service.criar(usuario);

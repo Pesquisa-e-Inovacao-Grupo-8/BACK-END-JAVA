@@ -51,29 +51,23 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-
                         .requestMatchers("/auth/**").permitAll()
-
-                        // Libera a criação de usuários (Cadastro)
                         .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
-
-                        // LIBERA A LEITURA PÚBLICA DE SERVIÇOS E PROFISSIONAIS
                         .requestMatchers(HttpMethod.GET, "/servicos/**", "/profissionais/**").permitAll()
-
+                        .requestMatchers("/profissionais/vincular-servicos/**").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .userDetailsService(userDetailsService)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
