@@ -9,8 +9,6 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
 public class PacoteServico {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -26,4 +24,36 @@ public class PacoteServico {
 
     @Column(nullable = false)
     private Double preco;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Pacote getPacote() {
+        return pacote;
+    }
+
+    public void setPacote(Pacote pacote) {
+        this.pacote = pacote;
+    }
+
+    public Servico getServico() {
+        return servico;
+    }
+
+    public void setServico(Servico servico) {
+        this.servico = servico;
+    }
+
+    public Double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(Double preco) {
+        this.preco = preco;
+    }
 }

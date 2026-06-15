@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/agendamentos")
+@CrossOrigin(origins = "*")
 public class AgendamentoController {
     private final AgendamentoService service;
 
@@ -32,22 +33,25 @@ public class AgendamentoController {
 
     @PostMapping
     public ResponseEntity<Agendamento> criarAgendamento(@RequestBody AgendamentoRequestDto dto) {
+        System.out.println("DEBUG DTO: " + dto.toString());
+        Agendamento ag = new Agendamento();
+        ag.setData(dto.getData());
+        ag.setHoraInicio(dto.getHoraInicio());
+        ag.setHoraFim(dto.getHoraFim());
+        ag.setStatus(dto.getStatus());
+        ag.setOrdemPedido(dto.getOrdemPedido());
 
-        Agendamento agendamentoParaCriar = new Agendamento();
 
-        agendamentoParaCriar.setData(dto.getData());
-        agendamentoParaCriar.setHoraInicio(dto.getHoraInicio());
-        agendamentoParaCriar.setHoraFim(dto.getHoraFim());
-        agendamentoParaCriar.setStatus(dto.getStatus());
-        agendamentoParaCriar.setOrdemPedido(dto.getOrdemPedido());
-
-        Agendamento agendamentoCriado = service.criar(
-                agendamentoParaCriar,
+        Agendamento criado = service.criar(
+                ag,
                 dto.getClienteId(),
-                dto.getProfissionalId()
+                dto.getNomeClienteAvulso(),
+                dto.getTelefoneClienteAvulso(),
+                dto.getProfissionalId(),
+                dto.getServicoId()
         );
 
-        return ResponseEntity.status(201).body(agendamentoCriado);
+        return ResponseEntity.status(201).body(criado);
     }
 
     @PutMapping("/{id}")

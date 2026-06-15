@@ -54,6 +54,12 @@ public class SecurityConfig {
 
                         .requestMatchers("/auth/**").permitAll()
 
+                        // Libera a criação de usuários (Cadastro)
+                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+
+                        // LIBERA A LEITURA PÚBLICA DE SERVIÇOS E PROFISSIONAIS
+                        .requestMatchers(HttpMethod.GET, "/servicos/**", "/profissionais/**").permitAll()
+
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -68,7 +74,6 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();

@@ -9,8 +9,6 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
 public class AgendamentoServico {
 
     @Id
@@ -25,4 +23,27 @@ public class AgendamentoServico {
     @JoinColumn(name = "fk_servico")
     private Servico servico;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Agendamento getAgendamento() {
+        return agendamento;
+    }
+
+    public void setAgendamento(Agendamento agendamento) {
+        this.agendamento = agendamento;
+    }
+
+    public Servico getServico() {
+        return servico;
+    }
+
+    public void setServico(Servico servico) {
+        this.servico = servico;
+    }
 }
