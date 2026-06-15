@@ -1,12 +1,20 @@
 package sptech.school.BACK_END_JAVA.agendamento.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
+import sptech.school.BACK_END_JAVA.agendamento.entity.dto.request.AgendamentoRequestDto;
 import sptech.school.BACK_END_JAVA.agendamento.repository.AgendamentoRepository;
+import sptech.school.BACK_END_JAVA.agendamento.strategy.AgendamentoStrategy;
+import sptech.school.BACK_END_JAVA.agendamento.strategy.AgendamentoStrategyFactory;
+import sptech.school.BACK_END_JAVA.agendamentoServico.entity.AgendamentoServico;
+import sptech.school.BACK_END_JAVA.agendamentoServico.repository.AgendamentoServicoRepository;
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
+import sptech.school.BACK_END_JAVA.servico.entity.Servico;
+import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,11 +25,17 @@ public class AgendamentoService {
     private final AgendamentoRepository agendamentoRepository;
     private final ClienteRepository clienteRepository;
     private final ProfissionalRepository profissionalRepository;
+    private final ServicoRepository servicoRepository;
+    private final AgendamentoServicoRepository agendamentoServicoRepository;
+    private final AgendamentoStrategyFactory factory;
 
-    public AgendamentoService(AgendamentoRepository agendamentoRepository, ClienteRepository clienteRepository, ProfissionalRepository profissionalRepository) {
+    public AgendamentoService(AgendamentoRepository agendamentoRepository, ClienteRepository clienteRepository, ProfissionalRepository profissionalRepository, ServicoRepository servicoRepository, AgendamentoServicoRepository agendamentoServicoRepository, AgendamentoStrategyFactory factory) {
         this.agendamentoRepository = agendamentoRepository;
         this.clienteRepository = clienteRepository;
         this.profissionalRepository = profissionalRepository;
+        this.servicoRepository = servicoRepository;
+        this.agendamentoServicoRepository = agendamentoServicoRepository;
+        this.factory = factory;
     }
 
     public List<Agendamento> listar() {return agendamentoRepository.findAll();}
@@ -31,18 +45,49 @@ public class AgendamentoService {
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
     }
 
-    public Agendamento criar(Agendamento agendamento, UUID clienteId, UUID profissionalId) {
+    @Transactional
+    public Agendamento criar(AgendamentoRequestDto dto) {
 
-        Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-
-        Profissional profissional = profissionalRepository.findById(profissionalId)
+        Profissional profissional = profissionalRepository.findById(dto.getProfissionalId())
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
-        agendamento.setCliente(cliente);
+        if ((dto.getServicos() == null || dto.getServicos().isEmpty())
+                && dto.getServicoId() != null) {
+            dto.setServicos(List.of(dto.getServicoId()));
+        }
+
+        if (dto.getServicos() == null || dto.getServicos().isEmpty()) {
+            throw new RuntimeException("Informe ao menos um serviço");
+        }
+
+        tentarVincularClienteCadastrado(dto);
+
+        Agendamento agendamento = new Agendamento();
+
+        agendamento.setData(dto.getData());
+        agendamento.setHoraInicio(dto.getHoraInicio());
+        agendamento.setHoraFim(dto.getHoraFim());
+        agendamento.setStatus(dto.getStatus());
         agendamento.setProfissional(profissional);
 
-        return agendamentoRepository.save(agendamento);
+        AgendamentoStrategy strategy = factory.escolher(dto);
+        strategy.aplicar(agendamento, dto);
+
+        Agendamento agendamentoSalvo = agendamentoRepository.save(agendamento);
+
+        for (UUID servicoId : dto.getServicos()) {
+
+            Servico servico = servicoRepository.findById(servicoId)
+                    .orElseThrow(() -> new RuntimeException("Serviço não encontrado: " + servicoId));
+
+            AgendamentoServico agendamentoServico = new AgendamentoServico();
+            agendamentoServico.setAgendamento(agendamentoSalvo);
+            agendamentoServico.setServico(servico);
+
+            agendamentoServicoRepository.save(agendamentoServico);
+        }
+
+        return agendamentoSalvo;
     }
 
     public Agendamento atualizar(UUID id, Agendamento agendamento) {
@@ -64,6 +109,21 @@ public class AgendamentoService {
         agendamentoRepository.deleteById(id);
     }
 
+    private void tentarVincularClienteCadastrado(AgendamentoRequestDto dto) {
 
+        if (dto.getClienteId() != null) {
+            return;
+        }
+
+        if (dto.getTelefoneClienteAvulso() == null ||
+                dto.getTelefoneClienteAvulso().isBlank()) {
+            return;
+        }
+
+        String telefone = dto.getTelefoneClienteAvulso().trim();
+
+        clienteRepository.findByUsuario_Telefone(telefone)
+                .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
+    }
     //restante das funções
 }

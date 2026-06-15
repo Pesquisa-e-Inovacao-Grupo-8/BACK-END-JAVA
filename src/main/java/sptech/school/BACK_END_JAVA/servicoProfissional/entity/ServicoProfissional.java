@@ -13,9 +13,15 @@ import java.util.UUID;
 @Setter
 public class ServicoProfissional {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id_servico_profissional")
+    @Column(name = "id_profissional_servico")
     private UUID id;
+
+    @PrePersist
+    public void prePersist() {
+        if (id == null) {
+            id = UUID.randomUUID();
+        }
+    }
 
     @ManyToOne
     @JoinColumn(name = "fk_servico")

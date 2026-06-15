@@ -1,58 +1,79 @@
 package sptech.school.BACK_END_JAVA.servicoProfissional.service;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
+import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 import sptech.school.BACK_END_JAVA.servicoProfissional.entity.ServicoProfissional;
 import sptech.school.BACK_END_JAVA.servicoProfissional.repository.ServicoProfissionalRepository;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class ServicoProfissionalService {
-    private final ServicoProfissionalRepository servicoProfissionalRepository;
+
+    private final ServicoProfissionalRepository repository;
     private final ServicoRepository servicoRepository;
     private final ProfissionalRepository profissionalRepository;
 
-    public ServicoProfissionalService(ServicoProfissionalRepository servicoProfissionalRepository, ServicoRepository servicoRepository, ProfissionalRepository profissionalRepository) {
-        this.servicoProfissionalRepository = servicoProfissionalRepository;
+    public ServicoProfissionalService(
+            ServicoProfissionalRepository repository,
+            ServicoRepository servicoRepository,
+            ProfissionalRepository profissionalRepository
+    ) {
+        this.repository = repository;
         this.servicoRepository = servicoRepository;
         this.profissionalRepository = profissionalRepository;
     }
 
-    public List<ServicoProfissional> listar() {return servicoProfissionalRepository.findAll();}
-
-    public ServicoProfissional buscarPorId(UUID id) {
-        return servicoProfissionalRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Serviço do profissional não encontrado"));
+    public List<ServicoProfissional> listar() {
+        return repository.findAll();
     }
 
-    public ServicoProfissional criar(ServicoProfissional servicoProfissional, UUID servicoId, UUID profissionalId) {
-        var servico = servicoRepository.findById(servicoId)
-                .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+    public List<ServicoProfissional> listarPorProfissional(UUID profissionalId) {
+        return repository.findByProfissional_Id(profissionalId);
+    }
 
-        var profissional = profissionalRepository.findById(profissionalId)
+    @Transactional
+    public void vincularServicos(UUID profissionalId, List<UUID> servicosIds) {
+
+        Profissional profissional = profissionalRepository.findById(profissionalId)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
-        servicoProfissional.setServico(servico);
-        servicoProfissional.setProfissional(profissional);
+        repository.deleteByProfissional(profissional);
 
-        return servicoProfissionalRepository.save(servicoProfissional);
+        if (servicosIds == null || servicosIds.isEmpty()) {
+            return;
+        }
+
+        List<UUID> idsSemDuplicidade =
+                new ArrayList<>(new LinkedHashSet<>(servicosIds));
+
+        for (UUID servicoId : idsSemDuplicidade) {
+
+            Servico servico = servicoRepository.findById(servicoId)
+                    .orElseThrow(() -> new RuntimeException(
+                            "Serviço não encontrado: " + servicoId
+                    ));
+
+            ServicoProfissional sp = new ServicoProfissional();
+            sp.setProfissional(profissional);
+            sp.setServico(servico);
+
+            repository.save(sp);
+        }
     }
 
-    public ServicoProfissional atualizar(UUID id, ServicoProfissional servicoProfissional) {
-        if (!servicoProfissionalRepository.existsById(id)) {
-            throw new RuntimeException("Serviço do profissional não encontrado");
-        }
-        servicoProfissional.setId(id);
-        return servicoProfissionalRepository.save(servicoProfissional);
-    }
-
-    public void deletar(UUID id) {
-        if (!servicoProfissionalRepository.existsById(id)) {
-            throw new RuntimeException("Serviço do profissional não encontrado");
-        }
-        servicoProfissionalRepository.deleteById(id);
+    @Transactional
+    public void remover(UUID profissionalId, UUID servicoId) {
+        repository.deleteByProfissional_IdAndServico_Id(
+                profissionalId,
+                servicoId
+        );
     }
 }

@@ -69,10 +69,6 @@ public class ClientePacoteService {
                     pacoteServico.getServico()
             );
 
-            clientePacoteServico.setQuantidadeDisponivel(
-                    pacoteServico.getQuantidade()
-            );
-
             clientePacoteServicoRepository.save(
                     clientePacoteServico
             );

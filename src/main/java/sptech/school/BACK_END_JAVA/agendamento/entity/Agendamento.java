@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
-import sptech.school.BACK_END_JAVA.clientePacote.entity.ClientePacote;
+import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -45,7 +45,12 @@ public class Agendamento {
     private Profissional profissional;
 
     @ManyToOne
-    @JoinColumn(name = "fk_cliente_pacote")
-    private ClientePacote clientePacote;
+    @JoinColumn(name = "fk_servico")
+    private Servico servico;
 
+    @Column
+    private String nomeClienteAvulso;
+
+    @Column
+    private String telefoneClienteAvulso;
 }

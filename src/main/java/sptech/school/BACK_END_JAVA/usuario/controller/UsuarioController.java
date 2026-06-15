@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping
+@RequestMapping("/usuarios")
 public class UsuarioController {
     private final UsuarioService service;
 
@@ -30,6 +30,7 @@ public class UsuarioController {
     }
 
     @PostMapping
+
     public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario) {
         Usuario criado = service.criar(usuario);
         return ResponseEntity.status(201).body(criado);

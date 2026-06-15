@@ -25,6 +25,4 @@ public class PacoteServico {
     @JoinColumn(name = "fk_servico")
     private Servico servico;
 
-    @Column(nullable = false)
-    private Integer quantidade;
 }
