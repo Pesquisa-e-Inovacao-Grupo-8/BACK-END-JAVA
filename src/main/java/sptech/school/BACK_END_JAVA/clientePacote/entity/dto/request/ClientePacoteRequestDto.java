@@ -8,8 +8,6 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Getter
-@Setter
 public class ClientePacoteRequestDto {
     @NotNull
     @Schema(description = "Representa a chave estrangeira do cliente", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
@@ -30,4 +28,44 @@ public class ClientePacoteRequestDto {
     @NotNull
     @Schema(description = "Representa a quantidade restantes do pacote para o cliente", example = "2")
     private Integer qtdUsos;
+
+    public UUID getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(UUID clienteId) {
+        this.clienteId = clienteId;
+    }
+
+    public UUID getPacoteId() {
+        return pacoteId;
+    }
+
+    public void setPacoteId(UUID pacoteId) {
+        this.pacoteId = pacoteId;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public LocalDateTime getDtExpiracao() {
+        return dtExpiracao;
+    }
+
+    public void setDtExpiracao(LocalDateTime dtExpiracao) {
+        this.dtExpiracao = dtExpiracao;
+    }
+
+    public Integer getQtdUsos() {
+        return qtdUsos;
+    }
+
+    public void setQtdUsos(Integer qtdUsos) {
+        this.qtdUsos = qtdUsos;
+    }
 }

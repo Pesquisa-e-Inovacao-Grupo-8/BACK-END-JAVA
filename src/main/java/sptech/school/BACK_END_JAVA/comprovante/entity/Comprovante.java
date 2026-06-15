@@ -8,8 +8,6 @@ import sptech.school.BACK_END_JAVA.pagamento.entity.Pagamento;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
 public class Comprovante {
 
     @Id
@@ -23,4 +21,28 @@ public class Comprovante {
     @ManyToOne
     @JoinColumn(name = "fk_pagamento")
     private Pagamento pagamento;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
+    }
 }

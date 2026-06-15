@@ -3,11 +3,7 @@ package sptech.school.BACK_END_JAVA.pacote.entity.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class PacoteRequestDto {
     @NotBlank
     @Schema(description = "Representa o nome do pacote", example = "pacote de verão")
@@ -20,4 +16,28 @@ public class PacoteRequestDto {
     @NotNull
     @Schema(description = "Representa o preço total do pacote", example = "150.00")
     private Double precoTotal;
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Double getPrecoTotal() {
+        return precoTotal;
+    }
+
+    public void setPrecoTotal(Double precoTotal) {
+        this.precoTotal = precoTotal;
+    }
 }

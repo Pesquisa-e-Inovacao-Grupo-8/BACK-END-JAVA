@@ -1,5 +1,7 @@
 package sptech.school.BACK_END_JAVA.agendamento.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
@@ -16,11 +18,13 @@ import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepositor
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class AgendamentoService {
+    private static final Logger logger = LoggerFactory.getLogger(AgendamentoService.class);
 
     private final AgendamentoRepository agendamentoRepository;
     private final ClienteRepository clienteRepository;
@@ -69,6 +73,7 @@ public class AgendamentoService {
         agendamento.setHoraFim(dto.getHoraFim());
         agendamento.setStatus(dto.getStatus());
         agendamento.setProfissional(profissional);
+        agendamento.setValorTotal(servico.getPreco());
 
         AgendamentoStrategy strategy = factory.escolher(dto);
         strategy.aplicar(agendamento, dto);

@@ -12,8 +12,6 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
-@Getter
-@Setter
 public class Agendamento {
 
     @Id
@@ -36,9 +34,18 @@ public class Agendamento {
     @Column(nullable = false)
     private String ordemPedido;
 
+    @Column(nullable = false)
+    private Double valorTotal;
+
     @ManyToOne
     @JoinColumn(name = "fk_cliente")
     private Cliente cliente;
+
+    @Column
+    private String nomeClienteAvulso;
+
+    @Column
+    private String telefoneClienteAvulso;
 
     @ManyToOne
     @JoinColumn(name = "fk_profissional")

@@ -46,5 +46,4 @@ public class PagamentoController {
         return ResponseEntity.noContent().build();
     }
 
-    //funções
 }
