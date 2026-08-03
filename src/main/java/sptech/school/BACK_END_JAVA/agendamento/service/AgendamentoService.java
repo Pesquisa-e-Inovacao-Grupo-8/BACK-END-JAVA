@@ -73,6 +73,7 @@ public class AgendamentoService {
         agendamento.setHoraFim(dto.getHoraFim());
         agendamento.setStatus(dto.getStatus());
         agendamento.setProfissional(profissional);
+        Servico servico = null;
         agendamento.setValorTotal(servico.getPreco());
 
         AgendamentoStrategy strategy = factory.escolher(dto);
@@ -82,7 +83,7 @@ public class AgendamentoService {
 
         for (UUID servicoId : dto.getServicos()) {
 
-            Servico servico = servicoRepository.findById(servicoId)
+            servico = servicoRepository.findById(servicoId)
                     .orElseThrow(() -> new RuntimeException("Serviço não encontrado: " + servicoId));
 
             AgendamentoServico agendamentoServico = new AgendamentoServico();

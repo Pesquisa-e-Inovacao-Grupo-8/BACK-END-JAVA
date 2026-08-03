@@ -7,6 +7,8 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 public class Servico {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

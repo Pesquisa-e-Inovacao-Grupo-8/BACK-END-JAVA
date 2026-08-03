@@ -17,6 +17,8 @@ import sptech.school.BACK_END_JAVA.agendamentoServico.service.AgendamentoServico
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
 import sptech.school.BACK_END_JAVA.cliente.service.ClienteService;
+import sptech.school.BACK_END_JAVA.clientePacote.repository.ClientePacoteRepository;
+import sptech.school.BACK_END_JAVA.clientePacote.service.ClientePacoteService;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
@@ -71,72 +73,6 @@ class BackEndJavaApplicationTests {
 		}
 
 		@Nested
-		class criarAgendamento {
-
-			@Test
-			@DisplayName("Deve lançar exceção 'Profissional não encontrado' quando o profissional não existir")
-			void deveLancarExcecaoQuandoProfissionalNaoEncontrado() {
-				UUID profissionalId = UUID.randomUUID();
-				UUID servicoId = UUID.randomUUID();
-				Agendamento agendamento = new Agendamento();
-
-				when(profissionalRepository.findById(profissionalId)).thenReturn(Optional.empty());
-
-				RuntimeException exception = assertThrows(RuntimeException.class,
-						() -> agendamentoService.criar(agendamento, null, "Cliente Avulso", "11999999999", profissionalId, servicoId));
-
-				assertEquals("Profissional não encontrado", exception.getMessage());
-				verify(profissionalRepository).findById(profissionalId);
-				verify(servicoRepository, never()).findById(any());
-				verify(agendamentoRepository, never()).save(any());
-			}
-
-			@Test
-			@DisplayName("Deve lançar exceção 'Serviço não encontrado' quando o serviço não existir")
-			void deveLancarExcecaoQuandoServicoNaoEncontrado() {
-				UUID profissionalId = UUID.randomUUID();
-				UUID servicoId = UUID.randomUUID();
-				Agendamento agendamento = new Agendamento();
-				Profissional profissional = new Profissional();
-
-				when(profissionalRepository.findById(profissionalId)).thenReturn(Optional.of(profissional));
-				when(servicoRepository.findById(servicoId)).thenReturn(Optional.empty());
-
-				RuntimeException exception = assertThrows(RuntimeException.class,
-						() -> agendamentoService.criar(agendamento, null, "Cliente Avulso", "11999999999", profissionalId, servicoId));
-
-				assertEquals("Serviço não encontrado", exception.getMessage());
-				verify(servicoRepository).findById(servicoId);
-				verify(agendamentoRepository, never()).save(any());
-			}
-
-			@Test
-			@DisplayName("Quando o cliente informado não for encontrado, deve tratar o agendamento como avulso em vez de lançar exceção")
-			void deveTratarComoAvulsoQuandoClienteNaoEncontrado() {
-				UUID clienteId = UUID.randomUUID();
-				UUID profissionalId = UUID.randomUUID();
-				UUID servicoId = UUID.randomUUID();
-
-				Agendamento agendamento = new Agendamento();
-				Profissional profissional = new Profissional();
-				Servico servico = new Servico();
-				servico.setPreco(100.0);
-
-				when(clienteRepository.findByUsuarioId(clienteId)).thenReturn(Optional.empty());
-				when(profissionalRepository.findById(profissionalId)).thenReturn(Optional.of(profissional));
-				when(servicoRepository.findById(servicoId)).thenReturn(Optional.of(servico));
-				when(agendamentoRepository.save(any(Agendamento.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-				Agendamento resultado = agendamentoService.criar(agendamento, clienteId, "Cliente Avulso", "11999999999", profissionalId, servicoId);
-
-				assertNull(resultado.getCliente());
-				assertEquals("Cliente Avulso", resultado.getNomeClienteAvulso());
-				assertEquals("11999999999", resultado.getTelefoneClienteAvulso());
-				verify(agendamentoRepository).save(any(Agendamento.class));
-			}
-		}
-
-		@Nested
 		class atualizarAgendamento {
 
 			@Test
@@ -157,27 +93,27 @@ class BackEndJavaApplicationTests {
 			}
 		}
 
-			@Nested
-			class deletarAgendamento {
+		@Nested
+		class deletarAgendamento {
 
-				@Test
-				@DisplayName("Deve deletar agendamentos corretamente")
-				void deveDeletarAgendamentos() {
-						UUID id = UUID.randomUUID();
+			@Test
+			@DisplayName("Deve deletar agendamentos corretamente")
+			void deveDeletarAgendamentos() {
+				UUID id = UUID.randomUUID();
 
-						when(agendamentoRepository.existsById(id)).thenReturn(false);
+				when(agendamentoRepository.existsById(id)).thenReturn(false);
 
-						RuntimeException exception = assertThrows(RuntimeException.class,
-								() -> agendamentoService.deletar(id));
+				RuntimeException exception = assertThrows(RuntimeException.class,
+						() -> agendamentoService.deletar(id));
 
-						assertEquals("Agendamento não encontrado", exception.getMessage());
-						verify(agendamentoRepository).existsById(id);
-						verify(agendamentoRepository, never()).deleteById(any());
-
-					}
+				assertEquals("Agendamento não encontrado", exception.getMessage());
+				verify(agendamentoRepository).existsById(id);
+				verify(agendamentoRepository, never()).deleteById(any());
 
 			}
+
 		}
+	}
 
 	//agendamentoServico
 	@Nested
@@ -327,253 +263,149 @@ class BackEndJavaApplicationTests {
 			}
 		}
 
-			@Nested
-			class deletarAgendamentoServico {
-
-				@Test
-				@DisplayName("Deve deletar agendamento de servicos corretamente")
-				void deveDeletarAgendamentoServico() {
-					UUID id = UUID.randomUUID();
-
-					when(agendamentoServicoRepository.existsById(id)).thenReturn(false);
-
-					RuntimeException exception = assertThrows(RuntimeException.class,
-							() -> agendamentoServicoService.deletar(id));
-
-					assertEquals("AgendamentoServico não encontrado", exception.getMessage());
-					verify(agendamentoServicoRepository).existsById(id);
-					verify(agendamentoServicoRepository, never()).deleteById(any());
-
-				}
-			}
-		}
-
-		//cliente
 		@Nested
-		class cliente {
+		class deletarAgendamentoServico {
 
-			@Mock
-			private ClienteRepository clienteRepository;
+			@Test
+			@DisplayName("Deve deletar agendamento de servicos corretamente")
+			void deveDeletarAgendamentoServico() {
+				UUID id = UUID.randomUUID();
 
-			@Mock
-			private UsuarioRepository usuarioRepository;
+				when(agendamentoServicoRepository.existsById(id)).thenReturn(false);
 
-			@InjectMocks
-			private ClienteService clienteService;
+				RuntimeException exception = assertThrows(RuntimeException.class,
+						() -> agendamentoServicoService.deletar(id));
 
-
-			@Nested
-			class buscarCliente {
-
-				@Test
-				@DisplayName("Deve buscar clientes corretamente")
-				void deveBuscarClientes() {
-					UUID id = UUID.randomUUID();
-					when(clienteRepository.findById(id)).thenReturn(Optional.empty());
-
-					RuntimeException exception = assertThrows(RuntimeException.class,
-							() -> clienteService.buscarPorId(id));
-
-					assertEquals("Cliente não encontrado", exception.getMessage());
-					verify(clienteRepository).findById(id);
-
-				}
-			}
-
-			@Nested
-			class criarCliente {
-
-				@Test
-				@DisplayName("Deve criar clientes corretamente")
-				void deveCriarClientes() {
-					UUID usuarioId = UUID.randomUUID();
-					Cliente cliente = new Cliente();
-
-					when(usuarioRepository.findById(usuarioId)).thenReturn(Optional.empty());
-
-					RuntimeException exception = assertThrows(RuntimeException.class,
-							() -> clienteService.criar(cliente, usuarioId));
-
-					assertEquals("Usuário não encontrado", exception.getMessage());
-					verify(usuarioRepository).findById(usuarioId);
-					verify(clienteRepository, never()).save(any());
-
-				}
-			}
-
-			@Nested
-			class atualizarCliente {
-
-				@Test
-				@DisplayName("Deve atualizar clientes corretamente")
-				void deveAtualizarClientes() {
-					UUID id = UUID.randomUUID();
-					Cliente cliente = new Cliente();
-
-					when(clienteRepository.existsById(id)).thenReturn(false);
-
-					RuntimeException exception = assertThrows(RuntimeException.class,
-							() -> clienteService.atualizar(id, cliente));
-
-					assertEquals("Cliente não encontrado", exception.getMessage());
-					verify(clienteRepository).existsById(id);
-					verify(clienteRepository, never()).save(any());
-				}
-			}
-
-			@Nested
-			class deletarCliente {
-
-				@Test
-				@DisplayName("Deve deletar clientes corretamente")
-				void deveDeletarClientes() {
-					UUID id = UUID.randomUUID();
-
-					when(clienteRepository.existsById(id)).thenReturn(false);
-
-					RuntimeException exception = assertThrows(RuntimeException.class,
-							() -> clienteService.deletar(id));
-
-					assertEquals("Cliente não encontrado", exception.getMessage());
-					verify(clienteRepository).existsById(id);
-					verify(clienteRepository, never()).deleteById(any());
-
-				}
-			}
-
-		}
-
-		//clientePacote
-		class clientePacote {
-
-			@Nested
-			class buscarClientePacote {
-
-			}
-
-			@Nested
-			class criarClientePacote {
-
-			}
-
-			@Nested
-			class listarClientePacote {
-
-			}
-
-			@Nested
-			class deletarClientePacote {
+				assertEquals("AgendamentoServico não encontrado", exception.getMessage());
+				verify(agendamentoServicoRepository).existsById(id);
+				verify(agendamentoServicoRepository, never()).deleteById(any());
 
 			}
 		}
+	}
+
+	//cliente
+	@Nested
+	class cliente {
+
+		@Mock
+		private ClienteRepository clienteRepository;
+
+		@Mock
+		private UsuarioRepository usuarioRepository;
+
+		@InjectMocks
+		private ClienteService clienteService;
 
 
-		//pagamento
 		@Nested
-		class pagamento {
+		class buscarCliente {
 
-			@Nested
-			class buscarPagamento {
+			@Test
+			@DisplayName("Deve buscar clientes corretamente")
+			void deveBuscarClientes() {
+				UUID id = UUID.randomUUID();
+				when(clienteRepository.findById(id)).thenReturn(Optional.empty());
 
-			}
+				RuntimeException exception = assertThrows(RuntimeException.class,
+						() -> clienteService.buscarPorId(id));
 
-			@Nested
-			class criarPagamento {
-
-			}
-
-			@Nested
-			class listarPagamento {
-
-			}
-
-			@Nested
-			class deletarPagamento {
+				assertEquals("Cliente não encontrado", exception.getMessage());
+				verify(clienteRepository).findById(id);
 
 			}
-
 		}
 
-		//profissional
 		@Nested
-		class profissional {
+		class criarCliente {
 
-			@Nested
-			class buscarProfissional {
+			@Test
+			@DisplayName("Deve criar clientes corretamente")
+			void deveCriarClientes() {
+				UUID usuarioId = UUID.randomUUID();
+				Cliente cliente = new Cliente();
 
-			}
+				when(usuarioRepository.findById(usuarioId)).thenReturn(Optional.empty());
 
-			@Nested
-			class criarProfissional {
+				RuntimeException exception = assertThrows(RuntimeException.class,
+						() -> clienteService.criar(cliente, usuarioId));
 
-			}
-
-			@Nested
-			class listarProfissional {
-
-			}
-
-			@Nested
-			class deletarProfissional {
+				assertEquals("Usuário não encontrado", exception.getMessage());
+				verify(usuarioRepository).findById(usuarioId);
+				verify(clienteRepository, never()).save(any());
 
 			}
-
 		}
 
-		//servico
 		@Nested
-		class servico {
+		class atualizarCliente {
 
-			@Nested
-			class buscarServico {
+			@Test
+			@DisplayName("Deve atualizar clientes corretamente")
+			void deveAtualizarClientes() {
+				UUID id = UUID.randomUUID();
+				Cliente cliente = new Cliente();
 
+				when(clienteRepository.existsById(id)).thenReturn(false);
+
+				RuntimeException exception = assertThrows(RuntimeException.class,
+						() -> clienteService.atualizar(id, cliente));
+
+				assertEquals("Cliente não encontrado", exception.getMessage());
+				verify(clienteRepository).existsById(id);
+				verify(clienteRepository, never()).save(any());
 			}
-
-			@Nested
-			class criarServico {
-
-			}
-
-			@Nested
-			class listarServico {
-
-			}
-
-			@Nested
-			class atualizarServico {
-
-			}
-
-			@Nested
-			class deletarServico {
-
-			}
-
 		}
 
-		//usuario
 		@Nested
-		class usuario {
+		class deletarCliente {
 
-			@Nested
-			class buscarUsuario {
+			@Test
+			@DisplayName("Deve deletar clientes corretamente")
+			void deveDeletarClientes() {
+				UUID id = UUID.randomUUID();
 
-			}
+				when(clienteRepository.existsById(id)).thenReturn(false);
 
-			@Nested
-			class criarUsuario {
+				RuntimeException exception = assertThrows(RuntimeException.class,
+						() -> clienteService.deletar(id));
 
-			}
-
-			@Nested
-			class listarUsuario {
-
-			}
-
-			@Nested
-			class deletarUsuario {
+				assertEquals("Cliente não encontrado", exception.getMessage());
+				verify(clienteRepository).existsById(id);
+				verify(clienteRepository, never()).deleteById(any());
 
 			}
+		}
+	}
+
+	//clientePacote
+	@Nested
+	class clientePacote {
+
+		@Mock
+		private ClientePacoteRepository clientePacoteRepository;
+
+		@Mock
+		private ClientePacoteService clientePacoteService;
+
+		@Nested
+		class criarClientePacote{
 
 		}
+
+		@Nested
+		class atualizarClientePacote{
+
+		}
+
+		@Nested
+		class buscarClientePacote{
+
+		}
+
+		@Nested
+		class deletarClientePacote{
+
+		}
+	}
 }

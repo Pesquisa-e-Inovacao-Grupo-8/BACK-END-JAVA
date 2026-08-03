@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 public class ClientePacote {
 
     @Id

@@ -10,6 +10,8 @@ import sptech.school.BACK_END_JAVA.clientePacoteServico.entity.ClientePacoteServ
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 public class AgendamentoServico {
 
     @Id

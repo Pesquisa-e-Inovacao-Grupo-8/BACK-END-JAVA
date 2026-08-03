@@ -12,6 +12,8 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 public class Agendamento {
 
     @Id
@@ -55,9 +57,9 @@ public class Agendamento {
     @JoinColumn(name = "fk_servico")
     private Servico servico;
 
-    @Column
-    private String nomeClienteAvulso;
-
-    @Column
-    private String telefoneClienteAvulso;
+//    @Column
+//    private String nomeClienteAvulso;
+//
+//    @Column
+//    private String telefoneClienteAvulso;
 }

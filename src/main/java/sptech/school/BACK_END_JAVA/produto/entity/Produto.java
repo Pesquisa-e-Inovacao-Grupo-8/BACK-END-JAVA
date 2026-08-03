@@ -1,9 +1,14 @@
 package sptech.school.BACK_END_JAVA.produto.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 public class Produto {
 
     @Id

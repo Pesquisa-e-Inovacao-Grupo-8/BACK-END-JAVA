@@ -8,6 +8,8 @@ import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 public class Cliente {
 
     @Id

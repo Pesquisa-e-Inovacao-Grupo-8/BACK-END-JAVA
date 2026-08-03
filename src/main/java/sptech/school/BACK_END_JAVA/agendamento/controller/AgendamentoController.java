@@ -39,8 +39,9 @@ public class AgendamentoController {
         ag.setHoraInicio(dto.getHoraInicio());
         ag.setHoraFim(dto.getHoraFim());
         ag.setStatus(dto.getStatus());
-        ag.setOrdemPedido(dto.getOrdemPedido());
+//        ag.setOrdemPedido(dto.getOrdemPedido());
 
+        AgendamentoRequestDto agendamentoParaCriar = null;
 
         agendamentoParaCriar.setData(dto.getData());
         agendamentoParaCriar.setHoraInicio(dto.getHoraInicio());
@@ -49,7 +50,7 @@ public class AgendamentoController {
 
         Agendamento agendamentoCriado = service.criar(dto);
 
-        return ResponseEntity.status(201).body(criado);
+        return ResponseEntity.status(201).body(agendamentoCriado);
     }
 
     @PutMapping("/{id}")

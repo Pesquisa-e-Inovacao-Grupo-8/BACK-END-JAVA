@@ -1,11 +1,15 @@
 package sptech.school.BACK_END_JAVA.servicoProduto.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import sptech.school.BACK_END_JAVA.produto.entity.Produto;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "servico_produto")
 public class ServicoProduto {
 

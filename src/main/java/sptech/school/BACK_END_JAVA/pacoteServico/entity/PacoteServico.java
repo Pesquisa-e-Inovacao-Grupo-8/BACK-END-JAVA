@@ -9,6 +9,8 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 public class PacoteServico {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -22,5 +24,4 @@ public class PacoteServico {
     @ManyToOne
     @JoinColumn(name = "fk_servico")
     private Servico servico;
-
 }
