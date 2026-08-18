@@ -33,23 +33,7 @@ public class AgendamentoController {
 
     @PostMapping
     public ResponseEntity<Agendamento> criarAgendamento(@RequestBody AgendamentoRequestDto dto) {
-        System.out.println("DEBUG DTO: " + dto.toString());
-        Agendamento ag = new Agendamento();
-        ag.setData(dto.getData());
-        ag.setHoraInicio(dto.getHoraInicio());
-        ag.setHoraFim(dto.getHoraFim());
-        ag.setStatus(dto.getStatus());
-//        ag.setOrdemPedido(dto.getOrdemPedido());
-
-        AgendamentoRequestDto agendamentoParaCriar = null;
-
-        agendamentoParaCriar.setData(dto.getData());
-        agendamentoParaCriar.setHoraInicio(dto.getHoraInicio());
-        agendamentoParaCriar.setHoraFim(dto.getHoraFim());
-        agendamentoParaCriar.setStatus(dto.getStatus());
-
         Agendamento agendamentoCriado = service.criar(dto);
-
         return ResponseEntity.status(201).body(agendamentoCriado);
     }
 

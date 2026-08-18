@@ -2,6 +2,11 @@ package sptech.school.BACK_END_JAVA.usuario.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
+import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
+import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
+import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
@@ -14,13 +19,19 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ClienteRepository clienteRepository;
+    private final ProfissionalRepository profissionalRepository;
 
     public UsuarioService(
             UsuarioRepository usuarioRepository,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            ClienteRepository clienteRepository,
+            ProfissionalRepository profissionalRepository
     ) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.clienteRepository = clienteRepository;
+        this.profissionalRepository = profissionalRepository;
     }
 
     public List<Usuario> listar() {
@@ -32,6 +43,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
+    @Transactional
     public Usuario criar(Usuario usuario) {
 
         usuario.setSenha(
@@ -40,7 +52,20 @@ public class UsuarioService {
 
         usuario.setCriacao(LocalDateTime.now());
 
-        return usuarioRepository.save(usuario);
+        Usuario usuarioCriado = usuarioRepository.save(usuario);
+
+        if ("PROFISSIONAL".equalsIgnoreCase(usuarioCriado.getTipo())) {
+            Profissional novoProfissional = new Profissional();
+            novoProfissional.setUsuario(usuarioCriado);
+            novoProfissional.setEspecialidade("Pendente");
+            profissionalRepository.save(novoProfissional);
+        } else if ("CLIENTE".equalsIgnoreCase(usuarioCriado.getTipo())) {
+            Cliente novoCliente = new Cliente();
+            novoCliente.setUsuario(usuarioCriado);
+            clienteRepository.save(novoCliente);
+        }
+
+        return usuarioCriado;
     }
 
     public Usuario atualizar(UUID id, Usuario usuario) {
