@@ -7,7 +7,7 @@ jobs:
   build:
     uses: Pesquisa-e-Inovacao-Grupo-8/TEMPLATES-PIPELINES/.github/workflows/build-java.yml@main
     with:
-      sonar_project_key: "Pesquisa-e-Inovacao-Grupo-8_${{github.repository}}"
+      sonar_project_key: "Pesquisa-e-Inovacao-Grupo-8_${{github.repository.name}}"
     secrets: inherit
 
 
