@@ -12,7 +12,6 @@ import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UsuarioService {
@@ -38,9 +37,9 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Usuario buscarPorId(UUID id) {
+    public Usuario buscarPorId(Integer id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new RuntimeException("UsuÃ¡rio nÃ£o encontrado"));
     }
 
     @Transactional
@@ -68,10 +67,10 @@ public class UsuarioService {
         return usuarioCriado;
     }
 
-    public Usuario atualizar(UUID id, Usuario usuario) {
+    public Usuario atualizar(Integer id, Usuario usuario) {
 
         Usuario existente = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new RuntimeException("UsuÃ¡rio nÃ£o encontrado"));
 
         existente.setNome(usuario.getNome());
         existente.setTelefone(usuario.getTelefone());
@@ -89,11 +88,12 @@ public class UsuarioService {
         return usuarioRepository.save(existente);
     }
 
-    public void deletar(UUID id) {
+    public void deletar(Integer id) {
         if (!usuarioRepository.existsById(id)) {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new RuntimeException("UsuÃ¡rio nÃ£o encontrado");
         }
 
         usuarioRepository.deleteById(id);
     }
 }
+

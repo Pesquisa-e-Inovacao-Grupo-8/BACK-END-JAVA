@@ -9,7 +9,6 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -17,9 +16,9 @@ import java.util.UUID;
 public class Agendamento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_agendamento")
-    private UUID id;
+    private Integer id;
 
     @Column(nullable = false)
     private LocalDate data;

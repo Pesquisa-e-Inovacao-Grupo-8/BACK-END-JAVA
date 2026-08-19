@@ -7,7 +7,6 @@ import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ClienteService {
@@ -22,12 +21,12 @@ public class ClienteService {
 
     public List<Cliente> listar() {return clienteRepository.findAll();}
 
-    public Cliente buscarPorId(UUID id) {
+    public Cliente buscarPorId(Integer id) {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
     }
 
-    public Cliente criar(Cliente cliente, UUID usuarioId) {
+    public Cliente criar(Cliente cliente, Integer usuarioId) {
 
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
@@ -37,7 +36,7 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    public Cliente atualizar(UUID id, Cliente cliente) {
+    public Cliente atualizar(Integer id, Cliente cliente) {
 
         if (!clienteRepository.existsById(id)) {
             throw new RuntimeException("Cliente não encontrado");
@@ -47,7 +46,7 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    public void deletar(UUID id) {
+    public void deletar(Integer id) {
         if (!clienteRepository.existsById(id)) {
             throw new RuntimeException("Cliente não encontrado");
         }

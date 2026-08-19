@@ -6,22 +6,14 @@ import lombok.Setter;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 
-import java.util.UUID;
-
 @Entity
 @Getter
 @Setter
 public class ServicoProfissional {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_profissional_servico")
-    private UUID id;
-
-    @PrePersist
-    public void prePersist() {
-        if (id == null) {
-            id = UUID.randomUUID();
-        }
-    }
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "fk_servico")
@@ -31,11 +23,11 @@ public class ServicoProfissional {
     @JoinColumn(name = "fk_profissional")
     private Profissional profissional;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -6,42 +6,41 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class ClientePacoteRequestDto {
     @NotNull
     @Schema(description = "Representa a chave estrangeira do cliente", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
-    private UUID clienteId;
+    private Integer clienteId;
 
     @NotNull
     @Schema(description = "Representa a chave estrangeira do pacote", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
-    private UUID pacoteId;
+    private Integer pacoteId;
 
     @NotNull
     @Schema(description = "Representa o estado do pacote para o cliente", example = "AT")
     private Boolean ativo;
 
     @NotNull
-    @Schema(description = "Representa o momento da expiração do pacote para o cliente", example = "2026-12-31T23:59:59")
+    @Schema(description = "Representa o momento da expiraÃ§Ã£o do pacote para o cliente", example = "2026-12-31T23:59:59")
     private LocalDateTime dtExpiracao;
 
     @NotNull
     @Schema(description = "Representa a quantidade restantes do pacote para o cliente", example = "2")
     private Integer qtdUsos;
 
-    public UUID getClienteId() {
+    public Integer getClienteId() {
         return clienteId;
     }
 
-    public void setClienteId(UUID clienteId) {
+    public void setClienteId(Integer clienteId) {
         this.clienteId = clienteId;
     }
 
-    public UUID getPacoteId() {
+    public Integer getPacoteId() {
         return pacoteId;
     }
 
-    public void setPacoteId(UUID pacoteId) {
+    public void setPacoteId(Integer pacoteId) {
         this.pacoteId = pacoteId;
     }
 
@@ -69,3 +68,5 @@ public class ClientePacoteRequestDto {
         this.qtdUsos = qtdUsos;
     }
 }
+
+

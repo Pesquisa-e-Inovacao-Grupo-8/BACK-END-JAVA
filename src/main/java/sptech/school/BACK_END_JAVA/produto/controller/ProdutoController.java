@@ -6,7 +6,6 @@ import sptech.school.BACK_END_JAVA.produto.entity.Produto;
 import sptech.school.BACK_END_JAVA.produto.service.ProdutoService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/produtos")
@@ -23,7 +22,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Produto> buscarPorId(@PathVariable UUID id) {
+    public ResponseEntity<Produto> buscarPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
@@ -33,13 +32,14 @@ public class ProdutoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizar(@PathVariable UUID id, @RequestBody Produto produto) {
+    public ResponseEntity<Produto> atualizar(@PathVariable Integer id, @RequestBody Produto produto) {
         return ResponseEntity.ok(service.atualizar(id, produto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
 }
+

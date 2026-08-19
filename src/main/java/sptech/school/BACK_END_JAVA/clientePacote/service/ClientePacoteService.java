@@ -13,7 +13,6 @@ import sptech.school.BACK_END_JAVA.pacoteServico.entity.PacoteServico;
 import sptech.school.BACK_END_JAVA.pacoteServico.repository.PacoteServicoRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ClientePacoteService {
@@ -33,15 +32,15 @@ public class ClientePacoteService {
 
     public List<ClientePacote> listar() {return clientePacoteRepository.findAll();}
 
-    public ClientePacote buscarPorId(UUID id) {
+    public ClientePacote buscarPorId(Integer id) {
         return clientePacoteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("ClientePacote não encontrado"));
     }
 
     public ClientePacote criar(
             ClientePacote clientePacote,
-            UUID clienteId,
-            UUID pacoteId) {
+            Integer clienteId,
+            Integer pacoteId) {
 
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
@@ -76,7 +75,7 @@ public class ClientePacoteService {
 
         return clientePacoteSalvo;
     }
-    public ClientePacote atualizar(UUID id, ClientePacote clientePacote) {
+    public ClientePacote atualizar(Integer id, ClientePacote clientePacote) {
 
         if (!clientePacoteRepository.existsById(id)) {
             throw new RuntimeException("ClientePacote não encontrado");
@@ -86,7 +85,7 @@ public class ClientePacoteService {
         return clientePacoteRepository.save(clientePacote);
     }
 
-    public void deletar(UUID id) {
+    public void deletar(Integer id) {
 
         if (!clientePacoteRepository.existsById(id)) {
             throw new RuntimeException("ClientePacote não encontrado");

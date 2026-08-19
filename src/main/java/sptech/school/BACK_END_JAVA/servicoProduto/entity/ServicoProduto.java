@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import sptech.school.BACK_END_JAVA.produto.entity.Produto;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
-import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,8 +13,8 @@ import java.util.UUID;
 public class ServicoProduto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "fk_servico", nullable = false)
@@ -28,8 +27,8 @@ public class ServicoProduto {
     @Column(name = "quantidade_usada", nullable = false)
     private Double quantidadeUsada;
 
-    public UUID getId() { return id; }
-    public void setId(UUID id) { this.id = id; }
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
     public Servico getServico() { return servico; }
     public void setServico(Servico servico) { this.servico = servico; }

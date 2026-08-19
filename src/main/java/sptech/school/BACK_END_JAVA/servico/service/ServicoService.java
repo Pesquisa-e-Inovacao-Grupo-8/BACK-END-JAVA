@@ -5,7 +5,6 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ServicoService {
@@ -17,7 +16,7 @@ public class ServicoService {
 
     public List<Servico> listar() {return servicoRepository.findAll();}
 
-    public Servico buscarPorId(UUID id) {
+    public Servico buscarPorId(Integer id) {
         return servicoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
     }
@@ -26,7 +25,7 @@ public class ServicoService {
         return servicoRepository.save(servico);
     }
 
-    public Servico atualizar(UUID id, Servico servico) {
+    public Servico atualizar(Integer id, Servico servico) {
         if (!servicoRepository.existsById(id)) {
             throw new RuntimeException("Serviço não encontrado");
         }
@@ -34,7 +33,7 @@ public class ServicoService {
         return servicoRepository.save(servico);
     }
 
-    public void deletar(UUID id) {
+    public void deletar(Integer id) {
         if (!servicoRepository.existsById(id)) {
             throw new RuntimeException("Serviço não encontrado");
         }

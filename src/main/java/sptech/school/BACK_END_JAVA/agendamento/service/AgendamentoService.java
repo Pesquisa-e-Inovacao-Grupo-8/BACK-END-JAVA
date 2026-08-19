@@ -18,9 +18,10 @@ import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepositor
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
+import java.util.UUID;
+
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class AgendamentoService {
@@ -44,16 +45,16 @@ public class AgendamentoService {
 
     public List<Agendamento> listar() {return agendamentoRepository.findAll();}
 
-    public Agendamento buscarPorId(UUID id) {
+    public Agendamento buscarPorId(Integer id) {
         return agendamentoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Agendamento nÃ£o encontrado"));
     }
 
     @Transactional
     public Agendamento criar(AgendamentoRequestDto dto) {
 
         Profissional profissional = profissionalRepository.findById(dto.getProfissionalId())
-                .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Profissional nÃ£o encontrado"));
 
         if ((dto.getServicos() == null || dto.getServicos().isEmpty())
                 && dto.getServicoId() != null) {
@@ -61,7 +62,7 @@ public class AgendamentoService {
         }
 
         if (dto.getServicos() == null || dto.getServicos().isEmpty()) {
-            throw new RuntimeException("Informe ao menos um serviço");
+            throw new RuntimeException("Informe ao menos um serviÃ§o");
         }
 
         tentarVincularClienteCadastrado(dto);
@@ -82,10 +83,10 @@ public class AgendamentoService {
         Agendamento agendamentoSalvo = agendamentoRepository.save(agendamento);
 
         Double valorTotal = 0.0;
-        for (UUID servicoId : dto.getServicos()) {
+        for (Integer servicoId : dto.getServicos()) {
 
             Servico servico = servicoRepository.findById(servicoId)
-                    .orElseThrow(() -> new RuntimeException("Serviço não encontrado: " + servicoId));
+                    .orElseThrow(() -> new RuntimeException("ServiÃ§o nÃ£o encontrado: " + servicoId));
 
             valorTotal += servico.getPreco();
 
@@ -102,20 +103,20 @@ public class AgendamentoService {
         return agendamentoSalvo;
     }
 
-    public Agendamento atualizar(UUID id, Agendamento agendamento) {
+    public Agendamento atualizar(Integer id, Agendamento agendamento) {
 
         if (!agendamentoRepository.existsById(id)) {
-            throw new RuntimeException("Agendamento não encontrado");
+            throw new RuntimeException("Agendamento nÃ£o encontrado");
         }
 
         agendamento.setId(id);
         return agendamentoRepository.save(agendamento);
     }
 
-    public void deletar(UUID id) {
+    public void deletar(Integer id) {
 
         if (!agendamentoRepository.existsById(id)) {
-            throw new RuntimeException("Agendamento não encontrado");
+            throw new RuntimeException("Agendamento nÃ£o encontrado");
         }
 
         agendamentoRepository.deleteById(id);
@@ -137,5 +138,7 @@ public class AgendamentoService {
         clienteRepository.findByUsuario_Telefone(telefone)
                 .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
     }
-    //restante das funções
+    //restante das funÃ§Ãµes
 }
+
+

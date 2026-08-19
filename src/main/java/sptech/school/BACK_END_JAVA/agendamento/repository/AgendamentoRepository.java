@@ -5,9 +5,9 @@ import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
-public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> {
+public interface AgendamentoRepository extends JpaRepository<Agendamento, Integer> {
     List<Agendamento> findByData(LocalDate data);
     List<Agendamento> findAll();
 }
+

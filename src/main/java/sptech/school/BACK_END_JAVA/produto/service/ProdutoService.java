@@ -5,7 +5,6 @@ import sptech.school.BACK_END_JAVA.produto.entity.Produto;
 import sptech.school.BACK_END_JAVA.produto.repository.ProdutoRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ProdutoService {
@@ -19,7 +18,7 @@ public class ProdutoService {
         return repository.findAll();
     }
 
-    public Produto buscarPorId(UUID id) {
+    public Produto buscarPorId(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
     }
@@ -28,7 +27,7 @@ public class ProdutoService {
         return repository.save(produto);
     }
 
-    public Produto atualizar(UUID id, Produto produto) {
+    public Produto atualizar(Integer id, Produto produto) {
         if (!repository.existsById(id)) {
             throw new RuntimeException("Produto não encontrado");
         }
@@ -36,7 +35,7 @@ public class ProdutoService {
         return repository.save(produto);
     }
 
-    public void deletar(UUID id) {
+    public void deletar(Integer id) {
         if (!repository.existsById(id)) {
             throw new RuntimeException("Produto não encontrado");
         }

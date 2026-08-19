@@ -11,7 +11,6 @@ import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/profissionais")
@@ -36,14 +35,14 @@ public class ProfissionalController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Profissional> getById(@PathVariable UUID id) {
+    public ResponseEntity<Profissional> getById(@PathVariable Integer id) {
         Profissional prof = service.buscarPorId(id);
         return ResponseEntity.ok(prof);
     }
 
-    // Buscar os serviços marcados pelo profissional
+    // Get services marked by the professional
     @GetMapping("/meus-servicos/{usuarioId}")
-    public ResponseEntity<List<Servico>> getMeusServicos(@PathVariable UUID usuarioId) {
+    public ResponseEntity<List<Servico>> getMeusServicos(@PathVariable Integer usuarioId) {
         Optional<Profissional> profOpt = profissionalRepository.findByUsuarioId(usuarioId);
 
         if (profOpt.isPresent()) {
@@ -53,17 +52,17 @@ public class ProfissionalController {
     }
 
     @PostMapping("/vincular-servicos/{usuarioId}")
-    public ResponseEntity<Void> vincularServicos(@PathVariable UUID usuarioId, @RequestBody List<UUID> servicosIds) {
+    public ResponseEntity<Void> vincularServicos(@PathVariable Integer usuarioId, @RequestBody List<Integer> servicosIds) {
         Optional<Profissional> profOpt = profissionalRepository.findByUsuarioId(usuarioId);
 
         if (profOpt.isPresent()) {
             Profissional profissional = profOpt.get();
 
-            // Busca todos os serviços no banco correspondentes aos IDs recebidos
-            List<Servico> serviçosSelecionados = servicoRepository.findAllById(servicosIds);
+            // Fetch all services from the database corresponding to received IDs
+            List<Servico> servicos = servicoRepository.findAllById(servicosIds);
 
-            // Atualiza a lista do profissional e salva
-            profissional.setServicos(serviçosSelecionados);
+            // Update the professional's service list and save
+            profissional.setServicos(servicos);
             profissionalRepository.save(profissional);
 
             return ResponseEntity.ok().build();
@@ -74,7 +73,7 @@ public class ProfissionalController {
     @PostMapping
     public ResponseEntity<Profissional> criar(
             @RequestBody Profissional profissional,
-            @RequestParam UUID usuarioId) {
+            @RequestParam Integer usuarioId) {
 
         Profissional criado = service.criar(profissional, usuarioId);
         return ResponseEntity.status(201).body(criado);
@@ -82,7 +81,7 @@ public class ProfissionalController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Profissional> atualizar(
-            @PathVariable UUID id,
+            @PathVariable Integer id,
             @RequestBody Profissional profissional) {
 
         Profissional atualizado = service.atualizar(id, profissional);
@@ -90,10 +89,12 @@ public class ProfissionalController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
 
-    //funções
+    //end
 }
+
+

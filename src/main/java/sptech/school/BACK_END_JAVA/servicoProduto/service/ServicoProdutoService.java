@@ -9,7 +9,6 @@ import sptech.school.BACK_END_JAVA.servicoProduto.entity.ServicoProduto;
 import sptech.school.BACK_END_JAVA.servicoProduto.repository.ServicoProdutoRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ServicoProdutoService {
@@ -30,16 +29,16 @@ public class ServicoProdutoService {
         return servicoProdutoRepository.findAll();
     }
 
-    public List<ServicoProduto> listarPorServico(UUID servicoId) {
+    public List<ServicoProduto> listarPorServico(Integer servicoId) {
         return servicoProdutoRepository.findByServicoId(servicoId);
     }
 
-    public ServicoProduto criar(UUID servicoId, UUID produtoId, Double quantidadeUsada) {
+    public ServicoProduto criar(Integer servicoId, Integer produtoId, Double quantidadeUsada) {
         Servico servico = servicoRepository.findById(servicoId)
-                .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
+                .orElseThrow(() -> new RuntimeException("ServiÃ§o nÃ£o encontrado"));
 
         Produto produto = produtoRepository.findById(produtoId)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Produto nÃ£o encontrado"));
 
         ServicoProduto sp = new ServicoProduto();
         sp.setServico(servico);
@@ -49,10 +48,11 @@ public class ServicoProdutoService {
         return servicoProdutoRepository.save(sp);
     }
 
-    public void deletar(UUID id) {
+    public void deletar(Integer id) {
         if (!servicoProdutoRepository.existsById(id)) {
-            throw new RuntimeException("Vínculo não encontrado");
+            throw new RuntimeException("VÃ­nculo nÃ£o encontrado");
         }
         servicoProdutoRepository.deleteById(id);
     }
 }
+

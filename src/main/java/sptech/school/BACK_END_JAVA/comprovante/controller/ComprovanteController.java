@@ -6,7 +6,6 @@ import sptech.school.BACK_END_JAVA.comprovante.entity.Comprovante;
 import sptech.school.BACK_END_JAVA.comprovante.service.ComprovanteService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/comprovantes")
@@ -24,28 +23,30 @@ public class ComprovanteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Comprovante> getById(@PathVariable UUID id) {
+    public ResponseEntity<Comprovante> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
     @PostMapping
-    public ResponseEntity<Comprovante> criar(@RequestBody Comprovante comprovante, @RequestParam UUID pagamentoId) {
+    public ResponseEntity<Comprovante> criar(@RequestBody Comprovante comprovante, @RequestParam Integer pagamentoId) {
 
         Comprovante criado = service.criar(comprovante, pagamentoId);
         return ResponseEntity.status(201).body(criado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Comprovante> atualizar(@PathVariable UUID id, @RequestBody Comprovante comprovante) {
+    public ResponseEntity<Comprovante> atualizar(@PathVariable Integer id, @RequestBody Comprovante comprovante) {
 
         Comprovante atualizado = service.atualizar(id, comprovante);
         return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
-    //funções
+    //funÃ§Ãµes
 }
+
+

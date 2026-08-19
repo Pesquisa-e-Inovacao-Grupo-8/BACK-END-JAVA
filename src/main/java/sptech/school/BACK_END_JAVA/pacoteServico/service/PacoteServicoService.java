@@ -7,7 +7,6 @@ import sptech.school.BACK_END_JAVA.pacoteServico.repository.PacoteServicoReposit
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class PacoteServicoService {
@@ -23,12 +22,12 @@ public class PacoteServicoService {
 
     public List<PacoteServico> listar() {return pacoteServicoRepository.findAll();}
 
-    public PacoteServico buscarPorId(UUID id) {
+    public PacoteServico buscarPorId(Integer id) {
         return pacoteServicoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("PacoteServico não encontrado"));
     }
 
-    public PacoteServico criar(PacoteServico pacoteServico, UUID pacoteId, UUID servicoId) {
+    public PacoteServico criar(PacoteServico pacoteServico, Integer pacoteId, Integer servicoId) {
 
         var pacote = pacoteRepository.findById(pacoteId)
                 .orElseThrow(() -> new RuntimeException("Pacote não encontrado"));
@@ -41,7 +40,7 @@ public class PacoteServicoService {
         return pacoteServicoRepository.save(pacoteServico);
     }
 
-    public PacoteServico atualizar(UUID id, PacoteServico pacoteServico) {
+    public PacoteServico atualizar(Integer id, PacoteServico pacoteServico) {
 
         if (!pacoteServicoRepository.existsById(id)) {
             throw new RuntimeException("PacoteServico não encontrado");
@@ -51,7 +50,7 @@ public class PacoteServicoService {
         return pacoteServicoRepository.save(pacoteServico);
     }
 
-    public void deletar(UUID id) {
+    public void deletar(Integer id) {
 
         if (!pacoteServicoRepository.existsById(id)) {
             throw new RuntimeException("PacoteServico não encontrado");

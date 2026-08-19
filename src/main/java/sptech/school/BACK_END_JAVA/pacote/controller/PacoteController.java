@@ -6,7 +6,6 @@ import sptech.school.BACK_END_JAVA.pacote.entity.Pacote;
 import sptech.school.BACK_END_JAVA.pacote.service.PacoteService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/pacotes")
@@ -24,7 +23,7 @@ public class PacoteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pacote> getById(@PathVariable UUID id) {
+    public ResponseEntity<Pacote> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(service.buscarPorId(id));
     }
 
@@ -35,16 +34,18 @@ public class PacoteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pacote> atualizar(@PathVariable UUID id, @RequestBody Pacote pacote) {
+    public ResponseEntity<Pacote> atualizar(@PathVariable Integer id, @RequestBody Pacote pacote) {
         Pacote atualizado = service.atualizar(id, pacote);
         return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
 
-    //funções
+    //funÃ§Ãµes
 }
+
+

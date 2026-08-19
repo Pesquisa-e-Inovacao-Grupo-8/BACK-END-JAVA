@@ -3,30 +3,28 @@ package sptech.school.BACK_END_JAVA.agendamentoServico.entity.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.UUID;
-
 public class AgendamentoServicoRequestDto {
     @NotNull
-    @Schema(description = "Representa a chave estrangeira do agendamento", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
-    private UUID agendamentoId;
+    @Schema(description = "Representa a chave estrangeira do agendamento", example = "1")
+    private Integer agendamentoId;
 
     @NotNull
-    @Schema(description = "Representa a chave estrangeira do serviço", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
-    private UUID servicoId;
+    @Schema(description = "Representa a chave estrangeira do serviço", example = "1")
+    private Integer servicoId;
 
-    public UUID getAgendamentoId() {
+    public Integer getAgendamentoId() {
         return agendamentoId;
     }
 
-    public void setAgendamentoId(UUID agendamentoId) {
+    public void setAgendamentoId(Integer agendamentoId) {
         this.agendamentoId = agendamentoId;
     }
 
-    public UUID getServicoId() {
+    public Integer getServicoId() {
         return servicoId;
     }
 
-    public void setServicoId(UUID servicoId) {
+    public void setServicoId(Integer servicoId) {
         this.servicoId = servicoId;
     }
 }

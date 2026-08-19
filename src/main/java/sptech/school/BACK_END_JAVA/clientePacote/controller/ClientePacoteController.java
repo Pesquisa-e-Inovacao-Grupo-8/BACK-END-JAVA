@@ -6,7 +6,6 @@ import sptech.school.BACK_END_JAVA.clientePacote.entity.ClientePacote;
 import sptech.school.BACK_END_JAVA.clientePacote.service.ClientePacoteService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/clientePacotes")
@@ -24,29 +23,31 @@ public class ClientePacoteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientePacote> getById(@PathVariable UUID id) {
+    public ResponseEntity<ClientePacote> getById(@PathVariable Integer id) {
         ClientePacote clientePacote = service.buscarPorId(id);
         return ResponseEntity.ok(clientePacote);
     }
 
     @PostMapping
-    public ResponseEntity<ClientePacote> criar(@RequestBody ClientePacote clientePacote, @RequestParam UUID clienteId, @RequestParam UUID pacoteId) {
+    public ResponseEntity<ClientePacote> criar(@RequestBody ClientePacote clientePacote, @RequestParam Integer clienteId, @RequestParam Integer pacoteId) {
 
         ClientePacote criado = service.criar(clientePacote, clienteId, pacoteId);
         return ResponseEntity.status(201).body(criado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientePacote> atualizar(@PathVariable UUID id, @RequestBody ClientePacote clientePacote) {
+    public ResponseEntity<ClientePacote> atualizar(@PathVariable Integer id, @RequestBody ClientePacote clientePacote) {
 
         ClientePacote atualizado = service.atualizar(id, clientePacote);
         return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
+    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
-    //funções
+    //funÃ§Ãµes
 }
+
+

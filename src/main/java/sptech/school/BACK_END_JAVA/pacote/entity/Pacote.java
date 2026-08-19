@@ -4,15 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Entity
 public class Pacote {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pacote")
-    private UUID id;
+    private Integer id;
 
     @Column(nullable = false)
     private String nome;
@@ -23,11 +21,11 @@ public class Pacote {
     @Column(nullable = false)
     private Double precoTotal;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -5,16 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 
-import java.util.UUID;
-
 @Entity
 @Getter
 @Setter
 public class Profissional {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_profissional")
-    private UUID id;
+    private Integer id;
 
     @Column(nullable = false)
     private String especialidade;
@@ -37,11 +35,11 @@ public class Profissional {
     )
     private java.util.List<sptech.school.BACK_END_JAVA.servico.entity.Servico> servicos;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

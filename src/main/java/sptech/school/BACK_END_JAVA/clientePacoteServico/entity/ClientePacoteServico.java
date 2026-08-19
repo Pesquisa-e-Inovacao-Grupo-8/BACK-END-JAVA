@@ -6,17 +6,15 @@ import lombok.Setter;
 import sptech.school.BACK_END_JAVA.clientePacote.entity.ClientePacote;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 
-import java.util.UUID;
-
 @Entity
 @Getter
 @Setter
 public class ClientePacoteServico {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cliente_pacote_servico")
-    private UUID id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "fk_cliente_pacote")

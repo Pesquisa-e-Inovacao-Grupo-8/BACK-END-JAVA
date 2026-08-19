@@ -5,17 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 
-import java.util.UUID;
-
 @Entity
 @Getter
 @Setter
 public class Cliente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cliente")
-    private UUID id;
+    private Integer id;
 
     @Column(nullable = true)
     private String observacoes;
@@ -24,11 +22,11 @@ public class Cliente {
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

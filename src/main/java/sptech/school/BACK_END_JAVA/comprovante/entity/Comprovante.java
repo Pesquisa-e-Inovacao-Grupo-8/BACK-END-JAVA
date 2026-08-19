@@ -5,15 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import sptech.school.BACK_END_JAVA.pagamento.entity.Pagamento;
 
-import java.util.UUID;
-
 @Entity
 public class Comprovante {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_comprovante")
-    private UUID id;
+    private Integer id;
 
     @Column(nullable = false)
     private String url;
@@ -22,11 +20,11 @@ public class Comprovante {
     @JoinColumn(name = "fk_pagamento")
     private Pagamento pagamento;
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -12,7 +12,6 @@ import sptech.school.BACK_END_JAVA.servicoProfissional.repository.ServicoProfiss
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ServicoProfissionalService {
@@ -35,15 +34,15 @@ public class ServicoProfissionalService {
         return repository.findAll();
     }
 
-    public List<ServicoProfissional> listarPorProfissional(UUID profissionalId) {
+    public List<ServicoProfissional> listarPorProfissional(Integer profissionalId) {
         return repository.findByProfissional_Id(profissionalId);
     }
 
     @Transactional
-    public void vincularServicos(UUID profissionalId, List<UUID> servicosIds) {
+    public void vincularServicos(Integer profissionalId, List<Integer> servicosIds) {
 
         Profissional profissional = profissionalRepository.findById(profissionalId)
-                .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+                .orElseThrow(() -> new RuntimeException("Profissional nÃ£o encontrado"));
 
         repository.deleteByProfissional(profissional);
 
@@ -51,14 +50,14 @@ public class ServicoProfissionalService {
             return;
         }
 
-        List<UUID> idsSemDuplicidade =
+        List<Integer> idsSemDuplicidade =
                 new ArrayList<>(new LinkedHashSet<>(servicosIds));
 
-        for (UUID servicoId : idsSemDuplicidade) {
+        for (Integer servicoId : idsSemDuplicidade) {
 
             Servico servico = servicoRepository.findById(servicoId)
                     .orElseThrow(() -> new RuntimeException(
-                            "Serviço não encontrado: " + servicoId
+                            "ServiÃ§o nÃ£o encontrado: " + servicoId
                     ));
 
             ServicoProfissional sp = new ServicoProfissional();
@@ -70,10 +69,11 @@ public class ServicoProfissionalService {
     }
 
     @Transactional
-    public void remover(UUID profissionalId, UUID servicoId) {
+    public void remover(Integer profissionalId, Integer servicoId) {
         repository.deleteByProfissional_IdAndServico_Id(
                 profissionalId,
                 servicoId
         );
     }
 }
+

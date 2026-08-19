@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
 
 public class ComprovanteRequestDto {
     @NotBlank
@@ -15,7 +14,7 @@ public class ComprovanteRequestDto {
 
     @NotNull
     @Schema(description = "Representa a chave estrangeira do pagamento", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
-    private UUID pagamentoId;
+    private Integer pagamentoId;
 
     public String getUrl() {
         return url;
@@ -25,11 +24,13 @@ public class ComprovanteRequestDto {
         this.url = url;
     }
 
-    public UUID getPagamentoId() {
+    public Integer getPagamentoId() {
         return pagamentoId;
     }
 
-    public void setPagamentoId(UUID pagamentoId) {
+    public void setPagamentoId(Integer pagamentoId) {
         this.pagamentoId = pagamentoId;
     }
 }
+
+
