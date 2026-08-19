@@ -5,8 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./Pesquisa-e-Inovacao-Grupo-8/TEMPLATES-PIPELINES/tree/main/.github/workflows/build-java.yml
-      - name: BUILD JAVA
+    uses: Pesquisa-e-Inovacao-Grupo-8/TEMPLATES-PIPELINES/.github/workflows/build-java.yml@main
+    secrets: inherit
+
 
