@@ -6,6 +6,9 @@ on:
 jobs:
   build:
     uses: Pesquisa-e-Inovacao-Grupo-8/TEMPLATES-PIPELINES/.github/workflows/build-java.yml@main
+    with:
+      sonar_project_key: ${{ github.repository }}
+      sonar_organization: ${{ github.organization }}
     secrets: inherit
 
 
