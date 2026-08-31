@@ -73,18 +73,21 @@ public class AgendamentoService {
         agendamento.setHoraFim(dto.getHoraFim());
         agendamento.setStatus(dto.getStatus());
         agendamento.setProfissional(profissional);
-        Servico servico = null;
-        agendamento.setValorTotal(servico.getPreco());
+        agendamento.setOrdemPedido(UUID.randomUUID().toString());
+        agendamento.setValorTotal(0.0);
 
         AgendamentoStrategy strategy = factory.escolher(dto);
         strategy.aplicar(agendamento, dto);
 
         Agendamento agendamentoSalvo = agendamentoRepository.save(agendamento);
 
+        Double valorTotal = 0.0;
         for (UUID servicoId : dto.getServicos()) {
 
-            servico = servicoRepository.findById(servicoId)
+            Servico servico = servicoRepository.findById(servicoId)
                     .orElseThrow(() -> new RuntimeException("Serviço não encontrado: " + servicoId));
+
+            valorTotal += servico.getPreco();
 
             AgendamentoServico agendamentoServico = new AgendamentoServico();
             agendamentoServico.setAgendamento(agendamentoSalvo);
@@ -92,6 +95,9 @@ public class AgendamentoService {
 
             agendamentoServicoRepository.save(agendamentoServico);
         }
+
+        agendamentoSalvo.setValorTotal(valorTotal);
+        agendamentoRepository.save(agendamentoSalvo);
 
         return agendamentoSalvo;
     }
