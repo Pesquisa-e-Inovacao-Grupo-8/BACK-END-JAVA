@@ -78,7 +78,13 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
                 "http://localhost:5173",
-                "http://localhost:8000"
+                "http://localhost:8000",
+                "http://renatatukotomi.duckdns.org",
+                "http://renatatukotomi.duckdns.org:8000",
+                "http://renatatukotomi.duckdns.org:8080",
+                "https://renatatukotomi.duckdns.org",
+                "https://renatatukotomi.duckdns.org:8000",
+                "https://renatatukotomi.duckdns.org:8080"
         ));
 
         config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
