@@ -13,6 +13,7 @@ public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id_produto")
     private UUID id;
 
     @Column(nullable = false, length = 100)
