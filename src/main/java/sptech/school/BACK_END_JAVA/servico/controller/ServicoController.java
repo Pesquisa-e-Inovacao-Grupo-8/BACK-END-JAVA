@@ -6,6 +6,7 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.service.ServicoService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/servicos")
@@ -24,7 +25,7 @@ public class ServicoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Servico> getById(@PathVariable Integer id) {
+    public ResponseEntity<Servico> getById(@PathVariable UUID id) {
         Servico servico = service.buscarPorId(id);
         return ResponseEntity.ok(servico);
     }
@@ -36,13 +37,13 @@ public class ServicoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Servico> atualizar(@PathVariable Integer id, @RequestBody Servico servico) {
+    public ResponseEntity<Servico> atualizar(@PathVariable UUID id, @RequestBody Servico servico) {
         Servico atualizado = service.atualizar(id, servico);
         return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }

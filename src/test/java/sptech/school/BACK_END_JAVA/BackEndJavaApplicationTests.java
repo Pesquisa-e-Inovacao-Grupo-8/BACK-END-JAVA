@@ -26,6 +26,7 @@ import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -58,7 +59,7 @@ class BackEndJavaApplicationTests {
 			@Test
 			@DisplayName("Deve buscar agendamentos corretamente")
 			void deveBuscarAgendamentos() {
-				Integer id = 1;
+				UUID id = UUID.randomUUID();
 				when(agendamentoRepository.findById(id)).thenReturn(Optional.empty());
 
 				RuntimeException exception = assertThrows(RuntimeException.class,
@@ -90,7 +91,7 @@ class BackEndJavaApplicationTests {
 			@Test
 			@DisplayName("Deve buscar clientes corretamente")
 			void deveBuscarClientes() {
-				Integer id = 1;
+				UUID id = UUID.randomUUID();
 				when(clienteRepository.findById(id)).thenReturn(Optional.empty());
 
 				RuntimeException exception = assertThrows(RuntimeException.class,

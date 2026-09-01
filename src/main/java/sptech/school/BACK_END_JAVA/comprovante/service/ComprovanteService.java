@@ -7,6 +7,7 @@ import sptech.school.BACK_END_JAVA.pagamento.entity.Pagamento;
 import sptech.school.BACK_END_JAVA.pagamento.repository.PagamentoRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ComprovanteService {
@@ -20,12 +21,12 @@ public class ComprovanteService {
 
     public List<Comprovante> listar() {return comprovanteRepository.findAll();}
 
-    public Comprovante buscarPorId(Integer id) {
+    public Comprovante buscarPorId(UUID id) {
         return comprovanteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Comprovante não encontrado"));
     }
 
-    public Comprovante criar(Comprovante comprovante, Integer pagamentoId) {
+    public Comprovante criar(Comprovante comprovante, UUID pagamentoId) {
 
         Pagamento pagamento = pagamentoRepository.findById(pagamentoId)
                 .orElseThrow(() -> new RuntimeException("Pagamento não encontrado"));
@@ -35,7 +36,7 @@ public class ComprovanteService {
         return comprovanteRepository.save(comprovante);
     }
 
-    public Comprovante atualizar(Integer id, Comprovante comprovante) {
+    public Comprovante atualizar(UUID id, Comprovante comprovante) {
 
         if (!comprovanteRepository.existsById(id)) {
             throw new RuntimeException("Comprovante não encontrado");
@@ -45,7 +46,7 @@ public class ComprovanteService {
         return comprovanteRepository.save(comprovante);
     }
 
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
 
         if (!comprovanteRepository.existsById(id)) {
             throw new RuntimeException("Comprovante não encontrado");

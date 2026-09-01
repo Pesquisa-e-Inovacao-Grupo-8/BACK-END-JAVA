@@ -9,6 +9,7 @@ import sptech.school.BACK_END_JAVA.servicoProduto.entity.ServicoProduto;
 import sptech.school.BACK_END_JAVA.servicoProduto.repository.ServicoProdutoRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ServicoProdutoService {
@@ -29,11 +30,11 @@ public class ServicoProdutoService {
         return servicoProdutoRepository.findAll();
     }
 
-    public List<ServicoProduto> listarPorServico(Integer servicoId) {
+    public List<ServicoProduto> listarPorServico(UUID servicoId) {
         return servicoProdutoRepository.findByServicoId(servicoId);
     }
 
-    public ServicoProduto criar(Integer servicoId, Integer produtoId, Double quantidadeUsada) {
+    public ServicoProduto criar(UUID servicoId, UUID produtoId, Double quantidadeUsada) {
         Servico servico = servicoRepository.findById(servicoId)
                 .orElseThrow(() -> new RuntimeException("ServiÃ§o nÃ£o encontrado"));
 
@@ -48,7 +49,7 @@ public class ServicoProdutoService {
         return servicoProdutoRepository.save(sp);
     }
 
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
         if (!servicoProdutoRepository.existsById(id)) {
             throw new RuntimeException("VÃ­nculo nÃ£o encontrado");
         }

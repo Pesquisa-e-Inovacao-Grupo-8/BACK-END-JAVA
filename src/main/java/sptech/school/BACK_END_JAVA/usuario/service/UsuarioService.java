@@ -12,6 +12,7 @@ import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UsuarioService {
@@ -37,7 +38,7 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Usuario buscarPorId(Integer id) {
+    public Usuario buscarPorId(UUID id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("UsuÃ¡rio nÃ£o encontrado"));
     }
@@ -67,7 +68,7 @@ public class UsuarioService {
         return usuarioCriado;
     }
 
-    public Usuario atualizar(Integer id, Usuario usuario) {
+    public Usuario atualizar(UUID id, Usuario usuario) {
 
         Usuario existente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("UsuÃ¡rio nÃ£o encontrado"));
@@ -88,7 +89,7 @@ public class UsuarioService {
         return usuarioRepository.save(existente);
     }
 
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
         if (!usuarioRepository.existsById(id)) {
             throw new RuntimeException("UsuÃ¡rio nÃ£o encontrado");
         }

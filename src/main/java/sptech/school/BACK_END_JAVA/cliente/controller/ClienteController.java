@@ -7,6 +7,7 @@ import sptech.school.BACK_END_JAVA.cliente.entity.dto.request.ClienteRequestDto;
 import sptech.school.BACK_END_JAVA.cliente.service.ClienteService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/clientes")
@@ -24,7 +25,7 @@ public class ClienteController {
         return ResponseEntity.ok(clientes);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> getById(@PathVariable Integer id) {
+    public ResponseEntity<Cliente> getById(@PathVariable UUID id) {
         Cliente cliente = service.buscarPorId(id);
         return ResponseEntity.ok(cliente);
     }
@@ -41,14 +42,14 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizar(@PathVariable Integer id, @RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> atualizar(@PathVariable UUID id, @RequestBody Cliente cliente) {
 
         Cliente atualizado = service.atualizar(id, cliente);
         return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }

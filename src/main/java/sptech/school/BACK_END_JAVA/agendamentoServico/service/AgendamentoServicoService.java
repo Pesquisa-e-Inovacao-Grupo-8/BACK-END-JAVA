@@ -14,6 +14,7 @@ import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class AgendamentoServicoService {
@@ -32,12 +33,12 @@ public class AgendamentoServicoService {
 
     public List<AgendamentoServico> listar() {return agendamentoServicoRepository.findAll();}
 
-    public AgendamentoServico buscarPorId(Integer id) {
+    public AgendamentoServico buscarPorId(UUID id) {
         return agendamentoServicoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("AgendamentoServico não encontrado"));
     }
 
-    public AgendamentoServico criar(Integer agendamentoId, Integer servicoId) {
+    public AgendamentoServico criar(UUID agendamentoId, UUID servicoId) {
 
         Agendamento agendamento = agendamentoRepository.findById(agendamentoId)
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
@@ -78,7 +79,7 @@ public class AgendamentoServicoService {
 
 
 
-    public AgendamentoServico atualizar(Integer id, Integer agendamentoId, Integer servicoId) {
+    public AgendamentoServico atualizar(UUID id, UUID agendamentoId, UUID servicoId) {
 
         if (!agendamentoServicoRepository.existsById(id)) {
             throw new RuntimeException("AgendamentoServico não encontrado");
@@ -98,7 +99,7 @@ public class AgendamentoServicoService {
         return agendamentoServicoRepository.save(atualizado);
     }
 
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
         if (!agendamentoServicoRepository.existsById(id)) {
             throw new RuntimeException("AgendamentoServico não encontrado");
         }

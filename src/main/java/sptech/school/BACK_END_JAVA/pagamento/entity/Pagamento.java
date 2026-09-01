@@ -6,15 +6,16 @@ import lombok.Setter;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 public class Pagamento {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_pagamento")
-    private Integer id;
+    private UUID id;
 
     @Column(nullable = false)
     private Double valor;
@@ -33,11 +34,11 @@ public class Pagamento {
     @JoinColumn(name = "fk_agendamento")
     private Agendamento agendamento;
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

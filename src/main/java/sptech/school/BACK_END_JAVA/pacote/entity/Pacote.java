@@ -3,14 +3,15 @@ package sptech.school.BACK_END_JAVA.pacote.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import java.util.UUID;
 
 @Entity
 public class Pacote {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_pacote")
-    private Integer id;
+    private UUID id;
 
     @Column(nullable = false)
     private String nome;
@@ -21,11 +22,11 @@ public class Pacote {
     @Column(nullable = false)
     private Double precoTotal;
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

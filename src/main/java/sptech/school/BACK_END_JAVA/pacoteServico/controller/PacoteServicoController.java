@@ -6,6 +6,7 @@ import sptech.school.BACK_END_JAVA.pacoteServico.entity.PacoteServico;
 import sptech.school.BACK_END_JAVA.pacoteServico.service.PacoteServicoService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/pacoteServicos")
@@ -23,7 +24,7 @@ public class PacoteServicoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PacoteServico> getById(@PathVariable Integer id) {
+    public ResponseEntity<PacoteServico> getById(@PathVariable UUID id) {
         PacoteServico ps = service.buscarPorId(id);
         return ResponseEntity.ok(ps);
     }
@@ -31,8 +32,8 @@ public class PacoteServicoController {
     @PostMapping
     public ResponseEntity<PacoteServico> criar(
             @RequestBody PacoteServico pacoteServico,
-            @RequestParam Integer pacoteId,
-            @RequestParam Integer servicoId) {
+           @RequestParam UUID pacoteId,
+           @RequestParam UUID servicoId) {
 
         PacoteServico criado = service.criar(pacoteServico, pacoteId, servicoId);
         return ResponseEntity.status(201).body(criado);
@@ -40,7 +41,7 @@ public class PacoteServicoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PacoteServico> atualizar(
-            @PathVariable Integer id,
+           @PathVariable UUID id,
             @RequestBody PacoteServico pacoteServico) {
 
         PacoteServico atualizado = service.atualizar(id, pacoteServico);
@@ -48,7 +49,7 @@ public class PacoteServicoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }

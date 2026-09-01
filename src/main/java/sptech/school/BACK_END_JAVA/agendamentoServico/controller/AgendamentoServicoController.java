@@ -7,6 +7,7 @@ import sptech.school.BACK_END_JAVA.agendamentoServico.entity.dto.request.Agendam
 import sptech.school.BACK_END_JAVA.agendamentoServico.service.AgendamentoServicoService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/agendamentoServicos")
@@ -26,7 +27,7 @@ public class AgendamentoServicoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AgendamentoServico> getById(@PathVariable Integer id) {
+    public ResponseEntity<AgendamentoServico> getById(@PathVariable UUID id) {
         AgendamentoServico agendamentoServico = service.buscarPorId(id);
         return ResponseEntity.ok(agendamentoServico);
     }
@@ -44,7 +45,7 @@ public class AgendamentoServicoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AgendamentoServico> atualizar(@PathVariable Integer id, @RequestBody AgendamentoServicoRequestDto dto) {
+    public ResponseEntity<AgendamentoServico> atualizar(@PathVariable UUID id, @RequestBody AgendamentoServicoRequestDto dto) {
 
         AgendamentoServico atualizado = service.atualizar(
                 id,
@@ -56,7 +57,7 @@ public class AgendamentoServicoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }

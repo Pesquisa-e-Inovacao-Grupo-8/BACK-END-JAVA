@@ -6,22 +6,23 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servicoProfissional.entity.ServicoProfissional;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ServicoProfissionalRepository
-        extends JpaRepository<ServicoProfissional, Integer> {
+        extends JpaRepository<ServicoProfissional, UUID> {
 
     boolean existsByProfissionalAndServico(
             Profissional profissional,
             Servico servico
     );
 
-    List<ServicoProfissional> findByProfissional_Id(Integer profissionalId);
+    List<ServicoProfissional> findByProfissional_Id(UUID profissionalId);
 
     void deleteByProfissional(Profissional profissional);
 
     void deleteByProfissional_IdAndServico_Id(
-            Integer profissionalId,
-            Integer servicoId
+            UUID profissionalId,
+            UUID servicoId
     );
 }
 

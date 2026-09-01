@@ -7,6 +7,8 @@ import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.pacote.entity.Pacote;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,9 +16,9 @@ import java.time.LocalDateTime;
 public class ClientePacote {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_cliente_pacote")
-    private Integer id;
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "fk_cliente")

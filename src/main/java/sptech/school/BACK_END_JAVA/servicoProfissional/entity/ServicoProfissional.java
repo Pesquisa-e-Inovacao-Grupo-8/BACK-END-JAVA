@@ -5,15 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 public class ServicoProfissional {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_profissional_servico")
-    private Integer id;
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "fk_servico")
@@ -23,11 +24,11 @@ public class ServicoProfissional {
     @JoinColumn(name = "fk_profissional")
     private Profissional profissional;
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

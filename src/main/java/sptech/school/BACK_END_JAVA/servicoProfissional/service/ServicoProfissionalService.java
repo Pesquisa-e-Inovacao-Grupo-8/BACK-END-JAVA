@@ -12,6 +12,7 @@ import sptech.school.BACK_END_JAVA.servicoProfissional.repository.ServicoProfiss
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ServicoProfissionalService {
@@ -34,12 +35,12 @@ public class ServicoProfissionalService {
         return repository.findAll();
     }
 
-    public List<ServicoProfissional> listarPorProfissional(Integer profissionalId) {
+    public List<ServicoProfissional> listarPorProfissional(UUID profissionalId) {
         return repository.findByProfissional_Id(profissionalId);
     }
 
     @Transactional
-    public void vincularServicos(Integer profissionalId, List<Integer> servicosIds) {
+    public void vincularServicos(UUID profissionalId, List<UUID> servicosIds) {
 
         Profissional profissional = profissionalRepository.findById(profissionalId)
                 .orElseThrow(() -> new RuntimeException("Profissional nÃ£o encontrado"));
@@ -50,10 +51,10 @@ public class ServicoProfissionalService {
             return;
         }
 
-        List<Integer> idsSemDuplicidade =
+        List<UUID> idsSemDuplicidade =
                 new ArrayList<>(new LinkedHashSet<>(servicosIds));
 
-        for (Integer servicoId : idsSemDuplicidade) {
+        for (UUID servicoId : idsSemDuplicidade) {
 
             Servico servico = servicoRepository.findById(servicoId)
                     .orElseThrow(() -> new RuntimeException(
@@ -69,7 +70,7 @@ public class ServicoProfissionalService {
     }
 
     @Transactional
-    public void remover(Integer profissionalId, Integer servicoId) {
+    public void remover(UUID profissionalId, UUID servicoId) {
         repository.deleteByProfissional_IdAndServico_Id(
                 profissionalId,
                 servicoId

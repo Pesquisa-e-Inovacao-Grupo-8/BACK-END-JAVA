@@ -4,26 +4,28 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import java.util.UUID;
+
 public class ServicoProdutoRequestDto {
 
     @NotNull
-    @Schema(description = "ID do ServiÃ§o")
-    private Integer servicoId;
+    @Schema(description = "ID do Serviço")
+    private UUID servicoId;
 
     @NotNull
     @Schema(description = "ID do Produto")
-    private Integer produtoId;
+    private UUID produtoId;
 
     @NotNull
     @Positive
-    @Schema(description = "Quantidade usada do produto neste serviÃ§o", example = "50.0")
+    @Schema(description = "Quantidade usada do produto neste serviço", example = "50.0")
     private Double quantidadeUsada;
 
-    public Integer getServicoId() { return servicoId; }
-    public void setServicoId(Integer servicoId) { this.servicoId = servicoId; }
+    public UUID getServicoId() { return servicoId; }
+    public void setServicoId(UUID servicoId) { this.servicoId = servicoId; }
 
-    public Integer getProdutoId() { return produtoId; }
-    public void setProdutoId(Integer produtoId) { this.produtoId = produtoId; }
+    public UUID getProdutoId() { return produtoId; }
+    public void setProdutoId(UUID produtoId) { this.produtoId = produtoId; }
 
     public Double getQuantidadeUsada() { return quantidadeUsada; }
     public void setQuantidadeUsada(Double quantidadeUsada) { this.quantidadeUsada = quantidadeUsada; }

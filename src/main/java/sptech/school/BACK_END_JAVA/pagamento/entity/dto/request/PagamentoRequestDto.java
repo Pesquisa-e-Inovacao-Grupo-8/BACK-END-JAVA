@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class PagamentoRequestDto {
 
@@ -28,7 +29,7 @@ public class PagamentoRequestDto {
 
     @NotNull
     @Schema(description = "Representa a chave estrangeira do agendamento", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
-    private Integer agendamentoId;
+    private UUID agendamentoId;
 
     public Double getValor() {
         return valor;
@@ -62,11 +63,11 @@ public class PagamentoRequestDto {
         this.data = data;
     }
 
-    public Integer getAgendamentoId() {
+    public UUID getAgendamentoId() {
         return agendamentoId;
     }
 
-    public void setAgendamentoId(Integer agendamentoId) {
+    public void setAgendamentoId(UUID agendamentoId) {
         this.agendamentoId = agendamentoId;
     }
 }

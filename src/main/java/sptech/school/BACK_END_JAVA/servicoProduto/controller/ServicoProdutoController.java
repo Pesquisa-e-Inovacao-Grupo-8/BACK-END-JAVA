@@ -7,6 +7,7 @@ import sptech.school.BACK_END_JAVA.servicoProduto.entity.dto.request.ServicoProd
 import sptech.school.BACK_END_JAVA.servicoProduto.service.ServicoProdutoService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/servico-produtos")
@@ -24,7 +25,7 @@ public class ServicoProdutoController {
     }
 
     @GetMapping("/servico/{servicoId}")
-    public ResponseEntity<List<ServicoProduto>> listarPorServico(@PathVariable Integer servicoId) {
+    public ResponseEntity<List<ServicoProduto>> listarPorServico(@PathVariable UUID servicoId) {
         return ResponseEntity.ok(service.listarPorServico(servicoId));
     }
 
@@ -35,7 +36,7 @@ public class ServicoProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }

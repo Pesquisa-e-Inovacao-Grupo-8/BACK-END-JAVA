@@ -5,31 +5,32 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
 
 public class PacoteServicoRequestDto {
     @NotNull
     @Schema(description = "Representa a chave estrangeira do pacote", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
-    private Integer pacoteId;
+    private UUID pacoteId;
     @NotNull
-    @Schema(description = "Representa a chave estrangeira do serviÃ§o", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
-    private Integer servicoId;
+    @Schema(description = "Representa a chave estrangeira do serviço", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
+    private UUID servicoId;
     @NotNull
-    @Schema(description = "Representa o valor do preÃ§o do serviÃ§o ao ser inserido no pacote", example = "15.99")
+    @Schema(description = "Representa o valor do preço do serviço ao ser inserido no pacote", example = "15.99")
     private Double preco;
 
-    public Integer getPacoteId() {
+    public UUID getPacoteId() {
         return pacoteId;
     }
 
-    public void setPacoteId(Integer pacoteId) {
+    public void setPacoteId(UUID pacoteId) {
         this.pacoteId = pacoteId;
     }
 
-    public Integer getServicoId() {
+    public UUID getServicoId() {
         return servicoId;
     }
 
-    public void setServicoId(Integer servicoId) {
+    public void setServicoId(UUID servicoId) {
         this.servicoId = servicoId;
     }
 

@@ -6,6 +6,7 @@ import sptech.school.BACK_END_JAVA.pagamento.entity.Pagamento;
 import sptech.school.BACK_END_JAVA.pagamento.repository.PagamentoRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PagamentoService {
@@ -19,18 +20,18 @@ public class PagamentoService {
 
     public List<Pagamento> listar() {return pagamentoRepository.findAll();}
 
-    public Pagamento buscarPorId(Integer id) {
+    public Pagamento buscarPorId(UUID id) {
         return pagamentoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pagamento não encontrado"));
     }
 
-    public Pagamento criar(Pagamento pagamento, Integer agendamentoId) {
+    public Pagamento criar(Pagamento pagamento, UUID agendamentoId) {
         var agendamento = agendamentoService.buscarPorId(agendamentoId);
         pagamento.setAgendamento(agendamento);
         return pagamentoRepository.save(pagamento);
     }
 
-    public Pagamento atualizar(Integer id, Pagamento pagamento) {
+    public Pagamento atualizar(UUID id, Pagamento pagamento) {
         if (!pagamentoRepository.existsById(id)) {
             throw new RuntimeException("Pagamento não encontrado");
         }
@@ -38,7 +39,7 @@ public class PagamentoService {
         return pagamentoRepository.save(pagamento);
     }
 
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
         if (!pagamentoRepository.existsById(id)) {
             throw new RuntimeException("Pagamento não encontrado");
         }

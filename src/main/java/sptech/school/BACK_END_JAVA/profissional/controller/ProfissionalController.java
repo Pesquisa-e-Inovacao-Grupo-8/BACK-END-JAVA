@@ -11,6 +11,7 @@ import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/profissionais")
@@ -35,14 +36,14 @@ public class ProfissionalController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Profissional> getById(@PathVariable Integer id) {
+    public ResponseEntity<Profissional> getById(@PathVariable UUID id) {
         Profissional prof = service.buscarPorId(id);
         return ResponseEntity.ok(prof);
     }
 
     // Get services marked by the professional
     @GetMapping("/meus-servicos/{usuarioId}")
-    public ResponseEntity<List<Servico>> getMeusServicos(@PathVariable Integer usuarioId) {
+    public ResponseEntity<List<Servico>> getMeusServicos(@PathVariable UUID usuarioId) {
         Optional<Profissional> profOpt = profissionalRepository.findByUsuarioId(usuarioId);
 
         if (profOpt.isPresent()) {
@@ -52,7 +53,7 @@ public class ProfissionalController {
     }
 
     @PostMapping("/vincular-servicos/{usuarioId}")
-    public ResponseEntity<Void> vincularServicos(@PathVariable Integer usuarioId, @RequestBody List<Integer> servicosIds) {
+    public ResponseEntity<Void> vincularServicos(@PathVariable UUID usuarioId, @RequestBody List<UUID> servicosIds) {
         Optional<Profissional> profOpt = profissionalRepository.findByUsuarioId(usuarioId);
 
         if (profOpt.isPresent()) {
@@ -73,7 +74,7 @@ public class ProfissionalController {
     @PostMapping
     public ResponseEntity<Profissional> criar(
             @RequestBody Profissional profissional,
-            @RequestParam Integer usuarioId) {
+           @RequestParam UUID usuarioId) {
 
         Profissional criado = service.criar(profissional, usuarioId);
         return ResponseEntity.status(201).body(criado);
@@ -81,7 +82,7 @@ public class ProfissionalController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Profissional> atualizar(
-            @PathVariable Integer id,
+           @PathVariable UUID id,
             @RequestBody Profissional profissional) {
 
         Profissional atualizado = service.atualizar(id, profissional);
@@ -89,7 +90,7 @@ public class ProfissionalController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }

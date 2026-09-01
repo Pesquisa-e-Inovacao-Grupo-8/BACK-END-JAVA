@@ -6,6 +6,7 @@ import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepositor
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProfissionalService {
@@ -18,19 +19,19 @@ public class ProfissionalService {
     }
 
     public List<Profissional> listar() {return profissionalRepository.findAll();}
-    public Profissional buscarPorId(Integer id) {
+    public Profissional buscarPorId(UUID id) {
         return profissionalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
     }
 
-    public Profissional criar(Profissional profissional, Integer usuarioId) {
+    public Profissional criar(Profissional profissional, UUID usuarioId) {
         var usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         profissional.setUsuario(usuario);
         return profissionalRepository.save(profissional);
     }
 
-    public Profissional atualizar(Integer id, Profissional profissional) {
+    public Profissional atualizar(UUID id, Profissional profissional) {
         if (!profissionalRepository.existsById(id)) {
             throw new RuntimeException("Profissional não encontrado");
         }
@@ -38,7 +39,7 @@ public class ProfissionalService {
         return profissionalRepository.save(profissional);
     }
 
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
         if (!profissionalRepository.existsById(id)) {
             throw new RuntimeException("Profissional não encontrado");
         }

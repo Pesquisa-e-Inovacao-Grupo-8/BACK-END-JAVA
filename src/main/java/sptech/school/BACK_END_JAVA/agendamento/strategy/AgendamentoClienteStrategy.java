@@ -7,6 +7,8 @@ import sptech.school.BACK_END_JAVA.agendamento.entity.dto.request.AgendamentoReq
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class AgendamentoClienteStrategy implements AgendamentoStrategy {

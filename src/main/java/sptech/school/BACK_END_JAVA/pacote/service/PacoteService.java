@@ -5,6 +5,7 @@ import sptech.school.BACK_END_JAVA.pacote.entity.Pacote;
 import sptech.school.BACK_END_JAVA.pacote.repository.PacoteRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PacoteService {
@@ -15,7 +16,7 @@ public class PacoteService {
     }
 
     public List<Pacote> listar() {return pacoteRepository.findAll();}
-    public Pacote buscarPorId(Integer id) {
+    public Pacote buscarPorId(UUID id) {
         return pacoteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pacote não encontrado"));
     }
@@ -24,7 +25,7 @@ public class PacoteService {
         return pacoteRepository.save(pacote);
     }
 
-    public Pacote atualizar(Integer id, Pacote pacote) {
+    public Pacote atualizar(UUID id, Pacote pacote) {
         if (!pacoteRepository.existsById(id)) {
             throw new RuntimeException("Pacote não encontrado");
         }
@@ -32,7 +33,7 @@ public class PacoteService {
         return pacoteRepository.save(pacote);
     }
 
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
         if (!pacoteRepository.existsById(id)) {
             throw new RuntimeException("Pacote não encontrado");
         }

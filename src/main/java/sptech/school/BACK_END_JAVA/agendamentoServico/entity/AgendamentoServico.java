@@ -7,6 +7,7 @@ import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.clientePacoteServico.entity.ClientePacoteServico;
 
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,9 +15,9 @@ import sptech.school.BACK_END_JAVA.clientePacoteServico.entity.ClientePacoteServ
 public class AgendamentoServico {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_agendamento_servico")
-    private Integer id;
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "fk_agendamento")

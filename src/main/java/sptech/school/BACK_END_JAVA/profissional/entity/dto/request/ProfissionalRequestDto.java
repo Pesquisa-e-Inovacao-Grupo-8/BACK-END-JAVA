@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.UUID;
+
 public class ProfissionalRequestDto {
 
     @NotBlank
@@ -18,7 +20,7 @@ public class ProfissionalRequestDto {
 
     @NotNull
     @Schema(description = "Representa a chave estrangeira do usuário", example = "a9e86162-d472-11e8-b36c-ccaf789d94a0")
-    private Integer usuarioId;
+    private UUID usuarioId;
 
     public String getEspecialidade() {
         return especialidade;
@@ -44,11 +46,11 @@ public class ProfissionalRequestDto {
         this.foto = foto;
     }
 
-    public Integer getUsuarioId() {
+    public UUID getUsuarioId() {
         return usuarioId;
     }
 
-    public void setUsuarioId(Integer usuarioId) {
+    public void setUsuarioId(UUID usuarioId) {
         this.usuarioId = usuarioId;
     }
 }

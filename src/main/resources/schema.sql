@@ -2,7 +2,7 @@
 -- USUARIO
 -- =========================
 CREATE TABLE IF NOT EXISTS usuario (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario BINARY(16) PRIMARY KEY,
     nome VARCHAR(115) NOT NULL,
     telefone VARCHAR(20),
     cpf VARCHAR(12) UNIQUE NOT NULL,
@@ -17,9 +17,9 @@ CREATE TABLE IF NOT EXISTS usuario (
 -- CLIENTE
 -- =========================
 CREATE TABLE IF NOT EXISTS cliente (
-    id_cliente INT AUTO_INCREMENT PRIMARY KEY,
+    id_cliente BINARY(16) PRIMARY KEY,
     observacoes TEXT,
-    fk_usuario INT UNIQUE,
+    fk_usuario BINARY(16) UNIQUE,
     CONSTRAINT fk_cliente_usuario
         FOREIGN KEY (fk_usuario)
         REFERENCES usuario(id_usuario)
@@ -30,11 +30,11 @@ CREATE TABLE IF NOT EXISTS cliente (
 -- PROFISSIONAL
 -- =========================
 CREATE TABLE IF NOT EXISTS profissional (
-    id_profissional INT AUTO_INCREMENT PRIMARY KEY,
+    id_profissional BINARY(16) PRIMARY KEY,
     especialidade VARCHAR(45),
     descricao VARCHAR(255),
     foto VARCHAR(225),
-    fk_usuario INT UNIQUE,
+    fk_usuario BINARY(16) UNIQUE,
     CONSTRAINT fk_profissional_usuario
         FOREIGN KEY (fk_usuario)
         REFERENCES usuario(id_usuario)
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS profissional (
 -- SERVICO
 -- =========================
 CREATE TABLE IF NOT EXISTS servico (
-    id_servico INT AUTO_INCREMENT PRIMARY KEY,
+    id_servico BINARY(16) PRIMARY KEY,
     nome VARCHAR(45) NOT NULL,
     duracao_minutos INT NOT NULL CHECK (duracao_minutos > 0),
     descricao VARCHAR(255),
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS servico (
 -- PACOTE
 -- =========================
 CREATE TABLE IF NOT EXISTS pacote (
-    id_pacote INT AUTO_INCREMENT PRIMARY KEY,
+    id_pacote BINARY(16) PRIMARY KEY,
     nome VARCHAR(45) NOT NULL,
     descricao VARCHAR(255),
     preco_total DECIMAL(10,2) CHECK (preco_total >= 0)
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS pacote (
 -- PACOTE_SERVICO
 -- =========================
 CREATE TABLE IF NOT EXISTS pacote_servico (
-    id_pacote_servico INT AUTO_INCREMENT PRIMARY KEY,
-    fk_pacote INT NOT NULL,
-    fk_servico INT NOT NULL,
+    id_pacote_servico BINARY(16) PRIMARY KEY,
+    fk_pacote BINARY(16) NOT NULL,
+    fk_servico BINARY(16) NOT NULL,
     quantidade INT NOT NULL CHECK (quantidade > 0),
     CONSTRAINT fk_ps_pacote
         FOREIGN KEY (fk_pacote)
@@ -87,9 +87,9 @@ CREATE TABLE IF NOT EXISTS pacote_servico (
 -- CLIENTE_PACOTE
 -- =========================
 CREATE TABLE IF NOT EXISTS cliente_pacote (
-    id_cliente_pacote INT AUTO_INCREMENT PRIMARY KEY,
-    fk_cliente INT NOT NULL,
-    fk_pacote INT NOT NULL,
+    id_cliente_pacote BINARY(16) PRIMARY KEY,
+    fk_cliente BINARY(16) NOT NULL,
+    fk_pacote BINARY(16) NOT NULL,
     status ENUM('ATIVO', 'INATIVO') DEFAULT 'ATIVO',
     data_compra TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expiracao TIMESTAMP NULL,
@@ -107,9 +107,9 @@ CREATE TABLE IF NOT EXISTS cliente_pacote (
 -- CLIENTE_PACOTE_SERVICO
 -- =========================
 CREATE TABLE IF NOT EXISTS cliente_pacote_servico (
-    id_cliente_pacote_servico INT AUTO_INCREMENT PRIMARY KEY,
-    fk_cliente_pacote INT NOT NULL,
-    fk_servico INT NOT NULL,
+    id_cliente_pacote_servico BINARY(16) PRIMARY KEY,
+    fk_cliente_pacote BINARY(16) NOT NULL,
+    fk_servico BINARY(16) NOT NULL,
     quantidade_disponivel INT NOT NULL
         CHECK (quantidade_disponivel >= 0),
     CONSTRAINT fk_cps_cliente_pacote
@@ -128,9 +128,9 @@ CREATE TABLE IF NOT EXISTS cliente_pacote_servico (
 -- SERVICO_PROFISSIONAL
 -- =========================
 CREATE TABLE IF NOT EXISTS servico_profissional (
-    id_profissional_servico INT AUTO_INCREMENT PRIMARY KEY,
-    fk_servico INT NOT NULL,
-    fk_profissional INT NOT NULL,
+    id_profissional_servico BINARY(16) PRIMARY KEY,
+    fk_servico BINARY(16) NOT NULL,
+    fk_profissional BINARY(16) NOT NULL,
     CONSTRAINT fk_sp_servico
         FOREIGN KEY (fk_servico)
         REFERENCES servico(id_servico)
@@ -147,15 +147,15 @@ CREATE TABLE IF NOT EXISTS servico_profissional (
 -- AGENDAMENTO
 -- =========================
 CREATE TABLE IF NOT EXISTS agendamento (
-    id_agendamento INT AUTO_INCREMENT PRIMARY KEY,
+    id_agendamento BINARY(16) PRIMARY KEY,
     data DATE NOT NULL,
     hora_inicio TIME NOT NULL,
     hora_fim TIME NOT NULL,
     status ENUM('PENDENTE', 'CONFIRMADO', 'CANCELADO', 'CONCLUIDO') NOT NULL,
     ordem_pedido VARCHAR(255),
-    fk_cliente INT NOT NULL,
-    fk_profissional INT NOT NULL,
-    fk_cliente_pacote INT,
+    fk_cliente BINARY(16) NOT NULL,
+    fk_profissional BINARY(16) NOT NULL,
+    fk_cliente_pacote BINARY(16),
     CONSTRAINT fk_ag_cliente
         FOREIGN KEY (fk_cliente)
         REFERENCES cliente(id_cliente)
@@ -176,10 +176,10 @@ CREATE TABLE IF NOT EXISTS agendamento (
 -- AGENDAMENTO_SERVICO
 -- =========================
 CREATE TABLE IF NOT EXISTS agendamento_servico (
-    id_agendamento_servico INT AUTO_INCREMENT PRIMARY KEY,
-    fk_agendamento INT NOT NULL,
-    fk_servico INT NOT NULL,
-    fk_cliente_pacote_servico INT,
+    id_agendamento_servico BINARY(16) PRIMARY KEY,
+    fk_agendamento BINARY(16) NOT NULL,
+    fk_servico BINARY(16) NOT NULL,
+    fk_cliente_pacote_servico BINARY(16),
     CONSTRAINT fk_as_agendamento
         FOREIGN KEY (fk_agendamento)
         REFERENCES agendamento(id_agendamento)
@@ -200,12 +200,12 @@ CREATE TABLE IF NOT EXISTS agendamento_servico (
 -- PAGAMENTO
 -- =========================
 CREATE TABLE IF NOT EXISTS pagamento (
-    id_pagamento INT AUTO_INCREMENT PRIMARY KEY,
+    id_pagamento BINARY(16) PRIMARY KEY,
     valor DECIMAL(10,2) NOT NULL CHECK (valor >= 0),
     metodo ENUM('PIX', 'CARTAO', 'DINHEIRO', 'BOLETO'),
     status ENUM('PENDENTE', 'PAGO', 'ESTORNADO', 'CANCELADO'),
     data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fk_agendamento INT,
+    fk_agendamento BINARY(16),
     CONSTRAINT fk_pagamento_agendamento
         FOREIGN KEY (fk_agendamento)
         REFERENCES agendamento(id_agendamento)
@@ -216,9 +216,9 @@ CREATE TABLE IF NOT EXISTS pagamento (
 -- COMPROVANTE
 -- =========================
 CREATE TABLE IF NOT EXISTS comprovante (
-    id_comprovante INT AUTO_INCREMENT PRIMARY KEY,
+    id_comprovante BINARY(16) PRIMARY KEY,
     url TEXT NOT NULL,
-    fk_pagamento INT UNIQUE,
+    fk_pagamento BINARY(16) UNIQUE,
     CONSTRAINT fk_comprovante_pagamento
         FOREIGN KEY (fk_pagamento)
         REFERENCES pagamento(id_pagamento)
@@ -229,7 +229,7 @@ CREATE TABLE IF NOT EXISTS comprovante (
 -- PRODUTO
 -- =========================
 CREATE TABLE IF NOT EXISTS produto (
-    id_produto INT AUTO_INCREMENT PRIMARY KEY,
+    id_produto BINARY(16) PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     unidade_medida VARCHAR(20),
     custo_unitario DECIMAL(10,2) NOT NULL CHECK (custo_unitario >= 0)
@@ -239,9 +239,9 @@ CREATE TABLE IF NOT EXISTS produto (
 -- SERVICO_PRODUTO
 -- =========================
 CREATE TABLE IF NOT EXISTS servico_produto (
-    id_servico_produto INT AUTO_INCREMENT PRIMARY KEY,
-    fk_servico INT NOT NULL,
-    fk_produto INT NOT NULL,
+    id_servico_produto BINARY(16) PRIMARY KEY,
+    fk_servico BINARY(16) NOT NULL,
+    fk_produto BINARY(16) NOT NULL,
     quantidade_usada DECIMAL(10,2) NOT NULL CHECK (quantidade_usada > 0),
     CONSTRAINT fk_sprod_servico 
         FOREIGN KEY (fk_servico) 

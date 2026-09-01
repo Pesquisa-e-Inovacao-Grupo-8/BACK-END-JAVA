@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -11,9 +12,9 @@ import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 public class Cliente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_cliente")
-    private Integer id;
+    private UUID id;
 
     @Column(nullable = true)
     private String observacoes;
@@ -22,11 +23,11 @@ public class Cliente {
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
 
-    public Integer getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -3,10 +3,11 @@ package sptech.school.BACK_END_JAVA.agendamento.entity.dto.request;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 
 public class AgendamentoRequestDto {
 
-    private Integer clienteId;
+    private UUID clienteId;
 
     private String nomeClienteAvulso;
 
@@ -20,13 +21,13 @@ public class AgendamentoRequestDto {
 
     private LocalTime horaFim;
 
-    private Integer profissionalId;
+    private UUID profissionalId;
 
-    private Integer servicoId;
+    private UUID servicoId;
 
-    private List<Integer> servicos;
+    private List<UUID> servicos;
 
-    public AgendamentoRequestDto(Integer clienteId, String nomeClienteAvulso, String telefoneClienteAvulso, String status, LocalDate data, LocalTime horaInicio, LocalTime horaFim, Integer profissionalId, Integer servicoId, List<Integer> servicos) {
+    public AgendamentoRequestDto(UUID clienteId, String nomeClienteAvulso, String telefoneClienteAvulso, String status, LocalDate data, LocalTime horaInicio, LocalTime horaFim, UUID profissionalId, UUID servicoId, List<UUID> servicos) {
         this.clienteId = clienteId;
         this.nomeClienteAvulso = nomeClienteAvulso;
         this.telefoneClienteAvulso = telefoneClienteAvulso;
@@ -39,11 +40,11 @@ public class AgendamentoRequestDto {
         this.servicos = servicos;
     }
 
-    public Integer getClienteId() {
+    public UUID getClienteId() {
         return clienteId;
     }
 
-    public void setClienteId(Integer clienteId) {
+    public void setClienteId(UUID clienteId) {
         this.clienteId = clienteId;
     }
 
@@ -95,27 +96,27 @@ public class AgendamentoRequestDto {
         this.horaFim = horaFim;
     }
 
-    public Integer getProfissionalId() {
+    public UUID getProfissionalId() {
         return profissionalId;
     }
 
-    public void setProfissionalId(Integer profissionalId) {
+    public void setProfissionalId(UUID profissionalId) {
         this.profissionalId = profissionalId;
     }
 
-    public Integer getServicoId() {
+    public UUID getServicoId() {
         return servicoId;
     }
 
-    public void setServicoId(Integer servicoId) {
+    public void setServicoId(UUID servicoId) {
         this.servicoId = servicoId;
     }
 
-    public List<Integer> getServicos() {
+    public List<UUID> getServicos() {
         return servicos;
     }
 
-    public void setServicos(List<Integer> servicos) {
+    public void setServicos(List<UUID> servicos) {
         this.servicos = servicos;
     }
 }

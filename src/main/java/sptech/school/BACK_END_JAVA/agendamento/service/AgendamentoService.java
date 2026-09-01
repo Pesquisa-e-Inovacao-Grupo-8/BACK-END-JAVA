@@ -45,7 +45,7 @@ public class AgendamentoService {
 
     public List<Agendamento> listar() {return agendamentoRepository.findAll();}
 
-    public Agendamento buscarPorId(Integer id) {
+    public Agendamento buscarPorId(UUID id) {
         return agendamentoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Agendamento nÃ£o encontrado"));
     }
@@ -83,7 +83,7 @@ public class AgendamentoService {
         Agendamento agendamentoSalvo = agendamentoRepository.save(agendamento);
 
         Double valorTotal = 0.0;
-        for (Integer servicoId : dto.getServicos()) {
+        for (UUID servicoId : dto.getServicos()) {
 
             Servico servico = servicoRepository.findById(servicoId)
                     .orElseThrow(() -> new RuntimeException("ServiÃ§o nÃ£o encontrado: " + servicoId));
@@ -103,7 +103,7 @@ public class AgendamentoService {
         return agendamentoSalvo;
     }
 
-    public Agendamento atualizar(Integer id, Agendamento agendamento) {
+    public Agendamento atualizar(UUID id, Agendamento agendamento) {
 
         if (!agendamentoRepository.existsById(id)) {
             throw new RuntimeException("Agendamento nÃ£o encontrado");
@@ -113,7 +113,7 @@ public class AgendamentoService {
         return agendamentoRepository.save(agendamento);
     }
 
-    public void deletar(Integer id) {
+    public void deletar(UUID id) {
 
         if (!agendamentoRepository.existsById(id)) {
             throw new RuntimeException("Agendamento nÃ£o encontrado");
