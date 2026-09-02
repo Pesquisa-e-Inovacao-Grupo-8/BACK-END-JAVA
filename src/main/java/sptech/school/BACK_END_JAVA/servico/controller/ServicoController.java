@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/servicos")
-@CrossOrigin(origins = "*")
 public class ServicoController {
     private final ServicoService service;
 

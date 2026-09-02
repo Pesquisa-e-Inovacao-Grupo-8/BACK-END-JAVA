@@ -79,7 +79,8 @@ public class SecurityConfig {
                 "http://renatatukotomi.duckdns.org",
                 "https://renatatukotomi.duckdns.org",
                 "http://localhost:3000",
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "http://localhost:8000"
         ));
 
         config.setAllowedMethods(List.of(
