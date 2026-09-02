@@ -66,6 +66,9 @@ public class AgendamentoService {
 
         tentarVincularClienteCadastrado(dto);
 
+        logger.info("usuarioId recebido: {}", dto.getUsuarioId());
+        logger.info("clienteId após vinculação: {}", dto.getClienteId());
+
         Agendamento agendamento = new Agendamento();
 
         agendamento.setData(dto.getData());
@@ -123,34 +126,36 @@ public class AgendamentoService {
 
     private void tentarVincularClienteCadastrado(AgendamentoRequestDto dto) {
 
-        // Se o cliente já foi informado, não precisa procurar
-        if (dto.getClienteId() != null) {
-            return;
-        }
 
-        // Tenta encontrar o cliente pelo ID do usuário
-        if (dto.getUsuarioId() != null) {
 
-            clienteRepository.findByUsuario_Id(dto.getUsuarioId())
-                    .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
 
-            // Se encontrou, encerra
+            // Cliente já informado pelo frontend
             if (dto.getClienteId() != null) {
                 return;
             }
+
+            // Tenta encontrar o cliente através do usuário
+            if (dto.getUsuarioId() != null) {
+
+                clienteRepository.findByUsuario_Id(dto.getUsuarioId())
+                        .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
+
+                if (dto.getClienteId() != null) {
+                    return;
+                }
+            }
+
+            // Tenta encontrar pelo telefone
+            if (dto.getTelefoneClienteAvulso() != null &&
+                    !dto.getTelefoneClienteAvulso().isBlank()) {
+
+                String telefone = dto.getTelefoneClienteAvulso().trim();
+
+                clienteRepository.findByUsuario_Telefone(telefone)
+                        .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
         }
-
-        // Se não encontrou pelo usuário, tenta pelo telefone
-        if (dto.getTelefoneClienteAvulso() == null ||
-                dto.getTelefoneClienteAvulso().isBlank()) {
-            return;
-        }
-
-        String telefone = dto.getTelefoneClienteAvulso().trim();
-
-        clienteRepository.findByUsuario_Telefone(telefone)
-                .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
     }
+
 
 
 
