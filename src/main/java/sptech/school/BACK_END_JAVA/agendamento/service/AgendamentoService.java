@@ -123,20 +123,24 @@ public class AgendamentoService {
 
     private void tentarVincularClienteCadastrado(AgendamentoRequestDto dto) {
 
+        // Se o cliente já foi informado, não precisa procurar
         if (dto.getClienteId() != null) {
             return;
         }
 
+        // Tenta encontrar o cliente pelo ID do usuário
         if (dto.getUsuarioId() != null) {
 
-            clienteRepository.findByUsuario_IdUsuario(dto.getUsuarioId())
+            clienteRepository.findByUsuario_Id(dto.getUsuarioId())
                     .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
 
+            // Se encontrou, encerra
             if (dto.getClienteId() != null) {
                 return;
             }
         }
 
+        // Se não encontrou pelo usuário, tenta pelo telefone
         if (dto.getTelefoneClienteAvulso() == null ||
                 dto.getTelefoneClienteAvulso().isBlank()) {
             return;
@@ -147,6 +151,7 @@ public class AgendamentoService {
         clienteRepository.findByUsuario_Telefone(telefone)
                 .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
     }
+
 
 
     //restante das funções
