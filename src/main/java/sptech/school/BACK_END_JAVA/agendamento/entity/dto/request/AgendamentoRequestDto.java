@@ -49,7 +49,7 @@ public class AgendamentoRequestDto {
 
     public void setClienteId(UUID clienteId) {
         this.clienteId = clienteId;
-    }
+    } 
 
     public String getNomeClienteAvulso() {
         return nomeClienteAvulso;

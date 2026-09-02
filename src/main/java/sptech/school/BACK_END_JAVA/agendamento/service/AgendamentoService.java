@@ -19,7 +19,7 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.List; 
 import java.util.UUID;
 
 @Service
@@ -123,10 +123,25 @@ public class AgendamentoService {
 
     private void tentarVincularClienteCadastrado(AgendamentoRequestDto dto) {
 
+        // Se o id_cliente já foi informado, não precisa buscar
         if (dto.getClienteId() != null) {
             return;
         }
 
+        // Tenta encontrar o cliente através do id_usuario
+        if (dto.getUsuarioId() != null) {
+
+            clienteRepository.findByUsuario_IdUsuario(dto.getUsuarioId())
+                    .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
+
+            // Se encontrou pelo usuarioId, não precisa continuar
+            if (dto.getClienteId() != null) {
+                return;
+            }
+        }
+
+        // Caso não tenha encontrado pelo usuarioId,
+        // tenta encontrar pelo telefone
         if (dto.getTelefoneClienteAvulso() == null ||
                 dto.getTelefoneClienteAvulso().isBlank()) {
             return;
@@ -137,5 +152,6 @@ public class AgendamentoService {
         clienteRepository.findByUsuario_Telefone(telefone)
                 .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
     }
+
     //restante das funções
 }
