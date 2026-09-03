@@ -76,8 +76,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of(
-                "http://renatatukotomi.duckdns.org",
-                "https://renatatukotomi.duckdns.org",
+                "https://spring.renatahtokutomi.com/",
                 "http://localhost:3000",
                 "http://localhost:5173"
         ));
