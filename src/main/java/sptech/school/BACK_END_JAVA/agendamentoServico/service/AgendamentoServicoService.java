@@ -46,6 +46,13 @@ public class AgendamentoServicoService {
         Servico servico = servicoRepository.findById(servicoId)
                 .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
 
+        // Evita inserir duplicatas: se já existir, retorna existente
+        if (agendamentoServicoRepository.existsByAgendamento_IdAndServico_Id(agendamentoId, servicoId)) {
+            return agendamentoServicoRepository.findByAgendamento_IdAndServico_Id(agendamentoId, servicoId)
+                    .orElseThrow(() -> new RuntimeException("AgendamentoServico já existe"));
+        }
+
+        // Envia notificação de forma resiliente (não propagar falha)
         enviarConfirmacaoAgendamento(agendamento,servico);
 
         AgendamentoServico novo = new AgendamentoServico();
@@ -68,14 +75,18 @@ public class AgendamentoServicoService {
         payload.put("horaInicio", agendamento.getHoraInicio().toString());
         payload.put("ordemPedido", agendamento.getOrdemPedido());
 
+        // Não deixar que falha no serviço de notificações quebre o fluxo principal
         webClient.post()
                 .uri("http://localhost:5000/notify/agendamento")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(payload)
                 .retrieve()
                 .bodyToMono(String.class)
+                .doOnError(e -> System.err.println("Falha ao notificar: " + e.getMessage()))
+                .onErrorResume(e -> reactor.core.publisher.Mono.empty())
                 .subscribe();
     }
+
 
 
 

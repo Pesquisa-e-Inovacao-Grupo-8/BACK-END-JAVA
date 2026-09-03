@@ -19,7 +19,7 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.List; 
 import java.util.UUID;
 
 @Service
@@ -65,6 +65,9 @@ public class AgendamentoService {
         }
 
         tentarVincularClienteCadastrado(dto);
+
+        logger.info("usuarioId recebido: {}", dto.getUsuarioId());
+        logger.info("clienteId após vinculação: {}", dto.getClienteId());
 
         Agendamento agendamento = new Agendamento();
 
@@ -123,19 +126,38 @@ public class AgendamentoService {
 
     private void tentarVincularClienteCadastrado(AgendamentoRequestDto dto) {
 
-        if (dto.getClienteId() != null) {
-            return;
+
+
+
+            // Cliente já informado pelo frontend
+            if (dto.getClienteId() != null) {
+                return;
+            }
+
+            // Tenta encontrar o cliente através do usuário
+            if (dto.getUsuarioId() != null) {
+
+                clienteRepository.findByUsuario_Id(dto.getUsuarioId())
+                        .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
+
+                if (dto.getClienteId() != null) {
+                    return;
+                }
+            }
+
+            // Tenta encontrar pelo telefone
+            if (dto.getTelefoneClienteAvulso() != null &&
+                    !dto.getTelefoneClienteAvulso().isBlank()) {
+
+                String telefone = dto.getTelefoneClienteAvulso().trim();
+
+                clienteRepository.findByUsuario_Telefone(telefone)
+                        .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
         }
-
-        if (dto.getTelefoneClienteAvulso() == null ||
-                dto.getTelefoneClienteAvulso().isBlank()) {
-            return;
-        }
-
-        String telefone = dto.getTelefoneClienteAvulso().trim();
-
-        clienteRepository.findByUsuario_Telefone(telefone)
-                .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
     }
+
+
+
+
     //restante das funções
 }

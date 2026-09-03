@@ -16,8 +16,23 @@ public class AgendamentoClienteStrategy implements AgendamentoStrategy {
     @Override
     public void aplicar(Agendamento agendamento, AgendamentoRequestDto dto) {
 
-        Cliente cliente = clienteRepository.findById(dto.getClienteId())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+        // Tenta resolver o cliente considerando que dto.getClienteId() pode
+        // ser o id do cliente (id_cliente) ou, por engano, o id do usuário (id_usuario).
+        Cliente cliente = null;
+
+        if (dto.getClienteId() != null) {
+            // 1) tenta buscar por id_cliente
+            cliente = clienteRepository.findById(dto.getClienteId()).orElse(null);
+
+            // 2) se não encontrou, tenta buscar por fk_usuario (tratando o id recebido como usuarioId)
+            if (cliente == null) {
+                cliente = clienteRepository.findByUsuario_Id(dto.getClienteId()).orElse(null);
+            }
+        }
+
+        if (cliente == null) {
+            throw new RuntimeException("Cliente não encontrado");
+        }
 
         agendamento.setCliente(cliente);
         agendamento.setNomeClienteAvulso(null);
