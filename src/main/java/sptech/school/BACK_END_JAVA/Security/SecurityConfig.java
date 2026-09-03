@@ -25,13 +25,11 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final UserDetailsServiceImpl userDetailsService;
-    private final PasswordEncoder passwordEncoder;
 
     public SecurityConfig(JwtFilter jwtFilter,
                           UserDetailsServiceImpl userDetailsService) {
         this.jwtFilter = jwtFilter;
         this.userDetailsService = userDetailsService;
-        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -65,7 +63,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().permitAll()
                 )
-                .authenticationManager(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)))
                 .userDetailsService(userDetailsService)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -77,28 +74,22 @@ public class SecurityConfig {
 
         config.setAllowedOrigins(List.of(
                 "https://renatahtokutomi.com",
+                "https://www.renatahtokutomi.com",
                 "http://localhost:3000",
                 "http://localhost:5173"
         ));
 
         config.setAllowedMethods(List.of(
-                "GET",
-                "POST",
-                "PUT",
-                "DELETE",
-                "OPTIONS"
+                "GET", "POST", "PUT", "DELETE", "OPTIONS"
         ));
 
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
-
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
 
         return source;
     }
-
 }
