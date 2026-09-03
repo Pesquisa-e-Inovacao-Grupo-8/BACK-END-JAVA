@@ -76,7 +76,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of(
-                "https://spring.renatahtokutomi.com/",
+                "https://renatahtokutomi.com/",
                 "http://localhost:3000",
                 "http://localhost:5173"
         ));
