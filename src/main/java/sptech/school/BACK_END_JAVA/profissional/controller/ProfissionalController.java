@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/profissionais")
-@CrossOrigin(origins = "*")
 public class ProfissionalController {
     private final ProfissionalService service;
 

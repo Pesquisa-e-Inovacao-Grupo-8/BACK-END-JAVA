@@ -26,18 +26,22 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @RequestBody LoginRequest request) {
+        try {
+            Authentication authentication =
+                    authManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(
+                                    request.getEmail(),
+                                    request.getSenha()
+                            )
+                    );
 
-        Authentication authentication =
-                authManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                request.getEmail(),
-                                request.getSenha()
-                        )
-                );
+            String token =
+                    jwtUtil.generateToken(authentication.getName());
 
-        String token =
-                jwtUtil.generateToken(authentication.getName());
-
-        return ResponseEntity.ok(new LoginResponse(token));
+            return ResponseEntity.ok(new LoginResponse(token));
+        } catch (Exception ex) {
+            // Authentication failed: return 401 Unauthorized
+            return ResponseEntity.status(401).body(new LoginResponse(null));
+        }
     }
 }
