@@ -75,6 +75,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of(
                 "https://renatahtokutomi.com",
                 "https://www.renatahtokutomi.com",
+                "http://qa.renatahtokutomi.com",
                 "http://localhost:3000",
                 "http://localhost:5173"
         ));
