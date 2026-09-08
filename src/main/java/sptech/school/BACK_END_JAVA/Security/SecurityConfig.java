@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,6 +22,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity // 👈 habilita @PreAuthorize nos controllers
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -51,17 +53,40 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        // preflight sempre liberado (senão CORS quebra)
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // rotas públicas
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/servicos/**", "/profissionais/**").permitAll()
-                        .requestMatchers("/profissionais/vincular-servicos/**").permitAll()
+                        .requestMatchers("/usuarios/**")
+                        .hasAnyRole("CLIENTE", "PROFISSIONAL", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/servicos/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/pacotes/**", "/pacoteServicos/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/profissionais", "/profissionais/*").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .anyRequest().permitAll()
+
+                        // rotas restritas por role
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/profissionais/meus-servicos/**", "/profissionais/*/servicos/**", "/profissionais/vincular-servicos/**")
+                        .hasAnyRole("PROFISSIONAL", "ADMIN")
+                        .requestMatchers("/agendamentos/**")
+                        .hasAnyRole("CLIENTE", "PROFISSIONAL", "ADMIN")
+                        .requestMatchers("/clientes/**", "/clientePacotes/**")
+                        .hasAnyRole("CLIENTE", "ADMIN")
+                        .requestMatchers("/pagamentos/**", "/comprovantes/**")
+                        .hasAnyRole("CLIENTE", "ADMIN")
+                        .requestMatchers("/servico-produtos/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers("/agendamentoServicos/**")
+                        .hasAnyRole("CLIENTE", "PROFISSIONAL", "ADMIN")
+                        .requestMatchers("/servicos/**", "/profissionais/**")
+                        .hasRole("ADMIN")
+
+                        .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -77,7 +102,9 @@ public class SecurityConfig {
                 "https://www.renatahtokutomi.com",
                 "https://qa.renatahtokutomi.com",
                 "http://localhost:3000",
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "http://localhost:8000",
+                "http://localhost:8001"
         ));
 
         config.setAllowedMethods(List.of(

@@ -1,6 +1,7 @@
 package sptech.school.BACK_END_JAVA.cliente.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.cliente.entity.dto.request.ClienteRequestDto;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/clientes")
+@PreAuthorize("hasAnyRole('CLIENTE', 'ADMIN')")
 public class ClienteController {
     private final ClienteService service;
 

@@ -3,17 +3,19 @@ package sptech.school.BACK_END_JAVA.agendamento.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 import sptech.school.BACK_END_JAVA.agendamento.entity.dto.request.AgendamentoRequestDto;
 import sptech.school.BACK_END_JAVA.agendamento.service.AgendamentoService;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
-import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/agendamentos")
+@PreAuthorize("hasAnyRole('CLIENTE', 'PROFISSIONAL', 'ADMIN')")
 public class AgendamentoController {
     private final AgendamentoService service;
     private final UsuarioRepository usuarioRepository;
@@ -24,13 +26,14 @@ public class AgendamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Agendamento>> getAgendamento() {
-        List<Agendamento> agendamentos = service.listar();
+    public ResponseEntity<List<Agendamento>> getAgendamento(Authentication authentication) {
+        List<Agendamento> agendamentos = service.listar(authentication);
         return ResponseEntity.ok(agendamentos);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Agendamento> getAgendamentoById(@PathVariable UUID id) {
+    public ResponseEntity<Agendamento> getAgendamentoById(@PathVariable UUID id, Authentication authentication) {
+        if (!service.podeAcessar(id, authentication)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Agendamento agendamento = service.buscarPorId(id);
         return ResponseEntity.ok(agendamento);
     }
@@ -48,14 +51,16 @@ public class AgendamentoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Agendamento> atualizarAgendamento(@PathVariable UUID id, @RequestBody Agendamento agendamento) {
+    public ResponseEntity<Agendamento> atualizarAgendamento(@PathVariable UUID id, @RequestBody Agendamento agendamento, Authentication authentication) {
+        if (!service.podeAcessar(id, authentication)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
         Agendamento atualizado = service.atualizar(id, agendamento);
         return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarAgendamento(@PathVariable UUID id) {
+    public ResponseEntity<Void> deletarAgendamento(@PathVariable UUID id, Authentication authentication) {
+        if (!service.podeAcessar(id, authentication)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         service.deletar(id);
         return ResponseEntity.noContent().build();
     }
