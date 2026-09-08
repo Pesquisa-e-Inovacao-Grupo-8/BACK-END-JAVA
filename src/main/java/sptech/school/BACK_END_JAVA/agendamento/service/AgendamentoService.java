@@ -11,7 +11,9 @@ import sptech.school.BACK_END_JAVA.agendamento.strategy.AgendamentoStrategy;
 import sptech.school.BACK_END_JAVA.agendamento.strategy.AgendamentoStrategyFactory;
 import sptech.school.BACK_END_JAVA.agendamentoServico.entity.AgendamentoServico;
 import sptech.school.BACK_END_JAVA.agendamentoServico.repository.AgendamentoServicoRepository;
+import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
+import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
@@ -34,6 +36,7 @@ public class AgendamentoService {
 
     private final AgendamentoRepository agendamentoRepository;
     private final ClienteRepository clienteRepository;
+    private final UsuarioRepository usuarioRepository;
     private final ProfissionalRepository profissionalRepository;
     private final ServicoRepository servicoRepository;
     private final AgendamentoServicoRepository agendamentoServicoRepository;
@@ -41,9 +44,10 @@ public class AgendamentoService {
     private final ProfissionalHorarioRepository profissionalHorarioRepository;
     private final ServicoProfissionalRepository servicoProfissionalRepository;
 
-    public AgendamentoService(AgendamentoRepository agendamentoRepository, ClienteRepository clienteRepository, ProfissionalRepository profissionalRepository, ServicoRepository servicoRepository, AgendamentoServicoRepository agendamentoServicoRepository, AgendamentoStrategyFactory factory, ProfissionalHorarioRepository profissionalHorarioRepository, ServicoProfissionalRepository servicoProfissionalRepository) {
+    public AgendamentoService(AgendamentoRepository agendamentoRepository, ClienteRepository clienteRepository, UsuarioRepository usuarioRepository, ProfissionalRepository profissionalRepository, ServicoRepository servicoRepository, AgendamentoServicoRepository agendamentoServicoRepository, AgendamentoStrategyFactory factory, ProfissionalHorarioRepository profissionalHorarioRepository, ServicoProfissionalRepository servicoProfissionalRepository) {
         this.agendamentoRepository = agendamentoRepository;
         this.clienteRepository = clienteRepository;
+        this.usuarioRepository = usuarioRepository;
         this.profissionalRepository = profissionalRepository;
         this.servicoRepository = servicoRepository;
         this.agendamentoServicoRepository = agendamentoServicoRepository;
@@ -209,6 +213,8 @@ public class AgendamentoService {
 
         tentarVincularClienteCadastrado(dto);
 
+        garantirClienteDoUsuario(dto);
+
         logger.info("usuarioId recebido: {}", dto.getUsuarioId());
         logger.info("clienteId após vinculação: {}", dto.getClienteId());
 
@@ -278,9 +284,14 @@ public class AgendamentoService {
 
 
             // Cliente já informado pelo frontend
-            if (dto.getClienteId() != null) {
+            if (dto.getClienteId() != null
+                    && clienteRepository.findById(dto.getClienteId()).isPresent()) {
                 return;
             }
+
+            // O frontend pode enviar o id_usuario no campo clienteId.
+            // Limpa esse valor para resolver corretamente pelo usuarioId abaixo.
+            dto.setClienteId(null);
 
             // Tenta encontrar o cliente através do usuário
             if (dto.getUsuarioId() != null) {
@@ -302,6 +313,19 @@ public class AgendamentoService {
                 clienteRepository.findByUsuario_Telefone(telefone)
                         .ifPresent(cliente -> dto.setClienteId(cliente.getId()));
         }
+    }
+
+    private void garantirClienteDoUsuario(AgendamentoRequestDto dto) {
+        if (dto.getUsuarioId() == null || dto.getClienteId() != null) return;
+
+        clienteRepository.findByUsuario_Id(dto.getUsuarioId()).ifPresentOrElse(
+                cliente -> dto.setClienteId(cliente.getId()),
+                () -> usuarioRepository.findById(dto.getUsuarioId()).ifPresent(usuario -> {
+                    Cliente cliente = new Cliente();
+                    cliente.setUsuario(usuario);
+                    dto.setClienteId(clienteRepository.save(cliente).getId());
+                })
+        );
     }
 
 
