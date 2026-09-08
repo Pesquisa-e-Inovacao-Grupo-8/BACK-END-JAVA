@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> {
     List<Agendamento> findByData(LocalDate data);
     List<Agendamento> findAll();
+    List<Agendamento> findByCliente_Usuario_Email(String email);
+    List<Agendamento> findByProfissional_Usuario_Email(String email);
 }

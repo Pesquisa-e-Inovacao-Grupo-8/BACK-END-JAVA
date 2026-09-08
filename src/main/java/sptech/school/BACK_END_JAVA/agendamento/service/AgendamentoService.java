@@ -11,16 +11,15 @@ import sptech.school.BACK_END_JAVA.agendamento.strategy.AgendamentoStrategy;
 import sptech.school.BACK_END_JAVA.agendamento.strategy.AgendamentoStrategyFactory;
 import sptech.school.BACK_END_JAVA.agendamentoServico.entity.AgendamentoServico;
 import sptech.school.BACK_END_JAVA.agendamentoServico.repository.AgendamentoServicoRepository;
-import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
-import java.time.LocalDate;
 import java.util.List; 
 import java.util.UUID;
+import org.springframework.security.core.Authentication;
 
 @Service
 public class AgendamentoService {
@@ -42,7 +41,31 @@ public class AgendamentoService {
         this.factory = factory;
     }
 
-    public List<Agendamento> listar() {return agendamentoRepository.findAll();}
+    public List<Agendamento> listar(Authentication authentication) {
+        if (temRole(authentication, "ROLE_ADMIN")) return agendamentoRepository.findAll();
+        if (temRole(authentication, "ROLE_PROFISSIONAL")) {
+            return agendamentoRepository.findByProfissional_Usuario_Email(authentication.getName());
+        }
+        return agendamentoRepository.findByCliente_Usuario_Email(authentication.getName());
+    }
+
+    public boolean podeAcessar(UUID id, Authentication authentication) {
+        if (temRole(authentication, "ROLE_ADMIN")) return true;
+        Agendamento agendamento = buscarPorId(id);
+        if (temRole(authentication, "ROLE_PROFISSIONAL")) {
+            return agendamento.getProfissional() != null
+                    && agendamento.getProfissional().getUsuario() != null
+                    && authentication.getName().equals(agendamento.getProfissional().getUsuario().getEmail());
+        }
+        return agendamento.getCliente() != null
+                && agendamento.getCliente().getUsuario() != null
+                && authentication.getName().equals(agendamento.getCliente().getUsuario().getEmail());
+    }
+
+    private boolean temRole(Authentication authentication, String role) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> role.equals(authority.getAuthority()));
+    }
 
     public Agendamento buscarPorId(UUID id) {
         return agendamentoRepository.findById(id)

@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
-import java.util.Collections;
-
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -27,7 +25,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return User.builder()
                 .username(usuario.getEmail())
                 .password(usuario.getSenha())
-                .authorities(Collections.emptyList())
+                .roles(usuario.getTipo().toUpperCase())
+                .disabled(Boolean.FALSE.equals(usuario.getAtivo()))
                 .build();
     }
 }

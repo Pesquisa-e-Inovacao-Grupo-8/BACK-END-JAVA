@@ -33,6 +33,10 @@ public class ClientePacoteService {
 
     public List<ClientePacote> listar() {return clientePacoteRepository.findAll();}
 
+    public List<ClientePacote> listarPorUsuario(UUID usuarioId) {
+        return clientePacoteRepository.findByCliente_Usuario_Id(usuarioId);
+    }
+
     public ClientePacote buscarPorId(UUID id) {
         return clientePacoteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("ClientePacote não encontrado"));
