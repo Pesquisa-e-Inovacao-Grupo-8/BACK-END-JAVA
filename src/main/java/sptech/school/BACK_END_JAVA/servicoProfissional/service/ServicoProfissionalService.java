@@ -39,28 +39,34 @@ public class ServicoProfissionalService {
         return repository.findByProfissional_Id(profissionalId);
     }
 
+    public List<Servico> listarServicosPorProfissional(UUID profissionalId) {
+        return repository.findByProfissional_Id(profissionalId).stream()
+                .map(ServicoProfissional::getServico)
+                .toList();
+    }
+
     @Transactional
     public void vincularServicos(UUID profissionalId, List<UUID> servicosIds) {
 
         Profissional profissional = profissionalRepository.findById(profissionalId)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
 
-        repository.deleteByProfissional(profissional);
-
         if (servicosIds == null || servicosIds.isEmpty()) {
+            repository.deleteByProfissional(profissional);
             return;
         }
 
         List<UUID> idsSemDuplicidade =
                 new ArrayList<>(new LinkedHashSet<>(servicosIds));
 
-        for (UUID servicoId : idsSemDuplicidade) {
+        List<Servico> servicos = servicoRepository.findAllById(idsSemDuplicidade);
+        if (servicos.size() != idsSemDuplicidade.size()) {
+            throw new IllegalArgumentException("Um ou mais serviços informados não existem");
+        }
 
-            Servico servico = servicoRepository.findById(servicoId)
-                    .orElseThrow(() -> new RuntimeException(
-                            "Serviço não encontrado: " + servicoId
-                    ));
+        repository.deleteByProfissional(profissional);
 
+        for (Servico servico : servicos) {
             ServicoProfissional sp = new ServicoProfissional();
             sp.setProfissional(profissional);
             sp.setServico(servico);

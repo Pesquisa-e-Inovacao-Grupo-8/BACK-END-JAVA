@@ -1,6 +1,7 @@
 package sptech.school.BACK_END_JAVA.agendamentoServico.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.agendamentoServico.entity.AgendamentoServico;
 import sptech.school.BACK_END_JAVA.agendamentoServico.entity.dto.request.AgendamentoServicoRequestDto;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/agendamentoServicos")
+@PreAuthorize("hasAnyRole('CLIENTE', 'PROFISSIONAL', 'ADMIN')")
 public class AgendamentoServicoController {
 
     private final AgendamentoServicoService service;
@@ -44,6 +46,7 @@ public class AgendamentoServicoController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('PROFISSIONAL', 'ADMIN')")
     public ResponseEntity<AgendamentoServico> atualizar(@PathVariable UUID id, @RequestBody AgendamentoServicoRequestDto dto) {
 
         AgendamentoServico atualizado = service.atualizar(
@@ -56,6 +59,7 @@ public class AgendamentoServicoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('PROFISSIONAL', 'ADMIN')")
     public ResponseEntity<Void> deletar(@PathVariable UUID id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();

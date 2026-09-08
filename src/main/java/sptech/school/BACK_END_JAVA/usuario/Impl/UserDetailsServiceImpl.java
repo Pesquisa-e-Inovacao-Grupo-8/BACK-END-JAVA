@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
-import java.util.Collections;
-
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -24,10 +22,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("Email não encontrado"));
 
+        String role = usuario.getTipo() == null
+            ? "CLIENTE"
+            : usuario.getTipo().trim().replaceFirst("(?i)^ROLE_", "").toUpperCase();
+
         return User.builder()
                 .username(usuario.getEmail())
                 .password(usuario.getSenha())
-                .authorities(Collections.emptyList())
+            .roles(role)
+                .disabled(Boolean.FALSE.equals(usuario.getAtivo()))
                 .build();
     }
 }
