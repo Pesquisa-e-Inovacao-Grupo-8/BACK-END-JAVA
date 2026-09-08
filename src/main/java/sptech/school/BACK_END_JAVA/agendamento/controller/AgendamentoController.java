@@ -12,6 +12,8 @@ import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @RestController
 @RequestMapping("/agendamentos")
@@ -29,6 +31,27 @@ public class AgendamentoController {
     public ResponseEntity<List<Agendamento>> getAgendamento(Authentication authentication) {
         List<Agendamento> agendamentos = service.listar(authentication);
         return ResponseEntity.ok(agendamentos);
+    }
+
+    @GetMapping("/disponibilidade")
+    public ResponseEntity<List<HorarioOcupadoResponse>> disponibilidade(
+            @RequestParam UUID profissionalId,
+            @RequestParam LocalDate data) {
+        return ResponseEntity.ok(service.listarDisponibilidade(profissionalId, data).stream()
+                .map(agendamento -> new HorarioOcupadoResponse(
+                        agendamento.getHoraInicio(),
+                        agendamento.getHoraFim()))
+                .toList());
+    }
+
+    public record HorarioOcupadoResponse(LocalTime horaInicio, LocalTime horaFim) {}
+
+    @GetMapping("/horarios-disponiveis")
+    public ResponseEntity<List<String>> horariosDisponiveis(
+            @RequestParam UUID profissionalId,
+            @RequestParam UUID servicoId,
+            @RequestParam LocalDate data) {
+        return ResponseEntity.ok(service.listarHorariosDisponiveis(profissionalId, servicoId, data));
     }
 
     @GetMapping("/{id}")

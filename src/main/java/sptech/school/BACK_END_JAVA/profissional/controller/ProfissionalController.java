@@ -10,7 +10,7 @@ import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 import sptech.school.BACK_END_JAVA.profissional.service.ProfissionalService;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
-import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
+import sptech.school.BACK_END_JAVA.servicoProfissional.service.ServicoProfissionalService;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
 import java.util.List;
@@ -21,18 +21,17 @@ import java.util.UUID;
 @RequestMapping("/profissionais")
 public class ProfissionalController {
     private final ProfissionalService service;
+    private final ServicoProfissionalService servicoProfissionalService;
 
     @Autowired
     private ProfissionalRepository profissionalRepository;
 
     @Autowired
-    private ServicoRepository servicoRepository;
-
-    @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public ProfissionalController(ProfissionalService service) {
+    public ProfissionalController(ProfissionalService service, ServicoProfissionalService servicoProfissionalService) {
         this.service = service;
+        this.servicoProfissionalService = servicoProfissionalService;
     }
 
     @GetMapping
@@ -48,6 +47,13 @@ public class ProfissionalController {
     }
 
     // Buscar os serviços marcados pelo profissional
+    @GetMapping("/meus-servicos")
+    @PreAuthorize("hasRole('PROFISSIONAL')")
+    public ResponseEntity<List<Servico>> getMeusServicos(Authentication authentication) {
+        Profissional profissional = service.buscarOuCriarPorEmail(authentication.getName());
+        return ResponseEntity.ok(servicoProfissionalService.listarServicosPorProfissional(profissional.getId()));
+    }
+
     @GetMapping("/meus-servicos/{usuarioId}")
     public ResponseEntity<List<Servico>> getMeusServicos(@PathVariable UUID usuarioId, Authentication authentication) {
         if (!podeAcessarUsuario(usuarioId, authentication)) {
@@ -56,9 +62,20 @@ public class ProfissionalController {
         Optional<Profissional> profOpt = profissionalRepository.findByUsuarioId(usuarioId);
 
         if (profOpt.isPresent()) {
-            return ResponseEntity.ok(profOpt.get().getServicos());
+                return ResponseEntity.ok(
+                    servicoProfissionalService.listarServicosPorProfissional(profOpt.get().getId()));
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/vincular-servicos")
+    @PreAuthorize("hasRole('PROFISSIONAL')")
+    public ResponseEntity<Void> vincularMeusServicos(
+            @RequestBody List<UUID> servicosIds,
+            Authentication authentication) {
+        Profissional profissional = service.buscarOuCriarPorEmail(authentication.getName());
+        servicoProfissionalService.vincularServicos(profissional.getId(), servicosIds);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/vincular-servicos/{usuarioId}")
@@ -73,11 +90,7 @@ public class ProfissionalController {
             Profissional profissional = profOpt.get();
 
             // Busca todos os serviços no banco correspondentes aos IDs recebidos
-            List<Servico> serviçosSelecionados = servicoRepository.findAllById(servicosIds);
-
-            // Atualiza a lista do profissional e salva
-            profissional.setServicos(serviçosSelecionados);
-            profissionalRepository.save(profissional);
+            servicoProfissionalService.vincularServicos(profissional.getId(), servicosIds);
 
             return ResponseEntity.ok().build();
         }

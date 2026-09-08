@@ -18,6 +18,8 @@ public interface ServicoProfissionalRepository
 
     List<ServicoProfissional> findByProfissional_Id(UUID profissionalId);
 
+        boolean existsByProfissional_IdAndServico_Id(UUID profissionalId, UUID servicoId);
+
     void deleteByProfissional(Profissional profissional);
 
     void deleteByProfissional_IdAndServico_Id(

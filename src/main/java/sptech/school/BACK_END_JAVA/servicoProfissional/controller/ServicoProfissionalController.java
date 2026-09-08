@@ -40,12 +40,8 @@ public class ServicoProfissionalController {
     }
 
     @GetMapping("/{profissionalId}/servicos")
-    @PreAuthorize("hasAnyRole('PROFISSIONAL', 'ADMIN')")
-    public ResponseEntity<List<?>> listarServicos(@PathVariable UUID profissionalId, Authentication authentication) {
-        if (!podeAcessar(profissionalId, authentication)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        return ResponseEntity.ok(service.listarPorProfissional(profissionalId));
+    public ResponseEntity<List<?>> listarServicos(@PathVariable UUID profissionalId) {
+        return ResponseEntity.ok(service.listarServicosPorProfissional(profissionalId));
     }
 
     @DeleteMapping("/{profissionalId}/servicos/{servicoId}")
