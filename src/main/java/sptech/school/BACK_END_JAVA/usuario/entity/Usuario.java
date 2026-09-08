@@ -1,6 +1,7 @@
 package sptech.school.BACK_END_JAVA.usuario.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +27,7 @@ public class Usuario {
     private String cpf;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String senha;
 
     @Column(nullable = false)

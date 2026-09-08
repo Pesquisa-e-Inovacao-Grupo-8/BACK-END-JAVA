@@ -1,6 +1,7 @@
 package sptech.school.BACK_END_JAVA.usuario.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 import sptech.school.BACK_END_JAVA.usuario.service.UsuarioService;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuarios")
+@PreAuthorize("hasRole('ADMIN')")
 public class UsuarioController {
     private final UsuarioService service;
 
@@ -22,7 +24,6 @@ public class UsuarioController {
         List<Usuario> usuarios = service.listar();
         return ResponseEntity.ok(usuarios);
     }
-
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> getById(@PathVariable UUID id) {
         Usuario usuario = service.buscarPorId(id);

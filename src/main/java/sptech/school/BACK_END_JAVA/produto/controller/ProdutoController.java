@@ -1,6 +1,7 @@
 package sptech.school.BACK_END_JAVA.produto.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.produto.entity.Produto;
 import sptech.school.BACK_END_JAVA.produto.service.ProdutoService;
@@ -10,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/produtos")
+@PreAuthorize("hasRole('ADMIN')")
 public class ProdutoController {
     private final ProdutoService service;
 

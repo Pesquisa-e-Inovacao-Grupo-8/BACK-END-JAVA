@@ -11,6 +11,13 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@Table(
+    name = "servico_profissional",
+    uniqueConstraints = @UniqueConstraint(
+        name = "unique_servico_profissional",
+        columnNames = {"fk_profissional", "fk_servico"}
+    )
+)
 public class ServicoProfissional {
     @Id
     @Column(name = "id_profissional_servico")
