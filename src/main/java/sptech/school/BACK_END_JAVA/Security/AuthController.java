@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.Security.DTO.*;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario; // ajuste o pacote real
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository; // ajuste o pacote real
+import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
+import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
 
 
 @RestController
@@ -24,6 +26,9 @@ public class AuthController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private ClienteRepository clienteRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -73,7 +78,11 @@ public class AuthController {
         usuario.setAtivo(true);
         usuario.setCriacao(java.time.LocalDateTime.now());
 
-        usuarioRepository.save(usuario);
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+
+        Cliente cliente = new Cliente();
+        cliente.setUsuario(usuarioSalvo);
+        clienteRepository.save(cliente);
 
         return ResponseEntity.ok(new CadastrarResponse("Usuário cadastrado com sucesso", true));
     }
