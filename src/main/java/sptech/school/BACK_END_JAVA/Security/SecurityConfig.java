@@ -62,7 +62,14 @@ public class SecurityConfig {
                         .hasAnyRole("CLIENTE", "PROFISSIONAL", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/servicos/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/pacotes/**", "/pacoteServicos/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/profissionais/me/horarios")
+                        .hasRole("PROFISSIONAL")
+                        .requestMatchers(HttpMethod.PUT, "/profissionais/me/horarios")
+                        .hasRole("PROFISSIONAL")
                         .requestMatchers(HttpMethod.GET, "/profissionais", "/profissionais/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/profissionais/*/servicos").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/profissionais/*/horarios").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/profissionais/{profissionalId}/horarios").permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -71,8 +78,10 @@ public class SecurityConfig {
 
                         // rotas restritas por role
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/profissionais/meus-servicos/**", "/profissionais/*/servicos/**", "/profissionais/vincular-servicos/**")
+                        .requestMatchers("/profissionais/meus-servicos/**", "/profissionais/vincular-servicos/**")
                         .hasAnyRole("PROFISSIONAL", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/agendamentos/disponibilidade")
+                        .permitAll()
                         .requestMatchers("/agendamentos/**")
                         .hasAnyRole("CLIENTE", "PROFISSIONAL", "ADMIN")
                         .requestMatchers("/clientes/**", "/clientePacotes/**")
@@ -83,9 +92,6 @@ public class SecurityConfig {
                         .hasRole("ADMIN")
                         .requestMatchers("/agendamentoServicos/**")
                         .hasAnyRole("CLIENTE", "PROFISSIONAL", "ADMIN")
-                        .requestMatchers("/servicos/**", "/profissionais/**")
-                        .hasRole("ADMIN")
-
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)

@@ -1,6 +1,8 @@
 package sptech.school.BACK_END_JAVA.agendamento.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import jakarta.persistence.LockModeType;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 
 import java.time.LocalDate;
@@ -12,4 +14,9 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> 
     List<Agendamento> findAll();
     List<Agendamento> findByCliente_Usuario_Email(String email);
     List<Agendamento> findByProfissional_Usuario_Email(String email);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    List<Agendamento> findByProfissional_IdAndData(UUID profissionalId, LocalDate data);
+
+    List<Agendamento> findByProfissional_IdAndDataOrderByHoraInicio(UUID profissionalId, LocalDate data);
 }

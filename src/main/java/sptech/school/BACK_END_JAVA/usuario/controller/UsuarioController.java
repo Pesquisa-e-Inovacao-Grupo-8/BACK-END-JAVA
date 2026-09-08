@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/admin/usuarios")
+@RequestMapping("/usuarios")
 @PreAuthorize("hasRole('ADMIN')")
 public class UsuarioController {
     private final UsuarioService service;

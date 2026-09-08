@@ -7,6 +7,7 @@ import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProfissionalService {
@@ -22,6 +23,23 @@ public class ProfissionalService {
     public Profissional buscarPorId(UUID id) {
         return profissionalRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profissional não encontrado"));
+    }
+
+    @Transactional
+    public Profissional buscarOuCriarPorEmail(String email) {
+        return profissionalRepository.findByUsuario_Email(email)
+                .orElseGet(() -> {
+                    var usuario = usuarioRepository.findByEmail(email)
+                            .orElseThrow(() -> new RuntimeException("Usuário autenticado não encontrado"));
+                    if (!"PROFISSIONAL".equalsIgnoreCase(usuario.getTipo())) {
+                        throw new IllegalStateException("O usuário autenticado não possui perfil profissional");
+                    }
+
+                    Profissional profissional = new Profissional();
+                    profissional.setUsuario(usuario);
+                    profissional.setEspecialidade("Pendente");
+                    return profissionalRepository.save(profissional);
+                });
     }
 
     public Profissional criar(Profissional profissional, UUID usuarioId) {

@@ -22,10 +22,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("Email não encontrado"));
 
+        String role = usuario.getTipo() == null
+            ? "CLIENTE"
+            : usuario.getTipo().trim().replaceFirst("(?i)^ROLE_", "").toUpperCase();
+
         return User.builder()
                 .username(usuario.getEmail())
                 .password(usuario.getSenha())
-                .roles(usuario.getTipo().toUpperCase())
+            .roles(role)
                 .disabled(Boolean.FALSE.equals(usuario.getAtivo()))
                 .build();
     }

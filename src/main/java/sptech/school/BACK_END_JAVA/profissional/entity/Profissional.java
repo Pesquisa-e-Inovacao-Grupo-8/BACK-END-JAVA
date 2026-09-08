@@ -29,14 +29,6 @@ public class Profissional {
     @JoinColumn(name = "fk_usuario")
     private Usuario usuario;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "profissional_servico",
-            joinColumns = @JoinColumn(name = "profissional_id"),
-            inverseJoinColumns = @JoinColumn(name = "servico_id")
-    )
-    private java.util.List<sptech.school.BACK_END_JAVA.servico.entity.Servico> servicos;
-
     public UUID getId() {
         return id;
     }
@@ -75,14 +67,6 @@ public class Profissional {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
-    }
-
-    public java.util.List<sptech.school.BACK_END_JAVA.servico.entity.Servico> getServicos() {
-        return servicos;
-    }
-
-    public void setServicos(java.util.List<sptech.school.BACK_END_JAVA.servico.entity.Servico> servicos) {
-        this.servicos = servicos;
     }
 
 }
