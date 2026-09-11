@@ -43,7 +43,7 @@ public class NotificationScheduler {
            body.put("ordemPedido", agendamento.getOrdemPedido());
 
            webClient.post()
-                   .uri("http://localhost:8090/notify/agendamento")
+                   .uri("http://api-twillio:8090/notify/agendamento")
                    .contentType(MediaType.APPLICATION_JSON)
                    .bodyValue(body)
                    .retrieve()

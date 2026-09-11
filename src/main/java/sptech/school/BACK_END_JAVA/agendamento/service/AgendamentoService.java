@@ -339,7 +339,7 @@ public class AgendamentoService {
 
         WebClient.create()
                 .post()
-                .uri("http://localhost:8090/notify/agendamento")
+                .uri("http://api-twillio:8090/notify/agendamento")
                 .contentType(MediaType.APPLICATION_JSON) 
                 .bodyValue(Map.of(
                         "telefone", agendamento.getCliente().getUsuario().getTelefone(),
