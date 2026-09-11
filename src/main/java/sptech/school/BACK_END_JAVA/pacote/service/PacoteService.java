@@ -2,6 +2,7 @@ package sptech.school.BACK_END_JAVA.pacote.service;
 
 import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.pacote.entity.Pacote;
+import sptech.school.BACK_END_JAVA.pacote.entity.dto.request.PacoteRequestDto;
 import sptech.school.BACK_END_JAVA.pacote.repository.PacoteRepository;
 
 import java.util.List;
@@ -21,16 +22,22 @@ public class PacoteService {
                 .orElseThrow(() -> new RuntimeException("Pacote não encontrado"));
     }
 
-    public Pacote criar(Pacote pacote) {
+    public Pacote criar(PacoteRequestDto dto) {
+        Pacote pacote = mapear(dto, new Pacote());
         return pacoteRepository.save(pacote);
     }
 
-    public Pacote atualizar(UUID id, Pacote pacote) {
-        if (!pacoteRepository.existsById(id)) {
-            throw new RuntimeException("Pacote não encontrado");
-        }
-        pacote.setId(id);
+    public Pacote atualizar(UUID id, PacoteRequestDto dto) {
+        Pacote pacote = buscarPorId(id);
+        mapear(dto, pacote);
         return pacoteRepository.save(pacote);
+    }
+
+    private Pacote mapear(PacoteRequestDto dto, Pacote pacote) {
+        pacote.setNome(dto.getNome());
+        pacote.setDescricao(dto.getDescricao());
+        pacote.setPrecoTotal(dto.getPrecoTotal());
+        return pacote;
     }
 
     public void deletar(UUID id) {

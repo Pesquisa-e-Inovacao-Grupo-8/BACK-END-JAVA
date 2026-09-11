@@ -4,7 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
+import sptech.school.BACK_END_JAVA.servico.entity.dto.request.ServicoRequestDto;
 import sptech.school.BACK_END_JAVA.servico.service.ServicoService;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,15 +34,15 @@ public class ServicoController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Servico> criar(@RequestBody Servico servico) {
-        Servico criado = service.criar(servico);
+    public ResponseEntity<Servico> criar(@Valid @RequestBody ServicoRequestDto dto) {
+        Servico criado = service.criar(dto);
         return ResponseEntity.status(201).body(criado);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Servico> atualizar(@PathVariable UUID id, @RequestBody Servico servico) {
-        Servico atualizado = service.atualizar(id, servico);
+    public ResponseEntity<Servico> atualizar(@PathVariable UUID id, @Valid @RequestBody ServicoRequestDto dto) {
+        Servico atualizado = service.atualizar(id, dto);
         return ResponseEntity.ok(atualizado);
     }
 

@@ -1,6 +1,5 @@
 package sptech.school.BACK_END_JAVA.agendamento.controller;
 
-import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
@@ -8,8 +7,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 import sptech.school.BACK_END_JAVA.agendamento.entity.dto.request.AgendamentoRequestDto;
+import sptech.school.BACK_END_JAVA.agendamento.entity.dto.request.AgendamentoUpdateDto;
 import sptech.school.BACK_END_JAVA.agendamento.service.AgendamentoService;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.UUID;
@@ -77,10 +78,10 @@ public class AgendamentoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Agendamento> atualizarAgendamento(@PathVariable UUID id, @RequestBody Agendamento agendamento, Authentication authentication) {
+    public ResponseEntity<Agendamento> atualizarAgendamento(@PathVariable UUID id, @Valid @RequestBody AgendamentoUpdateDto dto, Authentication authentication) {
         if (!service.podeAcessar(id, authentication)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 
-        Agendamento atualizado = service.atualizar(id, agendamento);
+        Agendamento atualizado = service.atualizar(id, dto);
         return ResponseEntity.ok(atualizado);
     }
 

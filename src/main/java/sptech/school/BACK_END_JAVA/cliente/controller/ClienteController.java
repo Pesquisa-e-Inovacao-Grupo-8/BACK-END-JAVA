@@ -5,7 +5,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.cliente.entity.dto.request.ClienteRequestDto;
+import sptech.school.BACK_END_JAVA.cliente.entity.dto.request.ClienteUpdateDto;
 import sptech.school.BACK_END_JAVA.cliente.service.ClienteService;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,9 +45,9 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Cliente> atualizar(@PathVariable UUID id, @RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> atualizar(@PathVariable UUID id, @Valid @RequestBody ClienteUpdateDto dto) {
 
-        Cliente atualizado = service.atualizar(id, cliente);
+        Cliente atualizado = service.atualizar(id, dto);
         return ResponseEntity.ok(atualizado);
     }
 
