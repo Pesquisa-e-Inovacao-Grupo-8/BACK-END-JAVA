@@ -3,6 +3,8 @@ package sptech.school.BACK_END_JAVA.pagamento.service;
 import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.agendamento.service.AgendamentoService;
 import sptech.school.BACK_END_JAVA.pagamento.entity.Pagamento;
+import sptech.school.BACK_END_JAVA.pagamento.entity.dto.request.PagamentoRequestDto;
+import sptech.school.BACK_END_JAVA.pagamento.entity.dto.request.PagamentoUpdateDto;
 import sptech.school.BACK_END_JAVA.pagamento.repository.PagamentoRepository;
 
 import java.util.List;
@@ -25,17 +27,22 @@ public class PagamentoService {
                 .orElseThrow(() -> new RuntimeException("Pagamento não encontrado"));
     }
 
-    public Pagamento criar(Pagamento pagamento, UUID agendamentoId) {
+    public Pagamento criar(PagamentoRequestDto dto, UUID agendamentoId) {
         var agendamento = agendamentoService.buscarPorId(agendamentoId);
+        Pagamento pagamento = new Pagamento();
+        pagamento.setValor(dto.getValor());
+        pagamento.setMetodo(dto.getMetodo());
+        pagamento.setStatus(dto.getStatus());
+        pagamento.setData(dto.getData());
         pagamento.setAgendamento(agendamento);
         return pagamentoRepository.save(pagamento);
     }
 
-    public Pagamento atualizar(UUID id, Pagamento pagamento) {
-        if (!pagamentoRepository.existsById(id)) {
-            throw new RuntimeException("Pagamento não encontrado");
-        }
-        pagamento.setId(id);
+    public Pagamento atualizar(UUID id, PagamentoUpdateDto dto) {
+        Pagamento pagamento = buscarPorId(id);
+        pagamento.setValor(dto.getValor());
+        pagamento.setMetodo(dto.getMetodo());
+        pagamento.setStatus(dto.getStatus());
         return pagamentoRepository.save(pagamento);
     }
 

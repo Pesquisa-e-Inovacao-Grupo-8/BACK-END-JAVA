@@ -2,6 +2,7 @@ package sptech.school.BACK_END_JAVA.cliente.service;
 
 import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
+import sptech.school.BACK_END_JAVA.cliente.entity.dto.request.ClienteUpdateDto;
 import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
@@ -37,13 +38,9 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    public Cliente atualizar(UUID id, Cliente cliente) {
-
-        if (!clienteRepository.existsById(id)) {
-            throw new RuntimeException("Cliente não encontrado");
-        }
-
-        cliente.setId(id);
+    public Cliente atualizar(UUID id, ClienteUpdateDto dto) {
+        Cliente cliente = buscarPorId(id);
+        cliente.setObservacoes(dto.getObservacoes());
         return clienteRepository.save(cliente);
     }
 

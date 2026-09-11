@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 import sptech.school.BACK_END_JAVA.agendamento.entity.dto.request.AgendamentoRequestDto;
+import sptech.school.BACK_END_JAVA.agendamento.entity.dto.request.AgendamentoUpdateDto;
 import sptech.school.BACK_END_JAVA.agendamento.repository.AgendamentoRepository;
 import sptech.school.BACK_END_JAVA.agendamento.strategy.AgendamentoStrategy;
 import sptech.school.BACK_END_JAVA.agendamento.strategy.AgendamentoStrategyFactory;
@@ -21,7 +22,6 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -263,13 +263,9 @@ public class AgendamentoService {
         return horaInicio;
     }
 
-    public Agendamento atualizar(UUID id, Agendamento agendamento) {
-
-        if (!agendamentoRepository.existsById(id)) {
-            throw new RuntimeException("Agendamento não encontrado");
-        }
-
-        agendamento.setId(id);
+    public Agendamento atualizar(UUID id, AgendamentoUpdateDto dto) {
+        Agendamento agendamento = buscarPorId(id);
+        agendamento.setStatus(dto.getStatus());
         return agendamentoRepository.save(agendamento);
     }
 

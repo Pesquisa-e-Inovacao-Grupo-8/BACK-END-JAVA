@@ -4,7 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.pacote.entity.Pacote;
+import sptech.school.BACK_END_JAVA.pacote.entity.dto.request.PacoteRequestDto;
 import sptech.school.BACK_END_JAVA.pacote.service.PacoteService;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,15 +33,15 @@ public class PacoteController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Pacote> criar(@RequestBody Pacote pacote) {
-        Pacote criado = service.criar(pacote);
+    public ResponseEntity<Pacote> criar(@Valid @RequestBody PacoteRequestDto dto) {
+        Pacote criado = service.criar(dto);
         return ResponseEntity.status(201).body(criado);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Pacote> atualizar(@PathVariable UUID id, @RequestBody Pacote pacote) {
-        Pacote atualizado = service.atualizar(id, pacote);
+    public ResponseEntity<Pacote> atualizar(@PathVariable UUID id, @Valid @RequestBody PacoteRequestDto dto) {
+        Pacote atualizado = service.atualizar(id, dto);
         return ResponseEntity.ok(atualizado);
     }
 
