@@ -1,5 +1,6 @@
 package sptech.school.BACK_END_JAVA.agendamento.controller;
 
+import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
@@ -70,6 +71,8 @@ public class AgendamentoController {
         }
 
         Agendamento agendamentoCriado = service.criar(dto);
+        service.notificarAgendamento(agendamentoCriado);
+
         return ResponseEntity.status(201).body(agendamentoCriado);
     }
 
