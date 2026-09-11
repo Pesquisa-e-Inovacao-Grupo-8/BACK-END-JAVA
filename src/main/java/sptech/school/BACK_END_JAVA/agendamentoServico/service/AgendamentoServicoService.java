@@ -7,7 +7,6 @@ import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 import sptech.school.BACK_END_JAVA.agendamento.repository.AgendamentoRepository;
 import sptech.school.BACK_END_JAVA.agendamentoServico.entity.AgendamentoServico;
 import sptech.school.BACK_END_JAVA.agendamentoServico.repository.AgendamentoServicoRepository;
-import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
@@ -70,14 +69,14 @@ public class AgendamentoServicoService {
 
         payload.put("telefone", agendamento.getCliente().getUsuario().getTelefone());
         payload.put("cliente", agendamento.getCliente().getUsuario().getNome());
-        payload.put("servico" , servico);
+        payload.put("servico", servico.getNome());
         payload.put("data", agendamento.getData().toString());
         payload.put("horaInicio", agendamento.getHoraInicio().toString());
         payload.put("ordemPedido", agendamento.getOrdemPedido());
 
         // Não deixar que falha no serviço de notificações quebre o fluxo principal
         webClient.post()
-                .uri("http://localhost:5000/notify/agendamento")
+                .uri("http://localhost:8090/notify/agendamento")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(payload)
                 .retrieve()

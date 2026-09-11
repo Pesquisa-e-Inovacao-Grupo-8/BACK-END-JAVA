@@ -344,7 +344,7 @@ public class AgendamentoService {
                 .bodyValue(Map.of(
                         "telefone", agendamento.getCliente().getUsuario().getTelefone(),
                         "cliente", agendamento.getCliente().getUsuario().getNome(),
-                        "servico", agendamento.getServico().toString(),
+                        "servico", agendamento.getServico().getNome(),
                         "data", agendamento.getData().toString(),
                         "horaInicio", agendamento.getHoraInicio().toString(),
                         "ordemPedido", agendamento.getOrdemPedido()
