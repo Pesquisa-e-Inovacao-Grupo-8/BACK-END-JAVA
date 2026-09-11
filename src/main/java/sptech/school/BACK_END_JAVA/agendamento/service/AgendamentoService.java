@@ -2,6 +2,7 @@ package sptech.school.BACK_END_JAVA.agendamento.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
@@ -18,8 +19,11 @@ import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
+import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List; 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.time.LocalTime;
 import java.time.LocalDate;
@@ -326,6 +330,36 @@ public class AgendamentoService {
                     dto.setClienteId(clienteRepository.save(cliente).getId());
                 })
         );
+    }
+
+    public void notificarAgendamento(Agendamento agendamento) {
+
+        // Implementação da notificação, por exemplo, chamando o endpoint do serviço de notificações
+        // Pode ser feito usando WebClient ou outro mecanismo de sua escolha
+
+        WebClient.create()
+                .post()
+                .uri("http://localhost:8090/notify/agendamento")
+                .contentType(MediaType.APPLICATION_JSON) 
+                .bodyValue(Map.of(
+                        "telefone", agendamento.getCliente().getUsuario().getTelefone(),
+                        "cliente", agendamento.getCliente().getUsuario().getNome(),
+                        "servico", agendamento.getServico().getNome(),
+                        "data", agendamento.getData().toString(),
+                        "horaInicio", agendamento.getHoraInicio().toString(),
+                        "ordemPedido", agendamento.getOrdemPedido()
+                ))
+                .retrieve()
+                .bodyToMono(String.class)
+                .subscribe();
+
+    }
+
+    public List<Agendamento> consultarPorData(LocalDate dataAlvo) {
+        List<Agendamento> agendamentos = agendamentoRepository.findAll();
+        return agendamentos.stream()
+                .filter(agendamento -> agendamento.getData().equals(dataAlvo))
+                .toList();
     }
 
 
