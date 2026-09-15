@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
 import sptech.school.BACK_END_JAVA.clientePacote.entity.ClientePacote;
+import sptech.school.BACK_END_JAVA.clientePacote.entity.dto.request.ClientePacoteRequestDto;
+import sptech.school.BACK_END_JAVA.clientePacote.entity.dto.request.ClientePacoteUpdateDto;
+import sptech.school.BACK_END_JAVA.clientePacote.entity.dto.response.ClientePacoteResponseDto;
 import sptech.school.BACK_END_JAVA.clientePacote.repository.ClientePacoteRepository;
 import sptech.school.BACK_END_JAVA.clientePacoteServico.entity.ClientePacoteServico;
 import sptech.school.BACK_END_JAVA.clientePacoteServico.repository.ClientePacoteServicoRepository;
@@ -14,6 +17,7 @@ import sptech.school.BACK_END_JAVA.pacoteServico.repository.PacoteServicoReposit
 
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Service
 public class ClientePacoteService {
@@ -33,8 +37,29 @@ public class ClientePacoteService {
 
     public List<ClientePacote> listar() {return clientePacoteRepository.findAll();}
 
-    public List<ClientePacote> listarPorUsuario(UUID usuarioId) {
-        return clientePacoteRepository.findByCliente_Usuario_Id(usuarioId);
+        public List<ClientePacoteResponseDto> listarPorUsuario(UUID usuarioId) {
+        return clientePacoteRepository.findByCliente_Usuario_Id(usuarioId).stream()
+            .map(clientePacote -> {
+                boolean valido = Boolean.TRUE.equals(clientePacote.getAtivo())
+                        && clientePacote.getDtExpiracao() != null
+                        && clientePacote.getDtExpiracao().isAfter(LocalDateTime.now());
+                return new ClientePacoteResponseDto(
+                    clientePacote.getId(),
+                    clientePacote.getPacote().getNome(),
+                    clientePacote.getPacote().getDescricao(),
+                    valido,
+                    clientePacote.getDtExpiracao(),
+                    clientePacoteServicoRepository.findByClientePacote(clientePacote).stream()
+                        .map(vinculo -> new ClientePacoteResponseDto.ServicoPacoteResponseDto(
+                            vinculo.getServico().getId(),
+                            vinculo.getServico().getNome(),
+                            vinculo.getServico().getDuracaoMinutos(),
+                            vinculo.getQuantidadeDisponivel(),
+                            vinculo.getQuantidadeTotal(),
+                            vinculo.getId()))
+                        .toList());
+            })
+            .toList();
     }
 
     public ClientePacote buscarPorId(UUID id) {
@@ -43,12 +68,17 @@ public class ClientePacoteService {
     }
 
     public ClientePacote criar(
-            ClientePacote clientePacote,
+            ClientePacoteRequestDto dto,
             UUID clienteId,
             UUID pacoteId) {
 
+        ClientePacote clientePacote = new ClientePacote();
+        clientePacote.setAtivo(true);
+        clientePacote.setDtExpiracao(LocalDateTime.now().plusDays(30));
+
         Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+            .orElseGet(() -> clienteRepository.findByUsuario_Id(clienteId)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado")));
 
         Pacote pacote = pacoteRepository.findById(pacoteId)
                 .orElseThrow(() -> new RuntimeException("Pacote não encontrado"));
@@ -72,6 +102,8 @@ public class ClientePacoteService {
             clientePacoteServico.setServico(
                     pacoteServico.getServico()
             );
+                clientePacoteServico.setQuantidadeDisponivel(pacoteServico.getQuantidade());
+                clientePacoteServico.setQuantidadeTotal(pacoteServico.getQuantidade());
 
             clientePacoteServicoRepository.save(
                     clientePacoteServico
@@ -80,13 +112,10 @@ public class ClientePacoteService {
 
         return clientePacoteSalvo;
     }
-    public ClientePacote atualizar(UUID id, ClientePacote clientePacote) {
-
-        if (!clientePacoteRepository.existsById(id)) {
-            throw new RuntimeException("ClientePacote não encontrado");
-        }
-
-        clientePacote.setId(id);
+    public ClientePacote atualizar(UUID id, ClientePacoteUpdateDto dto) {
+        ClientePacote clientePacote = buscarPorId(id);
+        clientePacote.setAtivo(dto.getAtivo());
+        clientePacote.setDtExpiracao(dto.getDtExpiracao());
         return clientePacoteRepository.save(clientePacote);
     }
 

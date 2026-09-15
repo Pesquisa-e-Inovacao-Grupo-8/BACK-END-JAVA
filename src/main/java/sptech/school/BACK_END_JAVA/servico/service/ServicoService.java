@@ -2,6 +2,7 @@ package sptech.school.BACK_END_JAVA.servico.service;
 
 import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
+import sptech.school.BACK_END_JAVA.servico.entity.dto.request.ServicoRequestDto;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
 import java.util.List;
@@ -22,16 +23,24 @@ public class ServicoService {
                 .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
     }
 
-    public Servico criar(Servico servico) {
+    public Servico criar(ServicoRequestDto dto) {
+        Servico servico = mapear(dto, new Servico());
         return servicoRepository.save(servico);
     }
 
-    public Servico atualizar(UUID id, Servico servico) {
-        if (!servicoRepository.existsById(id)) {
-            throw new RuntimeException("Serviço não encontrado");
-        }
-        servico.setId(id);
+    public Servico atualizar(UUID id, ServicoRequestDto dto) {
+        Servico servico = buscarPorId(id);
+        mapear(dto, servico);
         return servicoRepository.save(servico);
+    }
+
+    private Servico mapear(ServicoRequestDto dto, Servico servico) {
+        servico.setNome(dto.getNome());
+        servico.setDuracaoMinutos(dto.getDuracaoMinutos());
+        servico.setDescricao(dto.getDescricao());
+        servico.setPreco(dto.getPreco());
+        servico.setAtivo(dto.getAtivo());
+        return servico;
     }
 
     public void deletar(UUID id) {

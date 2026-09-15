@@ -24,4 +24,7 @@ public class PacoteServico {
     @ManyToOne
     @JoinColumn(name = "fk_servico")
     private Servico servico;
+
+    @Column(nullable = false)
+    private Integer quantidade;
 }

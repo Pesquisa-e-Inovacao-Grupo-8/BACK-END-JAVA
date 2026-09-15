@@ -4,7 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.produto.entity.Produto;
+import sptech.school.BACK_END_JAVA.produto.entity.dto.request.ProdutoRequestDto;
 import sptech.school.BACK_END_JAVA.produto.service.ProdutoService;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,13 +32,13 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Produto> criar(@RequestBody Produto produto) {
-        return ResponseEntity.status(201).body(service.criar(produto));
+    public ResponseEntity<Produto> criar(@Valid @RequestBody ProdutoRequestDto dto) {
+        return ResponseEntity.status(201).body(service.criar(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Produto> atualizar(@PathVariable UUID id, @RequestBody Produto produto) {
-        return ResponseEntity.ok(service.atualizar(id, produto));
+    public ResponseEntity<Produto> atualizar(@PathVariable UUID id, @Valid @RequestBody ProdutoRequestDto dto) {
+        return ResponseEntity.ok(service.atualizar(id, dto));
     }
 
     @DeleteMapping("/{id}")

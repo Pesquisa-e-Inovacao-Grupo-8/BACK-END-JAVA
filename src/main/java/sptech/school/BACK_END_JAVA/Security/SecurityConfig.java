@@ -26,11 +26,14 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+        private final PaymentApiKeyFilter paymentApiKeyFilter;
     private final UserDetailsServiceImpl userDetailsService;
 
     public SecurityConfig(JwtFilter jwtFilter,
+                                                  PaymentApiKeyFilter paymentApiKeyFilter,
                           UserDetailsServiceImpl userDetailsService) {
         this.jwtFilter = jwtFilter;
+                this.paymentApiKeyFilter = paymentApiKeyFilter;
         this.userDetailsService = userDetailsService;
     }
 
@@ -62,7 +65,7 @@ public class SecurityConfig {
                                 "/auth/login",
                                 "/auth/cadastrar"
                         ).permitAll()
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**", "/error").permitAll()
                         .requestMatchers("/usuarios/**")
                         .hasAnyRole("CLIENTE", "PROFISSIONAL", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/servicos/**").permitAll()
@@ -90,7 +93,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/agendamentos")
                         .hasAnyRole("CLIENTE", "PROFISSIONAL", "ADMIN")
                         .requestMatchers("/agendamentos/**")
-                        .hasAnyRole("CLIENTE", "PROFISSIONAL", "ADMIN")
+                        .hasAnyRole("CLIENTE", "PROFISSIONAL", "ADMIN", "PAYMENT")
                         .requestMatchers("/clientes/**", "/clientePacotes/**")
                         .hasAnyRole("CLIENTE", "ADMIN")
                         .requestMatchers("/pagamentos/**", "/comprovantes/**")
@@ -104,6 +107,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
+                .addFilterBefore(paymentApiKeyFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
@@ -112,14 +116,12 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(
+        config.setAllowedOriginPatterns(List.of(
                 "https://renatahtokutomi.com",
                 "https://www.renatahtokutomi.com",
                 "https://qa.renatahtokutomi.com",
-                "http://localhost:3000",
-                "http://localhost:5173",
-                "http://localhost:8000",
-                "http://localhost:8001"
+                "http://localhost:[*]",
+                "http://127.0.0.1:[*]"
         ));
 
         config.setAllowedMethods(List.of(

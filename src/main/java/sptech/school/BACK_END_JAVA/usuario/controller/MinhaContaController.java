@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
+import sptech.school.BACK_END_JAVA.usuario.entity.dto.request.MeusDadosUpdateDto;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
 @RestController
@@ -30,7 +32,7 @@ public class MinhaContaController {
 
     @PutMapping("/me")
     public ResponseEntity<Usuario> atualizarMeusDados(
-            @RequestBody Usuario dados,
+            @Valid @RequestBody MeusDadosUpdateDto dados,
             Authentication authentication) {
         return usuarioRepository.findByEmail(authentication.getName())
                 .map(usuario -> {

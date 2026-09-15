@@ -65,6 +65,7 @@ public class ServicoProfissionalService {
         }
 
         repository.deleteByProfissional(profissional);
+        repository.flush(); // <-- força o DELETE ir pro banco antes dos INSERTs abaixo
 
         for (Servico servico : servicos) {
             ServicoProfissional sp = new ServicoProfissional();
@@ -74,6 +75,10 @@ public class ServicoProfissionalService {
             repository.save(sp);
         }
     }
+
+
+
+
 
     @Transactional
     public void remover(UUID profissionalId, UUID servicoId) {

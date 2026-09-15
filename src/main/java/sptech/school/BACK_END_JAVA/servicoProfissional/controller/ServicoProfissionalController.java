@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import sptech.school.BACK_END_JAVA.profissional.entity.dto.request.ServicosIdsRequestDto;
 import sptech.school.BACK_END_JAVA.servicoProfissional.service.ServicoProfissionalService;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 
@@ -28,14 +30,13 @@ public class ServicoProfissionalController {
     @PreAuthorize("hasAnyRole('PROFISSIONAL', 'ADMIN')")
     public ResponseEntity<Void> vincularServicos(
             @PathVariable UUID profissionalId,
-            @RequestBody List<UUID> servicosIds,
+            @Valid @RequestBody ServicosIdsRequestDto dto,
             Authentication authentication
     ) {
         if (!podeAcessar(profissionalId, authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        System.out.println("IDS RECEBIDOS: " + servicosIds);
-        service.vincularServicos(profissionalId, servicosIds);
+        service.vincularServicos(profissionalId, dto.getServicosIds());
         return ResponseEntity.noContent().build();
     }
 

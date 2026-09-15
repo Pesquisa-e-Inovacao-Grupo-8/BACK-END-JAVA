@@ -7,11 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 import sptech.school.BACK_END_JAVA.agendamento.entity.dto.request.AgendamentoRequestDto;
+import sptech.school.BACK_END_JAVA.agendamento.entity.dto.request.AgendamentoUpdateDto;
 import sptech.school.BACK_END_JAVA.agendamento.repository.AgendamentoRepository;
 import sptech.school.BACK_END_JAVA.agendamento.strategy.AgendamentoStrategy;
 import sptech.school.BACK_END_JAVA.agendamento.strategy.AgendamentoStrategyFactory;
 import sptech.school.BACK_END_JAVA.agendamentoServico.entity.AgendamentoServico;
 import sptech.school.BACK_END_JAVA.agendamentoServico.repository.AgendamentoServicoRepository;
+import sptech.school.BACK_END_JAVA.clientePacoteServico.entity.ClientePacoteServico;
+import sptech.school.BACK_END_JAVA.clientePacoteServico.repository.ClientePacoteServicoRepository;
 import sptech.school.BACK_END_JAVA.cliente.entity.Cliente;
 import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
@@ -21,12 +24,12 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.time.LocalTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
@@ -47,8 +50,9 @@ public class AgendamentoService {
     private final AgendamentoStrategyFactory factory;
     private final ProfissionalHorarioRepository profissionalHorarioRepository;
     private final ServicoProfissionalRepository servicoProfissionalRepository;
+    private final ClientePacoteServicoRepository clientePacoteServicoRepository;
 
-    public AgendamentoService(AgendamentoRepository agendamentoRepository, ClienteRepository clienteRepository, UsuarioRepository usuarioRepository, ProfissionalRepository profissionalRepository, ServicoRepository servicoRepository, AgendamentoServicoRepository agendamentoServicoRepository, AgendamentoStrategyFactory factory, ProfissionalHorarioRepository profissionalHorarioRepository, ServicoProfissionalRepository servicoProfissionalRepository) {
+    public AgendamentoService(AgendamentoRepository agendamentoRepository, ClienteRepository clienteRepository, UsuarioRepository usuarioRepository, ProfissionalRepository profissionalRepository, ServicoRepository servicoRepository, AgendamentoServicoRepository agendamentoServicoRepository, AgendamentoStrategyFactory factory, ProfissionalHorarioRepository profissionalHorarioRepository, ServicoProfissionalRepository servicoProfissionalRepository, ClientePacoteServicoRepository clientePacoteServicoRepository) {
         this.agendamentoRepository = agendamentoRepository;
         this.clienteRepository = clienteRepository;
         this.usuarioRepository = usuarioRepository;
@@ -58,6 +62,7 @@ public class AgendamentoService {
         this.factory = factory;
         this.profissionalHorarioRepository = profissionalHorarioRepository;
         this.servicoProfissionalRepository = servicoProfissionalRepository;
+        this.clientePacoteServicoRepository = clientePacoteServicoRepository;
     }
 
     public List<Agendamento> listar(Authentication authentication) {
@@ -116,6 +121,7 @@ public class AgendamentoService {
             }
 
     public boolean podeAcessar(UUID id, Authentication authentication) {
+        if (temRole(authentication, "ROLE_PAYMENT")) return true;
         if (temRole(authentication, "ROLE_ADMIN")) return true;
         Agendamento agendamento = buscarPorId(id);
         if (temRole(authentication, "ROLE_PROFISSIONAL")) {
@@ -138,6 +144,20 @@ public class AgendamentoService {
                 .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
     }
 
+    public Agendamento buscarPorReferencia(String referencia) {
+        try {
+            return agendamentoRepository.findById(UUID.fromString(referencia))
+                    .orElseGet(() -> buscarPorOrdemPedido(referencia));
+        } catch (IllegalArgumentException erro) {
+            return buscarPorOrdemPedido(referencia);
+        }
+    }
+
+    private Agendamento buscarPorOrdemPedido(String ordemPedido) {
+        return agendamentoRepository.findByOrdemPedido(ordemPedido)
+                .orElseThrow(() -> new RuntimeException("Agendamento não encontrado"));
+    }
+
     @Transactional
     public Agendamento criar(AgendamentoRequestDto dto) {
 
@@ -156,6 +176,7 @@ public class AgendamentoService {
         if (dto.getServicos() == null || dto.getServicos().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe ao menos um serviço");
         }
+
 
         LocalTime horaInicio = validarHora(dto.getHoraInicio());
         List<Servico> servicos = dto.getServicos().stream()
@@ -196,31 +217,72 @@ public class AgendamentoService {
 
         List<Agendamento> existentes = agendamentoRepository
             .findByProfissional_IdAndData(profissional.getId(), dto.getData());
+
         int intervalo = horario.getIntervaloMinutos() == null ? 0 : horario.getIntervaloMinutos();
+
         boolean conflito = existentes.stream()
-            .filter(agendamento -> !"CANCELADO".equalsIgnoreCase(
-                agendamento.getStatus() == null ? "" : agendamento.getStatus().trim()))
+            .filter(agendamento -> agendamento.getStatus() == null 
+                || !"CANCELADO".equalsIgnoreCase(agendamento.getStatus().trim()))
             .anyMatch(agendamento -> {
                 LocalTime inicioExistente = agendamento.getHoraInicio();
                 LocalTime fimExistente = agendamento.getHoraFim();
                 if (inicioExistente == null || fimExistente == null) return true;
 
-                // O atendimento existente bloqueia também o intervalo posterior.
-                LocalTime fimBloqueado = fimExistente.plusMinutes(intervalo);
-                return horaInicio.isBefore(fimBloqueado)
-                    && horaFim.plusMinutes(intervalo).isAfter(inicioExistente);
+                // Considera o intervalo de descanso/limpeza após o término de cada agendamento
+                LocalTime fimExistenteComIntervalo = fimExistente.plusMinutes(intervalo);
+                LocalTime novoFimComIntervalo = horaFim.plusMinutes(intervalo);
+
+                // Regra de colisão de horários considerando o intervalo
+                return horaInicio.isBefore(fimExistenteComIntervalo) 
+                    && novoFimComIntervalo.isAfter(inicioExistente);
             });
+
         if (conflito) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
-                "O horário escolhido conflita com outro agendamento ou intervalo");
+                "O horário escolhido conflita com outro agendamento existente ou intervalo de descanso.");
         }
-
         tentarVincularClienteCadastrado(dto);
 
         garantirClienteDoUsuario(dto);
 
         logger.info("usuarioId recebido: {}", dto.getUsuarioId());
         logger.info("clienteId após vinculação: {}", dto.getClienteId());
+
+        ClientePacoteServico pacoteServicoSelecionado = null;
+        if (dto.getClientePacoteServicoId() != null) {
+            pacoteServicoSelecionado = clientePacoteServicoRepository
+                .findById(dto.getClientePacoteServicoId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Serviço do pacote não encontrado"));
+
+            boolean servicoNoAgendamento = false;
+            for (Servico servico : servicos) {
+                if (servico.getId().equals(pacoteServicoSelecionado.getServico().getId())) {
+                    servicoNoAgendamento = true;
+                    break;
+                }
+            }
+            boolean pacoteDoCliente = dto.getClienteId() != null
+                && pacoteServicoSelecionado.getClientePacote() != null
+                && pacoteServicoSelecionado.getClientePacote().getCliente() != null
+                && dto.getClienteId().equals(pacoteServicoSelecionado.getClientePacote().getCliente().getId());
+
+            if (!servicoNoAgendamento || !pacoteDoCliente) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                "O serviço do pacote não pertence ao cliente ou ao serviço selecionado");
+            }
+            if (pacoteServicoSelecionado.getQuantidadeDisponivel() == null
+                || pacoteServicoSelecionado.getQuantidadeDisponivel() <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                "Este serviço não possui saldo disponível no pacote");
+            }
+                if (!Boolean.TRUE.equals(pacoteServicoSelecionado.getClientePacote().getAtivo())
+                    || pacoteServicoSelecionado.getClientePacote().getDtExpiracao() == null
+                    || !pacoteServicoSelecionado.getClientePacote().getDtExpiracao().isAfter(LocalDateTime.now())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Este pacote está expirado");
+                }
+        }
 
         Agendamento agendamento = new Agendamento();
 
@@ -247,6 +309,13 @@ public class AgendamentoService {
             agendamentoServico.setAgendamento(agendamentoSalvo);
             agendamentoServico.setServico(servico);
 
+            if (dto.getClientePacoteServicoId() != null) {
+                agendamentoServico.setClientePacoteServico(pacoteServicoSelecionado);
+                pacoteServicoSelecionado.setQuantidadeDisponivel(
+                    pacoteServicoSelecionado.getQuantidadeDisponivel() - 1);
+                clientePacoteServicoRepository.saveAndFlush(pacoteServicoSelecionado);
+            }
+
             agendamentoServicoRepository.save(agendamentoServico);
         }
 
@@ -263,13 +332,9 @@ public class AgendamentoService {
         return horaInicio;
     }
 
-    public Agendamento atualizar(UUID id, Agendamento agendamento) {
-
-        if (!agendamentoRepository.existsById(id)) {
-            throw new RuntimeException("Agendamento não encontrado");
-        }
-
-        agendamento.setId(id);
+    public Agendamento atualizar(UUID id, AgendamentoUpdateDto dto) {
+        Agendamento agendamento = buscarPorId(id);
+        agendamento.setStatus(dto.getStatus());
         return agendamentoRepository.save(agendamento);
     }
 
