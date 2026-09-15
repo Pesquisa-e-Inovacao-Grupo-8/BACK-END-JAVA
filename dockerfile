@@ -1,26 +1,20 @@
 # ============================================
 # BUILD
 # ============================================
-FROM eclipse-temurin:21-jdk AS build
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 
 WORKDIR /app
 
-# Copia Maven Wrapper
-COPY mvnw .
-COPY .mvn .mvn
 COPY pom.xml .
 
-# Permissão para executar o Maven Wrapper
-RUN chmod +x mvnw
-
 # Baixa dependências
-RUN ./mvnw dependency:go-offline -B
+RUN mvn dependency:go-offline -B
 
 # Copia código fonte
 COPY src src
 
 # Build da aplicação
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 
 # ============================================
