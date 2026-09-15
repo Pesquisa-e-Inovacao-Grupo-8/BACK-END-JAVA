@@ -39,6 +39,9 @@ public class Agendamento {
     @Column(nullable = false)
     private Double valorTotal;
 
+    @Column(length = 1000)
+    private String linkPagamento;
+
     @ManyToOne
     @JoinColumn(name = "fk_cliente")
     private Cliente cliente;

@@ -8,6 +8,8 @@ import sptech.school.BACK_END_JAVA.cliente.repository.ClienteRepository;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 import sptech.school.BACK_END_JAVA.usuario.entity.Usuario;
+import sptech.school.BACK_END_JAVA.usuario.entity.dto.request.UsuarioCreateRequestDto;
+import sptech.school.BACK_END_JAVA.usuario.entity.dto.request.UsuarioUpdateRequestDto;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
 import java.time.LocalDateTime;
@@ -44,7 +46,15 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario criar(Usuario usuario) {
+    public Usuario criar(UsuarioCreateRequestDto dto) {
+        Usuario usuario = new Usuario();
+        usuario.setNome(dto.getNome());
+        usuario.setTelefone(dto.getTelefone());
+        usuario.setCpf(dto.getCpf());
+        usuario.setSenha(dto.getSenha());
+        usuario.setEmail(dto.getEmail());
+        usuario.setTipo(dto.getTipo());
+        usuario.setAtivo(dto.getAtivo() == null || dto.getAtivo());
 
         usuario.setSenha(
                 passwordEncoder.encode(usuario.getSenha())
@@ -68,21 +78,21 @@ public class UsuarioService {
         return usuarioCriado;
     }
 
-    public Usuario atualizar(UUID id, Usuario usuario) {
+    public Usuario atualizar(UUID id, UsuarioUpdateRequestDto dto) {
 
         Usuario existente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        existente.setNome(usuario.getNome());
-        existente.setTelefone(usuario.getTelefone());
-        existente.setCpf(usuario.getCpf());
-        existente.setEmail(usuario.getEmail());
-        existente.setTipo(usuario.getTipo());
-        existente.setAtivo(usuario.getAtivo());
+        existente.setNome(dto.getNome());
+        existente.setTelefone(dto.getTelefone());
+        existente.setCpf(dto.getCpf());
+        existente.setEmail(dto.getEmail());
+        existente.setTipo(dto.getTipo());
+        existente.setAtivo(dto.getAtivo());
 
-        if (usuario.getSenha() != null && !usuario.getSenha().isBlank()) {
+        if (dto.getSenha() != null && !dto.getSenha().isBlank()) {
             existente.setSenha(
-                    passwordEncoder.encode(usuario.getSenha())
+                passwordEncoder.encode(dto.getSenha())
             );
         }
 

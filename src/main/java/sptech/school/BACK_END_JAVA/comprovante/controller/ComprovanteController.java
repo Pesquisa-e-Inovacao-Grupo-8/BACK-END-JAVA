@@ -3,7 +3,10 @@ package sptech.school.BACK_END_JAVA.comprovante.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import sptech.school.BACK_END_JAVA.comprovante.entity.Comprovante;
+import sptech.school.BACK_END_JAVA.comprovante.entity.dto.request.ComprovanteRequestDto;
+import sptech.school.BACK_END_JAVA.comprovante.entity.dto.request.ComprovanteUpdateDto;
 import sptech.school.BACK_END_JAVA.comprovante.service.ComprovanteService;
 
 import java.util.List;
@@ -33,17 +36,17 @@ public class ComprovanteController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMIN')")
-    public ResponseEntity<Comprovante> criar(@RequestBody Comprovante comprovante, @RequestParam UUID pagamentoId) {
+    public ResponseEntity<Comprovante> criar(@Valid @RequestBody ComprovanteRequestDto dto, @RequestParam UUID pagamentoId) {
 
-        Comprovante criado = service.criar(comprovante, pagamentoId);
+        Comprovante criado = service.criar(dto, pagamentoId);
         return ResponseEntity.status(201).body(criado);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMIN')")
-    public ResponseEntity<Comprovante> atualizar(@PathVariable UUID id, @RequestBody Comprovante comprovante) {
+    public ResponseEntity<Comprovante> atualizar(@PathVariable UUID id, @Valid @RequestBody ComprovanteUpdateDto dto) {
 
-        Comprovante atualizado = service.atualizar(id, comprovante);
+        Comprovante atualizado = service.atualizar(id, dto);
         return ResponseEntity.ok(atualizado);
     }
 

@@ -1,4 +1,4 @@
-name: BACK-END-JAVA
+name: BACK-END-JAVA - Deploy
 
 on:
   workflow_dispatch:

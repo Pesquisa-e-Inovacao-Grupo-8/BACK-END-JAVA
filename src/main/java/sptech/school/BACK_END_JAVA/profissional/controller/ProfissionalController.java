@@ -6,6 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import sptech.school.BACK_END_JAVA.profissional.entity.dto.request.ServicosIdsRequestDto;
+import sptech.school.BACK_END_JAVA.profissional.entity.dto.request.ProfissionalRequestDto;
+import sptech.school.BACK_END_JAVA.profissional.entity.dto.request.ProfissionalUpdateRequestDto;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 import sptech.school.BACK_END_JAVA.profissional.service.ProfissionalService;
@@ -71,16 +75,16 @@ public class ProfissionalController {
     @PostMapping("/vincular-servicos")
     @PreAuthorize("hasRole('PROFISSIONAL')")
     public ResponseEntity<Void> vincularMeusServicos(
-            @RequestBody List<UUID> servicosIds,
+            @Valid @RequestBody ServicosIdsRequestDto dto,
             Authentication authentication) {
         Profissional profissional = service.buscarOuCriarPorEmail(authentication.getName());
-        servicoProfissionalService.vincularServicos(profissional.getId(), servicosIds);
+        servicoProfissionalService.vincularServicos(profissional.getId(), dto.getServicosIds());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/vincular-servicos/{usuarioId}")
     @PreAuthorize("hasAnyRole('PROFISSIONAL', 'ADMIN')")
-    public ResponseEntity<Void> vincularServicos(@PathVariable UUID usuarioId, @RequestBody List<UUID> servicosIds, Authentication authentication) {
+    public ResponseEntity<Void> vincularServicos(@PathVariable UUID usuarioId, @Valid @RequestBody ServicosIdsRequestDto dto, Authentication authentication) {
         if (!podeAcessarUsuario(usuarioId, authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -90,7 +94,7 @@ public class ProfissionalController {
             Profissional profissional = profOpt.get();
 
             // Busca todos os serviços no banco correspondentes aos IDs recebidos
-            servicoProfissionalService.vincularServicos(profissional.getId(), servicosIds);
+            servicoProfissionalService.vincularServicos(profissional.getId(), dto.getServicosIds());
 
             return ResponseEntity.ok().build();
         }
@@ -110,10 +114,10 @@ public class ProfissionalController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Profissional> criar(
-            @RequestBody Profissional profissional,
+            @Valid @RequestBody ProfissionalRequestDto dto,
             @RequestParam UUID usuarioId) {
 
-        Profissional criado = service.criar(profissional, usuarioId);
+        Profissional criado = service.criar(dto, usuarioId);
         return ResponseEntity.status(201).body(criado);
     }
 
@@ -121,9 +125,9 @@ public class ProfissionalController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Profissional> atualizar(
             @PathVariable UUID id,
-            @RequestBody Profissional profissional) {
+            @Valid @RequestBody ProfissionalUpdateRequestDto dto) {
 
-        Profissional atualizado = service.atualizar(id, profissional);
+        Profissional atualizado = service.atualizar(id, dto);
         return ResponseEntity.ok(atualizado);
     }
 

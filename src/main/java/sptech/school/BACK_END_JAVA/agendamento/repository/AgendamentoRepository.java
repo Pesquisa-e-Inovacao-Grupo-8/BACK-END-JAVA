@@ -14,6 +14,7 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> 
     List<Agendamento> findAll();
     List<Agendamento> findByCliente_Usuario_Email(String email);
     List<Agendamento> findByProfissional_Usuario_Email(String email);
+    java.util.Optional<Agendamento> findByOrdemPedido(String ordemPedido);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Agendamento> findByProfissional_IdAndData(UUID profissionalId, LocalDate data);

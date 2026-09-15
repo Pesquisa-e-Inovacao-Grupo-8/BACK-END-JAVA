@@ -9,6 +9,7 @@ import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 import sptech.school.BACK_END_JAVA.profissional.service.ProfissionalService;
 import sptech.school.BACK_END_JAVA.profissionalHorario.entity.ProfissionalHorario;
+import sptech.school.BACK_END_JAVA.profissionalHorario.entity.dto.request.ProfissionalHorarioRequestDto;
 import sptech.school.BACK_END_JAVA.profissionalHorario.repository.ProfissionalHorarioRepository;
 
 import java.time.LocalTime;
@@ -49,7 +50,7 @@ public class ProfissionalHorarioController {
     @PreAuthorize("hasRole('PROFISSIONAL')")
     @Transactional
     public ResponseEntity<List<ProfissionalHorario>> salvarMeus(
-            @RequestBody List<ProfissionalHorario> horarios,
+            @RequestBody List<ProfissionalHorarioRequestDto> horarios,
             Authentication authentication) {
         Profissional profissional = profissionalService.buscarOuCriarPorEmail(authentication.getName());
         return ResponseEntity.ok(salvar(profissional, horarios));
@@ -60,36 +61,40 @@ public class ProfissionalHorarioController {
     @Transactional
     public ResponseEntity<List<ProfissionalHorario>> salvarComoAdmin(
             @PathVariable UUID profissionalId,
-            @RequestBody List<ProfissionalHorario> horarios) {
+            @RequestBody List<ProfissionalHorarioRequestDto> horarios) {
         return profissionalRepository.findById(profissionalId)
                 .map(profissional -> ResponseEntity.ok(salvar(profissional, horarios)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    private List<ProfissionalHorario> salvar(Profissional profissional, List<ProfissionalHorario> recebidos) {
+    private List<ProfissionalHorario> salvar(Profissional profissional, List<ProfissionalHorarioRequestDto> recebidos) {
         if (recebidos == null || recebidos.size() != 7) {
             throw new IllegalArgumentException("Informe exatamente um horário para cada dia da semana");
         }
 
         Set<Integer> dias = recebidos.stream()
-                .map(ProfissionalHorario::getDiaSemana)
+            .map(ProfissionalHorarioRequestDto::getDiaSemana)
                 .collect(Collectors.toSet());
         if (dias.size() != 7 || !dias.equals(Set.of(1, 2, 3, 4, 5, 6, 7))) {
             throw new IllegalArgumentException("Informe exatamente os dias da semana de 1 a 7");
         }
-
-        recebidos.forEach(this::validar);
 
         List<ProfissionalHorario> atuais = horarioRepository
             .findByProfissional_IdOrderByDiaSemana(profissional.getId());
         horarioRepository.deleteAllInBatch(atuais);
         horarioRepository.flush();
 
-        return horarioRepository.saveAll(recebidos.stream().map(recebido -> {
-            recebido.setId(null);
+        return horarioRepository.saveAll(recebidos.stream().map(dto -> {
+            ProfissionalHorario recebido = new ProfissionalHorario();
+            recebido.setDiaSemana(dto.getDiaSemana());
+            recebido.setHoraInicio(dto.getHoraInicio());
+            recebido.setHoraFim(dto.getHoraFim());
+            recebido.setIntervaloMinutos(dto.getIntervaloMinutos());
+            recebido.setAtivo(dto.getAtivo());
             recebido.setProfissional(profissional);
             if (recebido.getIntervaloMinutos() == null) recebido.setIntervaloMinutos(0);
             if (recebido.getAtivo() == null) recebido.setAtivo(false);
+            validar(recebido);
             return recebido;
         }).toList());
     }

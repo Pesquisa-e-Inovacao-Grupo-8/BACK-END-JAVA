@@ -3,6 +3,8 @@ package sptech.school.BACK_END_JAVA.pacoteServico.service;
 import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.pacote.repository.PacoteRepository;
 import sptech.school.BACK_END_JAVA.pacoteServico.entity.PacoteServico;
+import sptech.school.BACK_END_JAVA.pacoteServico.entity.dto.request.PacoteServicoRequestDto;
+import sptech.school.BACK_END_JAVA.pacoteServico.entity.dto.request.PacoteServicoUpdateDto;
 import sptech.school.BACK_END_JAVA.pacoteServico.repository.PacoteServicoRepository;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
@@ -28,26 +30,28 @@ public class PacoteServicoService {
                 .orElseThrow(() -> new RuntimeException("PacoteServico não encontrado"));
     }
 
-    public PacoteServico criar(PacoteServico pacoteServico, UUID pacoteId, UUID servicoId) {
+    public PacoteServico criar(PacoteServicoRequestDto dto, UUID pacoteId, UUID servicoId) {
 
         var pacote = pacoteRepository.findById(pacoteId)
                 .orElseThrow(() -> new RuntimeException("Pacote não encontrado"));
         var servico = servicoRepository.findById(servicoId)
                 .orElseThrow(() -> new RuntimeException("Servico não encontrado"));
 
+        PacoteServico pacoteServico = new PacoteServico();
         pacoteServico.setPacote(pacote);
         pacoteServico.setServico(servico);
+        pacoteServico.setQuantidade(dto.getQuantidade());
 
         return pacoteServicoRepository.save(pacoteServico);
     }
 
-    public PacoteServico atualizar(UUID id, PacoteServico pacoteServico) {
-
-        if (!pacoteServicoRepository.existsById(id)) {
-            throw new RuntimeException("PacoteServico não encontrado");
-        }
-
-        pacoteServico.setId(id);
+    public PacoteServico atualizar(UUID id, PacoteServicoUpdateDto dto) {
+        PacoteServico pacoteServico = buscarPorId(id);
+        pacoteServico.setPacote(pacoteRepository.findById(dto.getPacoteId())
+                .orElseThrow(() -> new RuntimeException("Pacote não encontrado")));
+        pacoteServico.setServico(servicoRepository.findById(dto.getServicoId())
+                .orElseThrow(() -> new RuntimeException("Servico não encontrado")));
+        pacoteServico.setQuantidade(dto.getQuantidade());
         return pacoteServicoRepository.save(pacoteServico);
     }
 

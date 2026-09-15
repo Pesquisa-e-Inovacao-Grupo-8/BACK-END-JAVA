@@ -20,6 +20,7 @@ public class AgendamentoRequestDto {
 
     private UUID profissionalId;
     private UUID servicoId;
+    private UUID clientePacoteServicoId;
 
     private List<UUID> servicos;
 
@@ -130,6 +131,14 @@ public class AgendamentoRequestDto {
 
     public void setServicoId(UUID servicoId) {
         this.servicoId = servicoId;
+    }
+
+    public UUID getClientePacoteServicoId() {
+        return clientePacoteServicoId;
+    }
+
+    public void setClientePacoteServicoId(UUID clientePacoteServicoId) {
+        this.clientePacoteServicoId = clientePacoteServicoId;
     }
 
     public List<UUID> getServicos() {

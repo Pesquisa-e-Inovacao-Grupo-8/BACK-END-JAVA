@@ -1,6 +1,6 @@
 services:
   backend:
-    image: imagestreampi/back-end-java-prd:104
+    image: imagestreampi/back-end-java-prd:1
     container_name: back-end-java
     restart: unless-stopped
 
@@ -11,6 +11,7 @@ services:
       SPRING_APPLICATION_NAME: ${SPRING_APPLICATION_NAME:-BACK-END-JAVA}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
+      API_SPRING_KEY: ${API_SPRING_KEY}
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
@@ -22,3 +23,5 @@ services:
 
     ports:
       - "8080:8080"
+
+
