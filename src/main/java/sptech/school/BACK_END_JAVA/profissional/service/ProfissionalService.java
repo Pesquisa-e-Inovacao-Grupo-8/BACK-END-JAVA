@@ -2,6 +2,8 @@ package sptech.school.BACK_END_JAVA.profissional.service;
 
 import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.profissional.entity.Profissional;
+import sptech.school.BACK_END_JAVA.profissional.entity.dto.request.ProfissionalRequestDto;
+import sptech.school.BACK_END_JAVA.profissional.entity.dto.request.ProfissionalUpdateRequestDto;
 import sptech.school.BACK_END_JAVA.profissional.repository.ProfissionalRepository;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
@@ -42,18 +44,22 @@ public class ProfissionalService {
                 });
     }
 
-    public Profissional criar(Profissional profissional, UUID usuarioId) {
+    public Profissional criar(ProfissionalRequestDto dto, UUID usuarioId) {
         var usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        Profissional profissional = new Profissional();
+        profissional.setEspecialidade(dto.getEspecialidade());
+        profissional.setDescricao(dto.getDescricao());
+        profissional.setFoto(dto.getFoto());
         profissional.setUsuario(usuario);
         return profissionalRepository.save(profissional);
     }
 
-    public Profissional atualizar(UUID id, Profissional profissional) {
-        if (!profissionalRepository.existsById(id)) {
-            throw new RuntimeException("Profissional não encontrado");
-        }
-        profissional.setId(id);
+    public Profissional atualizar(UUID id, ProfissionalUpdateRequestDto dto) {
+        Profissional profissional = buscarPorId(id);
+        profissional.setEspecialidade(dto.getEspecialidade());
+        profissional.setDescricao(dto.getDescricao());
+        profissional.setFoto(dto.getFoto());
         return profissionalRepository.save(profissional);
     }
 

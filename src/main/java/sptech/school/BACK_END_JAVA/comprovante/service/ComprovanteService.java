@@ -2,6 +2,8 @@ package sptech.school.BACK_END_JAVA.comprovante.service;
 
 import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.comprovante.entity.Comprovante;
+import sptech.school.BACK_END_JAVA.comprovante.entity.dto.request.ComprovanteRequestDto;
+import sptech.school.BACK_END_JAVA.comprovante.entity.dto.request.ComprovanteUpdateDto;
 import sptech.school.BACK_END_JAVA.comprovante.repository.ComprovanteRepository;
 import sptech.school.BACK_END_JAVA.pagamento.entity.Pagamento;
 import sptech.school.BACK_END_JAVA.pagamento.repository.PagamentoRepository;
@@ -26,23 +28,21 @@ public class ComprovanteService {
                 .orElseThrow(() -> new RuntimeException("Comprovante não encontrado"));
     }
 
-    public Comprovante criar(Comprovante comprovante, UUID pagamentoId) {
+    public Comprovante criar(ComprovanteRequestDto dto, UUID pagamentoId) {
 
         Pagamento pagamento = pagamentoRepository.findById(pagamentoId)
                 .orElseThrow(() -> new RuntimeException("Pagamento não encontrado"));
 
+        Comprovante comprovante = new Comprovante();
+        comprovante.setUrl(dto.getUrl());
         comprovante.setPagamento(pagamento);
 
         return comprovanteRepository.save(comprovante);
     }
 
-    public Comprovante atualizar(UUID id, Comprovante comprovante) {
-
-        if (!comprovanteRepository.existsById(id)) {
-            throw new RuntimeException("Comprovante não encontrado");
-        }
-
-        comprovante.setId(id);
+    public Comprovante atualizar(UUID id, ComprovanteUpdateDto dto) {
+        Comprovante comprovante = buscarPorId(id);
+        comprovante.setUrl(dto.getUrl());
         return comprovanteRepository.save(comprovante);
     }
 

@@ -62,16 +62,23 @@ public class AuthController {
 
     @PostMapping("/cadastrar")
     public ResponseEntity<CadastrarResponse> cadastrar(@RequestBody CadastrarRequest request) {
+        String email = request.getEmail() == null ? "" : request.getEmail().trim().toLowerCase();
+        String cpf = request.getCpf() == null ? "" : request.getCpf().trim();
 
-        if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
+        if (usuarioRepository.findByEmail(email).isPresent()) {
             return ResponseEntity.status(409)
                     .body(new CadastrarResponse("Email já cadastrado", false));
         }
 
+        if (usuarioRepository.findByCpf(cpf).isPresent()) {
+            return ResponseEntity.status(409)
+                    .body(new CadastrarResponse("CPF já cadastrado", false));
+        }
+
         Usuario usuario = new Usuario();
         usuario.setNome(request.getNome());
-        usuario.setEmail(request.getEmail());
-        usuario.setCpf(request.getCpf());
+        usuario.setEmail(email);
+        usuario.setCpf(cpf);
         usuario.setTelefone(request.getTelefone());
         usuario.setSenha(passwordEncoder.encode(request.getSenha()));
         usuario.setTipo("CLIENTE"); // fixo, nunca vem do request

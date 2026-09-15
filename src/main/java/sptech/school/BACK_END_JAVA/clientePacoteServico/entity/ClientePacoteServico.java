@@ -29,5 +29,8 @@ public class ClientePacoteServico {
     @Column(nullable = false)
     private Integer quantidadeDisponivel;
 
+    @Column(nullable = false)
+    private Integer quantidadeTotal;
+
 
 }

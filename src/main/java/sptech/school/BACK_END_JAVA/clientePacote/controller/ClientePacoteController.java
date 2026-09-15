@@ -4,7 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import sptech.school.BACK_END_JAVA.clientePacote.entity.ClientePacote;
+import sptech.school.BACK_END_JAVA.clientePacote.entity.dto.request.ClientePacoteRequestDto;
+import sptech.school.BACK_END_JAVA.clientePacote.entity.dto.request.ClientePacoteUpdateDto;
+import sptech.school.BACK_END_JAVA.clientePacote.entity.dto.response.ClientePacoteResponseDto;
 import sptech.school.BACK_END_JAVA.clientePacote.service.ClientePacoteService;
 import sptech.school.BACK_END_JAVA.usuario.repository.UsuarioRepository;
 
@@ -37,7 +41,7 @@ public class ClientePacoteController {
 
     @GetMapping("/meus/{usuarioId}")
     @PreAuthorize("hasAnyRole('CLIENTE', 'ADMIN')")
-    public ResponseEntity<List<ClientePacote>> meusPacotes(
+    public ResponseEntity<List<ClientePacoteResponseDto>> meusPacotes(
             @PathVariable UUID usuarioId,
             Authentication authentication) {
         boolean admin = authentication.getAuthorities().stream()
@@ -54,16 +58,16 @@ public class ClientePacoteController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientePacote> criar(@RequestBody ClientePacote clientePacote, @RequestParam UUID clienteId, @RequestParam UUID pacoteId) {
+    public ResponseEntity<ClientePacote> criar(@Valid @RequestBody ClientePacoteRequestDto dto, @RequestParam UUID clienteId, @RequestParam UUID pacoteId) {
 
-        ClientePacote criado = service.criar(clientePacote, clienteId, pacoteId);
+        ClientePacote criado = service.criar(dto, clienteId, pacoteId);
         return ResponseEntity.status(201).body(criado);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientePacote> atualizar(@PathVariable UUID id, @RequestBody ClientePacote clientePacote) {
+    public ResponseEntity<ClientePacote> atualizar(@PathVariable UUID id, @Valid @RequestBody ClientePacoteUpdateDto dto) {
 
-        ClientePacote atualizado = service.atualizar(id, clientePacote);
+        ClientePacote atualizado = service.atualizar(id, dto);
         return ResponseEntity.ok(atualizado);
     }
 

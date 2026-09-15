@@ -1,10 +1,8 @@
 package sptech.school.BACK_END_JAVA.pacoteServico.entity.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.UUID;
 
 public class PacoteServicoRequestDto {
@@ -17,6 +15,9 @@ public class PacoteServicoRequestDto {
     @NotNull
     @Schema(description = "Representa o valor do preço do serviço ao ser inserido no pacote", example = "15.99")
     private Double preco;
+    @NotNull
+    @Min(1)
+    private Integer quantidade;
 
     public UUID getPacoteId() {
         return pacoteId;
@@ -40,5 +41,13 @@ public class PacoteServicoRequestDto {
 
     public void setPreco(Double preco) {
         this.preco = preco;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
     }
 }
