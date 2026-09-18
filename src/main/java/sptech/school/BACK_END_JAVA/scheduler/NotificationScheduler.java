@@ -24,8 +24,8 @@ public class NotificationScheduler {
     }
 
 
-   @Scheduled(cron = "*/60 * * * * *")
-   public void enviarNotificacao() {
+    @Scheduled(cron = "0 0 12 * * *")
+    public void enviarNotificacao() {
 
        System.out.println("ENVIANDO!");
        LocalDate alvo = LocalDate.now().plusDays(1);
