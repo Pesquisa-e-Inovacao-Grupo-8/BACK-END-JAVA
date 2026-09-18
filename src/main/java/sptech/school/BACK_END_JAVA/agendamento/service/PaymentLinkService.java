@@ -6,7 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import sptech.school.BACK_END_JAVA.agendamento.entity.Agendamento;
 import sptech.school.BACK_END_JAVA.agendamento.repository.AgendamentoRepository;
+import sptech.school.BACK_END_JAVA.pagamento.entity.Pagamento;
+import sptech.school.BACK_END_JAVA.pagamento.repository.PagamentoRepository;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -14,14 +17,17 @@ import java.util.UUID;
 public class PaymentLinkService {
 
     private final AgendamentoRepository agendamentoRepository;
+    private final PagamentoRepository pagamentoRepository;
     private final WebClient webClient;
     private final String paymentApiUrl;
 
     public PaymentLinkService(
             AgendamentoRepository agendamentoRepository,
+            PagamentoRepository pagamentoRepository,
             WebClient webClient,
             @Value("${payment.api.url:http://localhost:8088}") String paymentApiUrl) {
         this.agendamentoRepository = agendamentoRepository;
+        this.pagamentoRepository = pagamentoRepository;
         this.webClient = webClient;
         this.paymentApiUrl = paymentApiUrl;
     }
@@ -32,11 +38,12 @@ public class PaymentLinkService {
                 .orElseThrow(() -> new IllegalArgumentException("Agendamento não encontrado"));
 
         if (agendamento.getLinkPagamento() != null && !agendamento.getLinkPagamento().isBlank()) {
+            criarPagamentoPendenteSeNecessario(agendamento);
             return agendamento.getLinkPagamento();
         }
 
         CheckoutResponse checkout = webClient.post()
-                .uri(paymentApiUrl + "/flask-infinity-pay/create-checkout")
+                .uri(paymentApiUrl + "/infinity-pay/create-checkout")
                 .bodyValue(Map.of("id", agendamentoId.toString()))
                 .retrieve()
                 .bodyToMono(CheckoutResponse.class)
@@ -48,7 +55,22 @@ public class PaymentLinkService {
 
         agendamento.setLinkPagamento(checkout.url());
         agendamentoRepository.save(agendamento);
+        criarPagamentoPendenteSeNecessario(agendamento);
         return checkout.url();
+    }
+
+    private void criarPagamentoPendenteSeNecessario(Agendamento agendamento) {
+        if (pagamentoRepository.findByAgendamento_Id(agendamento.getId()).isPresent()) {
+            return;
+        }
+
+        Pagamento pagamento = new Pagamento();
+        pagamento.setValor(agendamento.getValorTotal());
+        pagamento.setMetodo("INFINITY_PAY");
+        pagamento.setStatus("PENDENTE");
+        pagamento.setData(LocalDateTime.now());
+        pagamento.setAgendamento(agendamento);
+        pagamentoRepository.save(pagamento);
     }
 
     private record CheckoutResponse(String orderNsu, String url) { }

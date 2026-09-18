@@ -97,7 +97,7 @@ public class SecurityConfig {
                         .requestMatchers("/clientes/**", "/clientePacotes/**")
                         .hasAnyRole("CLIENTE", "ADMIN")
                         .requestMatchers("/pagamentos/**", "/comprovantes/**")
-                        .hasAnyRole("CLIENTE", "ADMIN")
+                        .hasAnyRole("CLIENTE", "ADMIN", "PAYMENT")
                         .requestMatchers("/servico-produtos/**")
                         .hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/agendamentoServicos")

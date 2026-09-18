@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static reactor.netty.http.HttpConnectionLiveness.log;
+
 @Service
 public class NotificationScheduler {
 
@@ -24,16 +26,26 @@ public class NotificationScheduler {
     }
 
 
-   @Scheduled(cron = "*/60 * * * * *")
+   //@Scheduled(cron = "0 0 9,12,16,20 * * *", zone = "America/Sao_Paulo")
+   @Scheduled(cron = "0 * * * * *", zone = "America/Sao_Paulo")
    public void enviarNotificacao() {
 
        System.out.println("ENVIANDO!");
        LocalDate alvo = LocalDate.now().plusDays(1);
        List<Agendamento> agendamentos = agendamentoService.consultarPorData(alvo);
 
-       agendamentos.forEach(agendamento -> {
+       agendamentos.stream()
+           .filter(agendamento -> !"CONFIRMADO".equalsIgnoreCase(agendamento.getStatus()))
+           .filter(agendamento -> !"CANCELADO".equalsIgnoreCase(agendamento.getStatus()))
+           .forEach(agendamento -> {
 
            Map<String, Object> body = new HashMap<>();
+
+               System.out.println("====== INFOMRAÇÔES DO AGENDAMENTO ======");
+               System.out.println(" CLIENTE:" + agendamento.getCliente().getUsuario().toString());
+               System.out.println(" STATUS:" + agendamento.getStatus().toString());
+               System.out.println(" ORDEM NSU:" + agendamento.getOrdemPedido());
+               System.out.println("=========================================");
 
            body.put("telefone", agendamento.getCliente().getUsuario().getTelefone());
            body.put("cliente", agendamento.getCliente().getUsuario().getNome());
@@ -43,12 +55,17 @@ public class NotificationScheduler {
            body.put("ordemPedido", agendamento.getOrdemPedido());
 
            webClient.post()
-               .uri("http://localhost:8090/notify/lembrete-agendamento")
+                   .uri("http://localhost:8090/notify/lembrete-agendamento")
                    .contentType(MediaType.APPLICATION_JSON)
                    .bodyValue(body)
                    .retrieve()
                    .bodyToMono(String.class)
-                   .subscribe();
-       });
+                   .subscribe(
+                           response -> log.info("Lembrete enviado com sucesso: {}", response),
+                           error -> log.error("Erro ao enviar lembrete: {}", error.getMessage())
+                               );
+
+           }
+           );
    }
 }

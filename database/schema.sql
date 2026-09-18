@@ -399,53 +399,32 @@ INSERT INTO usuario (
     email,
     tipo,
     status,
+    criacao,
     ativo
 ) VALUES
 (
-    UUID_TO_BIN('423e4567-e89b-12d3-a456-426614174001'),
-    'Cliente Padrao',
-    '(11) 98888-0001',
-    '333.333.333-01',
-    '$2a$10$6Rz3G.41B0/wQ4mQ.7xR2.m04c7P4vT/35U6rB3pT9o2V1/4.G/1q',
-    'cliente@tukotomi.com',
-    'CLIENTE',
-    'ATIVO',
-    TRUE
-),
-(
-    UUID_TO_BIN('223e4567-e89b-12d3-a456-426614174001'),
-    'Profissional Padrao',
-    '(11) 99999-0001',
-    '111.111.111-01',
-    '$2a$10$6Rz3G.41B0/wQ4mQ.7xR2.m04c7P4vT/35U6rB3pT9o2V1/4.G/1q',
-    'profissional@tukotomi.com',
-    'PROFISSIONAL',
-    'ATIVO',
-    TRUE
-),
-(
-    UUID_TO_BIN('223e4567-e89b-12d3-a456-426614174003'),
+    UUID_TO_BIN('111e4567-e89b-12d3-a456-426614174001'),
     'Administrador',
-    '(11) 99999-0000',
-    '000.000.000-01',
-    '$2a$10$6Rz3G.41B0/wQ4mQ.7xR2.m04c7P4vT/35U6rB3pT9o2V1/4.G/1q',
+    '5511999990000',
+    '11111111111',
+    '$2b$10$3tXXnlGlMoKQD5mKpBkCtuAYXZMdukiIR0F6wJbMmb1YPuQC5ogcK',
+    'admin@tokutomi.com',
     'ADMIN',
     'ATIVO',
+    CURRENT_TIMESTAMP,
     TRUE
-);
-
--- =========================================================
--- DADOS INICIAIS: PERFIS RELACIONADOS
--- =========================================================
-
-INSERT INTO cliente (
-    id_cliente,
-    observacoes,
-    fk_usuario
-) VALUES (
-    UUID_TO_BIN('523e4567-e89b-12d3-a456-426614174001'),
-    'Cliente padrao do ambiente',
-    UUID_TO_BIN('423e4567-e89b-12d3-a456-426614174001')
+),
+(
+    UUID_TO_BIN('222e4567-e89b-12d3-a456-426614174001'),
+    'Profissional Principal',
+    '5511988880000',
+    '22222222222',
+    '$2b$10$3tXXnlGlMoKQD5mKpBkCtuAYXZMdukiIR0F6wJbMmb1YPuQC5ogcK',
+    'profissional@tokutomi.com',
+    'PROFISSIONAL',
+    'ATIVO',
+    CURRENT_TIMESTAMP,
+    TRUE
 );
 
 INSERT INTO profissional (
@@ -456,36 +435,12 @@ INSERT INTO profissional (
     fk_usuario
 ) VALUES (
     UUID_TO_BIN('323e4567-e89b-12d3-a456-426614174001'),
-    'Cabelo e estetica',
-    'Profissional padrao do ambiente',
+    'Cabeleireiro',
+    'Profissional principal da Tukotomi',
     NULL,
-    UUID_TO_BIN('223e4567-e89b-12d3-a456-426614174001')
+    UUID_TO_BIN('222e4567-e89b-12d3-a456-426614174001')
 );
 
-INSERT INTO servico_profissional (
-    id_profissional_servico,
-    fk_servico,
-    fk_profissional
-) VALUES
-(
-    UUID_TO_BIN('843e4567-e89b-12d3-a456-426614174001'),
-    UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174001'),
-    UUID_TO_BIN('323e4567-e89b-12d3-a456-426614174001')
-),
-(
-    UUID_TO_BIN('843e4567-e89b-12d3-a456-426614174002'),
-    UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174002'),
-    UUID_TO_BIN('323e4567-e89b-12d3-a456-426614174001')
-),
-(
-    UUID_TO_BIN('843e4567-e89b-12d3-a456-426614174003'),
-    UUID_TO_BIN('123e4567-e89b-12d3-a456-426614174003'),
-    UUID_TO_BIN('323e4567-e89b-12d3-a456-426614174001')
-);
-
--- Segunda a sexta: 09:00 - 18:00, intervalo de 15 minutos.
--- Sabado: 09:00 - 13:00, intervalo de 15 minutos.
--- Domingo: inativo.
 INSERT INTO profissional_horario (
     id_horario,
     fk_profissional,

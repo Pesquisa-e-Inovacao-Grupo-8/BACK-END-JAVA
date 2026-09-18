@@ -12,6 +12,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRATION: ${JWT_EXPIRATION}
       API_SPRING_KEY: ${API_SPRING_KEY}
+      PAYMENT_API_URL: ${PAYMENT_API_URL}
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
@@ -23,5 +24,11 @@ services:
 
     ports:
       - "8080:8080"
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    external: true
 
 
