@@ -9,6 +9,7 @@ import sptech.school.BACK_END_JAVA.pagamento.repository.PagamentoRepository;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PagamentoService {
@@ -44,6 +45,20 @@ public class PagamentoService {
         pagamento.setMetodo(dto.getMetodo());
         pagamento.setStatus(dto.getStatus());
         return pagamentoRepository.save(pagamento);
+    }
+
+    @Transactional
+    public void atualizarStatusPorAgendamento(
+            String ordemPedido,
+            String statusPagamento,
+            String statusAgendamento) {
+        var agendamento = agendamentoService.buscarPorReferencia(ordemPedido);
+        Pagamento pagamento = pagamentoRepository.findByAgendamento_Id(agendamento.getId())
+                .orElseThrow(() -> new RuntimeException("Pagamento não encontrado para o agendamento"));
+
+        pagamento.setStatus(statusPagamento);
+        agendamento.setStatus(statusAgendamento);
+        pagamentoRepository.save(pagamento);
     }
 
     public void deletar(UUID id) {

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import sptech.school.BACK_END_JAVA.pagamento.entity.Pagamento;
 import sptech.school.BACK_END_JAVA.pagamento.entity.dto.request.PagamentoRequestDto;
 import sptech.school.BACK_END_JAVA.pagamento.entity.dto.request.PagamentoUpdateDto;
+import sptech.school.BACK_END_JAVA.pagamento.entity.dto.request.PagamentoWebhookStatusDto;
 import sptech.school.BACK_END_JAVA.pagamento.service.PagamentoService;
 import jakarta.validation.Valid;
 
@@ -46,6 +47,18 @@ public class PagamentoController {
     public ResponseEntity<Pagamento> atualizar(@PathVariable UUID id, @Valid @RequestBody PagamentoUpdateDto dto) {
         Pagamento atualizado = service.atualizar(id, dto);
         return ResponseEntity.ok(atualizado);
+    }
+
+    @PatchMapping("/agendamento/{ordemPedido}/status")
+    @PreAuthorize("hasRole('PAYMENT')")
+    public ResponseEntity<Void> atualizarStatusPorAgendamento(
+            @PathVariable String ordemPedido,
+            @Valid @RequestBody PagamentoWebhookStatusDto dto) {
+        service.atualizarStatusPorAgendamento(
+                ordemPedido,
+                dto.getStatusPagamento(),
+                dto.getStatusAgendamento());
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
