@@ -24,6 +24,8 @@ import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -65,12 +67,12 @@ public class AgendamentoService {
         this.clientePacoteServicoRepository = clientePacoteServicoRepository;
     }
 
-    public List<Agendamento> listar(Authentication authentication) {
-        if (temRole(authentication, "ROLE_ADMIN")) return agendamentoRepository.findAll();
+    public Page<Agendamento> listar(Authentication authentication, Pageable pageable) {
+        if (temRole(authentication, "ROLE_ADMIN")) return agendamentoRepository.findAll(pageable);
         if (temRole(authentication, "ROLE_PROFISSIONAL")) {
-            return agendamentoRepository.findByProfissional_Usuario_Email(authentication.getName());
+            return agendamentoRepository.findByProfissional_Usuario_Email(authentication.getName(), pageable);
         }
-        return agendamentoRepository.findByCliente_Usuario_Email(authentication.getName());
+        return agendamentoRepository.findByCliente_Usuario_Email(authentication.getName(), pageable);
     }
 
     public List<Agendamento> listarDisponibilidade(UUID profissionalId, LocalDate data) {

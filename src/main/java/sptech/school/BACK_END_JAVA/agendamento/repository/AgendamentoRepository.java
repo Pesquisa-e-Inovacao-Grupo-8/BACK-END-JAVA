@@ -1,5 +1,7 @@
 package sptech.school.BACK_END_JAVA.agendamento.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import jakarta.persistence.LockModeType;
@@ -12,8 +14,10 @@ import java.util.UUID;
 public interface AgendamentoRepository extends JpaRepository<Agendamento, UUID> {
     List<Agendamento> findByData(LocalDate data);
     List<Agendamento> findAll();
-    List<Agendamento> findByCliente_Usuario_Email(String email);
-    List<Agendamento> findByProfissional_Usuario_Email(String email);
+
+    Page<Agendamento> findByCliente_Usuario_Email(String email, Pageable pageable);
+    Page<Agendamento> findByProfissional_Usuario_Email(String email, Pageable pageable);
+
     java.util.Optional<Agendamento> findByOrdemPedido(String ordemPedido);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

@@ -1,5 +1,9 @@
 package sptech.school.BACK_END_JAVA.agendamento.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
@@ -34,8 +38,9 @@ public class AgendamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Agendamento>> getAgendamento(Authentication authentication) {
-        List<Agendamento> agendamentos = service.listar(authentication);
+    public ResponseEntity<Page<Agendamento>> getAgendamento(Authentication authentication,
+            @PageableDefault(page = 0, size = 10, sort = "data", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Agendamento> agendamentos = service.listar(authentication, pageable);
         return ResponseEntity.ok(agendamentos);
     }
 
