@@ -1,11 +1,12 @@
 package sptech.school.BACK_END_JAVA.servico.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sptech.school.BACK_END_JAVA.servico.entity.Servico;
 import sptech.school.BACK_END_JAVA.servico.entity.dto.request.ServicoRequestDto;
 import sptech.school.BACK_END_JAVA.servico.repository.ServicoRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -16,7 +17,9 @@ public class ServicoService {
         this.servicoRepository = servicoRepository;
     }
 
-    public List<Servico> listar() {return servicoRepository.findAll();}
+    public Page<Servico> listar(Pageable pageable) {
+        return servicoRepository.findAll(pageable);
+    }
 
     public Servico buscarPorId(UUID id) {
         return servicoRepository.findById(id)

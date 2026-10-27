@@ -292,7 +292,7 @@ public class AgendamentoService {
         agendamento.setHoraInicio(horaInicio);
         agendamento.setHoraFim(horaFim);
         agendamento.setServico(servicos.get(0));
-        agendamento.setStatus(dto.getStatus());
+        agendamento.setStatus(dto.getStatus() != null ? dto.getStatus() : "PENDENTE");
         agendamento.setProfissional(profissional);
         agendamento.setOrdemPedido(UUID.randomUUID().toString());
         agendamento.setValorTotal(0.0);
@@ -401,16 +401,35 @@ public class AgendamentoService {
 
     public void notificarAgendamento(Agendamento agendamento) {
 
-        // Implementação da notificação, por exemplo, chamando o endpoint do serviço de notificações
-        // Pode ser feito usando WebClient ou outro mecanismo de sua escolha
+        // Determina telefone e nome dependendo do tipo de agendamento (cadastrado ou avulso)
+        String telefone;
+        String nomeCliente;
+
+        if (agendamento.getCliente() != null
+                && agendamento.getCliente().getUsuario() != null
+                && agendamento.getCliente().getUsuario().getTelefone() != null) {
+            telefone = agendamento.getCliente().getUsuario().getTelefone();
+            nomeCliente = agendamento.getCliente().getUsuario().getNome();
+        } else if (agendamento.getTelefoneClienteAvulso() != null
+                && !agendamento.getTelefoneClienteAvulso().isBlank()) {
+            telefone = agendamento.getTelefoneClienteAvulso();
+            nomeCliente = agendamento.getNomeClienteAvulso() != null
+                    ? agendamento.getNomeClienteAvulso()
+                    : "Cliente";
+        } else {
+            // Sem telefone disponível, não é possível notificar
+            logger.warn("Agendamento {} sem telefone para notificação — notificação ignorada.",
+                    agendamento.getId());
+            return;
+        }
 
         WebClient.create()
                 .post()
                 .uri("http://api-twillio:8090/notify/agendamento")
-                .contentType(MediaType.APPLICATION_JSON) 
+                .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(Map.of(
-                        "telefone", agendamento.getCliente().getUsuario().getTelefone(),
-                        "cliente", agendamento.getCliente().getUsuario().getNome(),
+                        "telefone", telefone,
+                        "cliente", nomeCliente,
                         "servico", agendamento.getServico().getNome(),
                         "data", agendamento.getData().toString(),
                         "horaInicio", agendamento.getHoraInicio().toString(),
@@ -418,8 +437,8 @@ public class AgendamentoService {
                 ))
                 .retrieve()
                 .bodyToMono(String.class)
+                .doOnError(e -> logger.error("Falha ao notificar agendamento {}: {}", agendamento.getId(), e.getMessage()))
                 .subscribe();
-
     }
 
     public List<Agendamento> consultarPorData(LocalDate dataAlvo) {
