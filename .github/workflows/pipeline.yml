@@ -4,6 +4,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  java:
     uses: Pesquisa-e-Inovacao-Grupo-8/TEMPLATES-PIPELINES/.github/workflows/pipeline-java.yml@nova-arquitetura
     secrets: inherit
